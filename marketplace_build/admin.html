@@ -13,6 +13,7 @@
         <strong>Паланарт</strong>
         <span>Управление маркетплейсом исполнителей</span>
       </div>
+      <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Открыть меню">☰</button>
       <nav class="nav">
         <a href="index.html">Витрина</a>
         <a href="user.html">Клиент</a>
@@ -20,18 +21,19 @@
         <button id="theme-toggle" class="ghost-btn theme-toggle" type="button">Светлая тема</button>
       </nav>
     </div>
+    <div class="mobile-nav-backdrop" id="mobile-nav-backdrop"></div>
   </header>
 
   <main class="shell">
     <section id="login-view" class="auth-wrap">
       <div class="auth-box">
         <h1>Вход администратора</h1>
-        <p class="muted">Здесь вы управляете модерацией, статусами профилей, чатами и общими настройками платформы.</p>
+        <p class="muted">Здесь вы управляете модерацией, статусами профилей, чатами и общими настройками платформы. Вход администратора: <strong>admin@palan.market</strong> / <strong>admin12345</strong></p>
         <div id="login-message"></div>
         <form id="admin-login" class="panel">
           <div class="form-grid one">
-            <label>E-mail<input name="email" type="email" required></label>
-            <label>Пароль<input name="password" type="password" required></label>
+            <label>E-mail<input name="email" type="email" value="admin@palan.market" required></label>
+            <label>Пароль<input name="password" type="password" value="admin12345" required></label>
           </div>
           <div class="inline-actions">
             <button class="primary-btn" type="submit">Войти</button>
@@ -119,12 +121,23 @@
       const saved = localStorage.getItem(key) || "dark";
       document.body.setAttribute("data-theme", saved);
       const button = document.getElementById("theme-toggle");
+      const menuToggle = document.getElementById("menu-toggle");
+      const backdrop = document.getElementById("mobile-nav-backdrop");
+      const nav = document.querySelector(".nav");
       function sync() { button.textContent = (document.body.getAttribute("data-theme") || "dark") === "dark" ? "Светлая тема" : "Тёмная тема"; }
+      function closeNav() { document.body.classList.remove("nav-open"); }
       button.addEventListener("click", function () {
         const next = (document.body.getAttribute("data-theme") || "dark") === "dark" ? "light" : "dark";
         document.body.setAttribute("data-theme", next);
         localStorage.setItem(key, next);
         sync();
+      });
+      menuToggle.addEventListener("click", function () { document.body.classList.toggle("nav-open"); });
+      backdrop.addEventListener("click", closeNav);
+      nav.querySelectorAll("a, button").forEach(function (node) {
+        node.addEventListener("click", function () {
+          if (window.innerWidth <= 720 && node !== menuToggle) closeNav();
+        });
       });
       sync();
     })();

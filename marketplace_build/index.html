@@ -19,6 +19,7 @@
         <strong>Паланарт</strong>
         <span>Маркетплейс исполнителей для мероприятий</span>
       </div>
+      <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Открыть меню">☰</button>
       <nav class="nav">
         <a href="#catalog">Каталог</a>
         <a href="#workflow">Как это работает</a>
@@ -29,6 +30,7 @@
         <button id="theme-toggle" class="ghost-btn theme-toggle" type="button">Светлая тема</button>
       </nav>
     </div>
+    <div class="mobile-nav-backdrop" id="mobile-nav-backdrop"></div>
   </header>
 
   <main class="shell">
@@ -239,15 +241,30 @@
       const saved = localStorage.getItem(key) || "dark";
       document.body.setAttribute("data-theme", saved);
       const button = document.getElementById("theme-toggle");
+      const menuToggle = document.getElementById("menu-toggle");
+      const backdrop = document.getElementById("mobile-nav-backdrop");
+      const nav = document.querySelector(".nav");
       function sync() {
         const theme = document.body.getAttribute("data-theme") || "dark";
         button.textContent = theme === "dark" ? "Светлая тема" : "Тёмная тема";
+      }
+      function closeNav() {
+        document.body.classList.remove("nav-open");
       }
       button.addEventListener("click", function () {
         const next = (document.body.getAttribute("data-theme") || "dark") === "dark" ? "light" : "dark";
         document.body.setAttribute("data-theme", next);
         localStorage.setItem(key, next);
         sync();
+      });
+      menuToggle.addEventListener("click", function () {
+        document.body.classList.toggle("nav-open");
+      });
+      backdrop.addEventListener("click", closeNav);
+      nav.querySelectorAll("a, button").forEach(function (node) {
+        node.addEventListener("click", function () {
+          if (window.innerWidth <= 720 && node !== menuToggle) closeNav();
+        });
       });
       sync();
     })();

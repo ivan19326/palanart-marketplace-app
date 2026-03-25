@@ -697,8 +697,7 @@
     });
   }
 
-  function ensureDealForLead(lead) {
-    const db = getDb();
+  function ensureDealForLeadInDb(db, lead) {
     let deal = db.deals.find(function (item) { return item.leadId === lead.id; });
     if (deal) return deal;
     deal = {
@@ -736,6 +735,12 @@
         }
       ]
     });
+    return deal;
+  }
+
+  function ensureDealForLead(lead) {
+    const db = getDb();
+    const deal = ensureDealForLeadInDb(db, lead);
     saveDb(db);
     return deal;
   }
@@ -768,7 +773,7 @@
       createdAt: new Date().toISOString()
     };
     db.quotes.unshift(quote);
-    const deal = ensureDealForLead(lead);
+    const deal = ensureDealForLeadInDb(db, lead);
     deal.quoteId = quote.id;
     deal.agreedAmount = quote.amount;
     deal.status = "quoted";
@@ -810,7 +815,9 @@
     quote.status = status;
     if (status === "accepted") {
       const lead = db.leads.find(function (item) { return item.id === quote.leadId; });
-      const deal = db.deals.find(function (item) { return item.quoteId === quote.id || item.leadId === quote.leadId; });
+      const deal = lead
+        ? ensureDealForLeadInDb(db, lead)
+        : db.deals.find(function (item) { return item.quoteId === quote.id || item.leadId === quote.leadId; });
       if (lead) lead.status = "booked";
       if (deal) {
         deal.quoteId = quote.id;
@@ -830,8 +837,12 @@
 
   function getDealsForUser(user) {
     if (!user) return [];
+    const userRecord = typeof user === "string"
+      ? getDb().users.find(function (item) { return item.id === user || item.email === user; })
+      : user;
+    if (!userRecord) return [];
     return getDb().deals.filter(function (deal) {
-      return deal.clientUserId === user.id || deal.clientEmail === user.email || deal.clientPhone === user.phone;
+      return deal.clientUserId === userRecord.id || deal.clientEmail === userRecord.email || deal.clientPhone === userRecord.phone;
     });
   }
 
