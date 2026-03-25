@@ -235,7 +235,7 @@
 
     return {
       meta: {
-        project: "PALAN HYPE Marketplace",
+        project: "Паланар",
         updatedAt: now,
         schemaVersion: 6
       },
