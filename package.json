@@ -1,0 +1,24 @@
+{
+  "name": "palanart-marketplace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Паланарт — маркетплейс исполнителей для мероприятий.",
+  "scripts": {
+    "cap:sync": "npx cap sync",
+    "cap:open:android": "npx cap open android",
+    "cap:open:ios": "npx cap open ios",
+    "cap:add:android": "npx cap add android",
+    "cap:add:ios": "npx cap add ios",
+    "twa:init": "npx @bubblewrap/cli init --manifest https://ivan19326.github.io/palanart-marketplace-app/manifest.json",
+    "twa:build": "npx @bubblewrap/cli build"
+  },
+  "dependencies": {
+    "@capacitor/core": "^7.0.0"
+  },
+  "devDependencies": {
+    "@bubblewrap/cli": "^1.22.2",
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/cli": "^7.0.0",
+    "@capacitor/ios": "^7.0.0"
+  }
+}

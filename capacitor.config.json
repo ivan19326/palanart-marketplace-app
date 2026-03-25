@@ -1,0 +1,17 @@
+{
+  "appId": "ru.palanart.app",
+  "appName": "Паланарт",
+  "webDir": "marketplace_build",
+  "server": {
+    "hostname": "app.palanart.local",
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1200,
+      "launchAutoHide": true,
+      "backgroundColor": "#101626",
+      "showSpinner": false
+    }
+  }
+}

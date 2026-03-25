@@ -25,3 +25,14 @@ PWA использует:
 - `service-worker.js`
 - standalone-режим
 - иконки для установки
+
+## Нативные обертки
+
+В проект уже добавлены конфиги для двух мобильных путей:
+
+- `capacitor.config.json` — Android + iPhone через Capacitor
+- `twa-manifest.json` — Android APK/AAB через Bubblewrap / TWA
+
+Подробный сценарий:
+
+- `mobile-release.md`

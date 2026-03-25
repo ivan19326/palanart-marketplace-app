@@ -1,0 +1,15 @@
+{
+  "packageId": "ru.palanart.twa",
+  "host": "ivan19326.github.io",
+  "name": "Паланарт",
+  "launcherName": "Паланарт",
+  "display": "standalone",
+  "themeColor": "#f6c453",
+  "backgroundColor": "#101626",
+  "startUrl": "/palanart-marketplace-app/index.html",
+  "iconUrl": "https://ivan19326.github.io/palanart-marketplace-app/icons/icon-512.png",
+  "maskableIconUrl": "https://ivan19326.github.io/palanart-marketplace-app/icons/icon-512.png",
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "fallbackType": "customtabs"
+}
