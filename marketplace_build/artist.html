@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Кабинет исполнителя | PALAN HYPE</title>
+  <link rel="stylesheet" href="marketplace.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand">
+        <strong>PALAN HYPE</strong>
+        <span>Кабинет исполнителя</span>
+      </div>
+      <nav class="nav">
+        <a href="index.html">Витрина</a>
+        <a href="user.html">Клиент</a>
+        <a href="admin.html">Админ</a>
+        <button id="theme-toggle" class="ghost-btn theme-toggle" type="button">Светлая тема</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell section service-shell">
+    <div id="artist-message"></div>
+
+    <section id="artist-auth-view" class="split">
+      <form id="artist-register-form" class="service-panel">
+        <h1>Регистрация исполнителя</h1>
+        <div class="form-grid">
+          <label>Имя или проект<input name="name" type="text" required></label>
+          <label>E-mail<input name="email" type="email" required></label>
+          <label>Телефон<input name="phone" type="tel" required></label>
+          <label>Пароль<input name="password" type="password" required></label>
+          <label>Telegram<input name="telegram" type="text"></label>
+          <label>Фото профиля<input name="photo" type="text" placeholder="https://..."></label>
+        </div>
+        <button class="primary-btn" type="submit">Создать кабинет</button>
+      </form>
+
+      <form id="artist-login-form" class="service-panel">
+        <h2>Вход</h2>
+        <div class="form-grid one">
+          <label>E-mail<input name="email" type="email" value="anna@palan.market" required></label>
+          <label>Пароль<input name="password" type="password" value="artist12345" required></label>
+        </div>
+        <button class="ghost-btn" type="submit">Войти</button>
+      </form>
+    </section>
+
+    <section id="artist-cabinet-view" style="display:none;" class="service-shell">
+      <div class="service-panel">
+        <div class="section-head">
+          <div>
+            <h1>Профиль исполнителя</h1>
+            <p id="artist-summary" class="muted"></p>
+          </div>
+          <button id="artist-logout" class="ghost-btn" type="button">Выйти</button>
+        </div>
+        <div id="artist-kpis" class="service-kpis"></div>
+      </div>
+
+      <form id="artist-profile-form" class="service-panel">
+        <div class="form-grid">
+          <label>Основная категория<select name="role" id="artist-role"></select></label>
+          <label>Дополнительные категории<input name="categories" type="text" placeholder="host, planner"></label>
+          <label>Тариф<select name="planId" id="artist-plan"></select></label>
+          <label>Название профиля<input name="name" type="text" required></label>
+          <label>Заголовок<input name="title" type="text"></label>
+          <label>Город<input name="city" type="text" required></label>
+          <label>Регион<input name="region" type="text"></label>
+          <label>Радиус выезда, км<input name="travelRadiusKm" type="number" min="0" value="50"></label>
+          <label>Цена от<input name="priceFrom" type="number" min="0" required></label>
+          <label>Короткое позиционирование<input name="tagline" type="text" required></label>
+          <label>E-mail<input name="email" type="email" required></label>
+          <label>Телефон<input name="phone" type="tel" required></label>
+          <label>Telegram<input name="telegram" type="text"></label>
+          <label>Instagram<input name="instagram" type="url"></label>
+          <label>YouTube<input name="youtube" type="url"></label>
+          <label>VK<input name="vk" type="url"></label>
+          <label>Сайт<input name="website" type="url"></label>
+          <label>Фото профиля по ссылке<input name="photo" type="text" placeholder="https://..."></label>
+          <label>Фото профиля файлом<input id="artist-photo-file" type="file" accept="image/*"></label>
+          <label>Галерея по ссылкам<input name="galleryRaw" type="text" placeholder="https://img1, https://img2"></label>
+          <label>Галерея файлами<input id="artist-gallery-files" type="file" accept="image/*" multiple></label>
+          <label>Видео по ссылкам<input name="videoRaw" type="text" placeholder="https://video1, https://video2"></label>
+          <label>Видео файлами<input id="artist-video-files" type="file" accept="video/*" multiple></label>
+          <label>Аудио по ссылкам<input name="audioRaw" type="text" placeholder="https://audio1, https://audio2"></label>
+          <label>Аудио файлами<input id="artist-audio-files" type="file" accept="audio/*" multiple></label>
+        </div>
+        <div class="form-grid one">
+          <label>Языки<input name="languages" type="text"></label>
+          <label>Форматы мероприятий<input name="eventFormats" type="text"></label>
+          <label>Особенности сервиса<input name="serviceFeatures" type="text"></label>
+          <label>Пакеты<textarea name="packagesText"></textarea></label>
+          <label>Дополнительные опции<textarea name="addOnsText"></textarea></label>
+          <label>Календарь занятости<textarea name="availabilityText"></textarea></label>
+          <label>FAQ<textarea name="faqText"></textarea></label>
+          <label>Депозит<input name="depositPolicy" type="text"></label>
+          <label>Отмена<input name="cancellationPolicy" type="text"></label>
+          <label>Технические требования<input name="technicalPolicy" type="text"></label>
+          <label>Подробное описание<textarea name="description" required></textarea></label>
+          <label>Стиль работы<textarea name="workStyle"></textarea></label>
+        </div>
+        <div class="detail-box">
+          <div class="section-head">
+            <div>
+              <strong>Медиа исполнителя</strong>
+              <p class="muted">Загрузка, удаление и сортировка фото, видео и аудио.</p>
+            </div>
+          </div>
+          <div id="artist-media-preview" class="media-grid" style="margin-top:12px;"></div>
+        </div>
+        <button class="primary-btn" type="submit">Сохранить профиль</button>
+      </form>
+
+      <div class="split">
+        <div class="panel"><h2>Лиды</h2><div id="artist-leads" class="table-list"></div></div>
+        <div class="panel"><h2>Предложения</h2><div id="artist-quotes" class="table-list"></div></div>
+      </div>
+      <div class="split">
+        <div class="panel"><h2>Чаты и сделки</h2><div id="artist-chats" class="table-list"></div></div>
+        <div id="artist-chat-box" class="panel"><div class="empty">Выберите сделку, чтобы открыть переписку.</div></div>
+      </div>
+      <div class="panel"><h2>Аналитика</h2><div id="artist-analytics" class="metrics-grid"></div></div>
+      <div class="panel"><h2>Мои объявления</h2><div id="artist-board" class="table-list"></div></div>
+    </section>
+  </main>
+
+  <script src="marketplace-core.js"></script>
+  <script>
+    (function () {
+      const key = "palan_theme_mode";
+      const saved = localStorage.getItem(key) || "dark";
+      document.body.setAttribute("data-theme", saved);
+      const button = document.getElementById("theme-toggle");
+      function sync() { button.textContent = (document.body.getAttribute("data-theme") || "dark") === "dark" ? "Светлая тема" : "Тёмная тема"; }
+      button.addEventListener("click", function () {
+        const next = (document.body.getAttribute("data-theme") || "dark") === "dark" ? "light" : "dark";
+        document.body.setAttribute("data-theme", next);
+        localStorage.setItem(key, next);
+        sync();
+      });
+      sync();
+    })();
+
+    const artistMediaState = { photo: "", galleryFiles: [], videoFiles: [], audioFiles: [], drag: null };
+    function byId(id) { return document.getElementById(id); }
+    function escapeHtml(value) { return String(value || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+    function parseList(value) { return String(value || "").split(",").map(function (item) { return item.trim(); }).filter(Boolean); }
+    function readFileAsDataUrl(file) {
+      return new Promise(function (resolve, reject) {
+        const reader = new FileReader();
+        reader.onload = function () { resolve(reader.result); };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+    async function collectFiles(input) {
+      const files = Array.from(input.files || []);
+      return Promise.all(files.map(readFileAsDataUrl));
+    }
+    function createMediaEntry(kind, src, extra) {
+      return Object.assign({
+        id: kind + "-" + Date.now() + "-" + Math.random().toString(16).slice(2),
+        src: String(src || "").trim(),
+        caption: "",
+        poster: ""
+      }, extra || {});
+    }
+    function normalizeMediaEntry(entry, kind, index) {
+      if (!entry) return null;
+      if (typeof entry === "string") return createMediaEntry(kind, entry);
+      return {
+        id: entry.id || (kind + "-" + index),
+        src: String(entry.src || "").trim(),
+        caption: String(entry.caption || "").trim(),
+        poster: String(entry.poster || "").trim()
+      };
+    }
+    function parseMediaList(value, kind) {
+      return parseList(value).map(function (src, index) { return normalizeMediaEntry({ src: src }, kind, index); }).filter(function (item) { return item && item.src; });
+    }
+    function mediaSrc(item) { return item && item.src ? item.src : ""; }
+    function mediaCaption(item, fallback) { return item && item.caption ? item.caption : fallback; }
+    function parseRows(value, mode) {
+      return String(value || "").split(/\r?\n/).map(function (line) { return line.trim(); }).filter(Boolean).map(function (line) {
+        const parts = line.split("|").map(function (item) { return item.trim(); });
+        if (mode === "package") return { name: parts[0] || "", duration: parts[1] || "", price: Number(parts[2] || 0), description: parts[3] || "" };
+        if (mode === "availability") return { date: parts[0] || "", status: parts[1] || "available" };
+        if (mode === "faq") return { q: parts[0] || "", a: parts[1] || "" };
+        return null;
+      }).filter(Boolean);
+    }
+    function syncMediaInputs() {
+      const form = byId("artist-profile-form");
+      form.photo.value = artistMediaState.photo || "";
+      form.galleryRaw.value = artistMediaState.galleryFiles.map(function (item) { return item.src; }).join(", ");
+      form.videoRaw.value = artistMediaState.videoFiles.map(function (item) { return item.src; }).join(", ");
+      form.audioRaw.value = artistMediaState.audioFiles.map(function (item) { return item.src; }).join(", ");
+    }
+    function moveMediaItem(listName, index, direction) {
+      const list = artistMediaState[listName];
+      const next = index + direction;
+      if (!Array.isArray(list) || next < 0 || next >= list.length) return;
+      const item = list[index];
+      list.splice(index, 1);
+      list.splice(next, 0, item);
+      syncMediaInputs();
+      renderMediaPreview();
+    }
+    function reorderMediaItem(listName, fromIndex, toIndex) {
+      const list = artistMediaState[listName];
+      if (!Array.isArray(list) || fromIndex === toIndex || fromIndex < 0 || toIndex < 0 || fromIndex >= list.length || toIndex >= list.length) return;
+      const item = list[fromIndex];
+      list.splice(fromIndex, 1);
+      list.splice(toIndex, 0, item);
+      syncMediaInputs();
+      renderMediaPreview();
+    }
+    function removeMediaItem(listName, index) {
+      const list = artistMediaState[listName];
+      if (!Array.isArray(list) || index < 0 || index >= list.length) return;
+      list.splice(index, 1);
+      syncMediaInputs();
+      renderMediaPreview();
+    }
+    function clearPhoto() {
+      artistMediaState.photo = "";
+      byId("artist-photo-file").value = "";
+      syncMediaInputs();
+      renderMediaPreview();
+    }
+    function mediaCard(kind, src, index, total) {
+      const label = kind === "photo" ? "Фото профиля" : (kind === "gallery" ? "Изображение" : (kind === "video" ? "Видео" : "Аудио"));
+      const listName = kind + "Files";
+      const entry = kind === "photo" ? { src: src, caption: "", poster: "" } : src;
+      const body = kind === "audio"
+        ? '<div class="media-audio-cover"><strong>Аудио</strong><audio controls><source src="' + escapeHtml(mediaSrc(entry)) + '"></audio></div>'
+        : (kind === "video"
+          ? '<video controls preload="none"' + (entry.poster ? ' poster="' + escapeHtml(entry.poster) + '"' : '') + '><source src="' + escapeHtml(mediaSrc(entry)) + '"></video>'
+          : '<img src="' + escapeHtml(mediaSrc(entry)) + '" alt="' + escapeHtml(label) + '">');
+      const actions = kind === "photo"
+        ? '<div class="media-card-actions"><button class="mini-btn danger" type="button" onclick="clearArtistPhoto()">Убрать</button></div>'
+        : '<div class="media-card-actions"><button class="mini-btn" type="button" onclick="artistMediaAction(\'' + listName + '\', ' + index + ', -1)"' + (index === 0 ? ' disabled' : '') + '>←</button><button class="mini-btn" type="button" onclick="artistMediaAction(\'' + listName + '\', ' + index + ', 1)"' + (index === total - 1 ? ' disabled' : '') + '>→</button><button class="mini-btn danger" type="button" onclick="removeArtistMedia(\'' + listName + '\', ' + index + ')">Удалить</button></div>';
+      const captionField = kind === "photo" ? "" : '<label class="media-field">Подпись<input type="text" value="' + escapeHtml(entry.caption || "") + '" oninput="updateArtistMediaMeta(\'' + listName + '\', ' + index + ', \'caption\', this.value)"></label>';
+      const posterField = kind === "video" ? '<label class="media-field">Обложка видео<input type="text" value="' + escapeHtml(entry.poster || "") + '" placeholder="https://poster..." oninput="updateArtistMediaMeta(\'' + listName + '\', ' + index + ', \'poster\', this.value)"></label>' : "";
+      const dragAttrs = kind === "photo" ? "" : ' draggable="true" ondragstart="artistMediaDragStart(\'' + listName + '\', ' + index + ')" ondragover="artistMediaDragOver(event)" ondrop="artistMediaDrop(\'' + listName + '\', ' + index + ')"';
+      return '<div class="media-card media-card-' + kind + '"' + dragAttrs + '><div class="media-card-head"><span class="media-kind">' + label + '</span></div>' + body + '<span>' + escapeHtml(mediaCaption(entry, label + " #" + (index + 1))) + '</span>' + captionField + posterField + actions + '</div>';
+    }
+    function renderMediaPreview() {
+      const items = [];
+      if (artistMediaState.photo) items.push(mediaCard("photo", artistMediaState.photo, 0, 1));
+      artistMediaState.galleryFiles.forEach(function (src, index) { items.push(mediaCard("gallery", src, index, artistMediaState.galleryFiles.length)); });
+      artistMediaState.videoFiles.forEach(function (src, index) { items.push(mediaCard("video", src, index, artistMediaState.videoFiles.length)); });
+      artistMediaState.audioFiles.forEach(function (src, index) { items.push(mediaCard("audio", src, index, artistMediaState.audioFiles.length)); });
+      byId("artist-media-preview").innerHTML = items.length ? items.join("") : '<div class="empty">Добавьте фото, изображения, видео или аудио, чтобы собрать карточку исполнителя.</div>';
+    }
+    function showArtistMessage(text, kind) { byId("artist-message").innerHTML = text ? '<div class="message ' + kind + '">' + text + '</div>' : ""; }
+    function fillSelects() {
+      const dict = MarketplaceStore.getDictionaries();
+      byId("artist-role").innerHTML = dict.categories.map(function (item) { return '<option value="' + item.id + '">' + item.label + '</option>'; }).join("");
+      byId("artist-plan").innerHTML = dict.plans.map(function (item) { return '<option value="' + item.id + '">' + item.label + '</option>'; }).join("");
+    }
+    function fillArtistForm(artist, profile) {
+      const form = byId("artist-profile-form");
+      const source = profile || {};
+      form.role.value = source.role || "host";
+      form.categories.value = (source.categories || [source.role || "host"]).join(", ");
+      form.planId.value = source.planId || "basic";
+      form.name.value = source.name || artist.name || "";
+      form.title.value = source.title || "";
+      form.city.value = source.city || "";
+      form.region.value = source.region || "";
+      form.travelRadiusKm.value = source.travelRadiusKm || 50;
+      form.priceFrom.value = source.priceFrom || "";
+      form.tagline.value = source.tagline || "";
+      form.email.value = source.contact ? (source.contact.email || artist.email) : artist.email;
+      form.phone.value = source.contact ? (source.contact.phone || artist.phone) : artist.phone;
+      form.telegram.value = source.contact ? (source.contact.telegram || artist.telegram || "") : (artist.telegram || "");
+      form.instagram.value = source.socials ? (source.socials.instagram || "") : "";
+      form.youtube.value = source.socials ? (source.socials.youtube || "") : "";
+      form.vk.value = source.socials ? (source.socials.vk || "") : "";
+      form.website.value = source.socials ? (source.socials.website || "") : "";
+      artistMediaState.photo = source.media ? (source.media.photo || "") : "";
+      artistMediaState.galleryFiles = source.media && source.media.gallery ? source.media.gallery.map(function (item, index) { return normalizeMediaEntry(item, "gallery", index); }) : [];
+      artistMediaState.videoFiles = source.media && source.media.video ? source.media.video.map(function (item, index) { return normalizeMediaEntry(item, "video", index); }) : [];
+      artistMediaState.audioFiles = source.media && source.media.audio ? source.media.audio.map(function (item, index) { return normalizeMediaEntry(item, "audio", index); }) : [];
+      syncMediaInputs();
+      form.languages.value = source.languages ? source.languages.join(", ") : "";
+      form.eventFormats.value = source.eventFormats ? source.eventFormats.join(", ") : "";
+      form.serviceFeatures.value = source.serviceFeatures ? source.serviceFeatures.join(", ") : "";
+      form.packagesText.value = (source.packages || []).map(function (item) { return [item.name, item.duration, item.price, item.description].join("|"); }).join("\n");
+      form.addOnsText.value = (source.addOns || []).map(function (item) { return [item.name, "", item.price, item.description].join("|"); }).join("\n");
+      form.availabilityText.value = (source.availability || []).map(function (item) { return [item.date, item.status].join("|"); }).join("\n");
+      form.faqText.value = (source.faq || []).map(function (item) { return [item.q, item.a].join("|"); }).join("\n");
+      form.depositPolicy.value = source.policies ? (source.policies.deposit || "") : "";
+      form.cancellationPolicy.value = source.policies ? (source.policies.cancellation || "") : "";
+      form.technicalPolicy.value = source.policies ? (source.policies.technical || "") : "";
+      form.description.value = source.description || "";
+      form.workStyle.value = source.workStyle || "";
+      byId("artist-photo-file").value = "";
+      byId("artist-gallery-files").value = "";
+      byId("artist-video-files").value = "";
+      byId("artist-audio-files").value = "";
+      renderMediaPreview();
+    }
+    function renderKpis(profile, leads, quotes) {
+      byId("artist-kpis").innerHTML = [["Профиль", profile ? profile.status : "draft"], ["Лиды", leads.length], ["Квоты", quotes.length]].map(function (item) {
+        return '<div class="service-kpi"><span>' + item[0] + '</span><strong>' + item[1] + '</strong></div>';
+      }).join("");
+    }
+    function renderLeads(artist) {
+      const leads = MarketplaceStore.getLeadsForArtist(artist.id);
+      byId("artist-leads").innerHTML = leads.length ? leads.map(function (lead) { return '<div class="detail-box"><strong>' + escapeHtml(lead.customerName) + '</strong><div class="muted">' + escapeHtml(lead.eventType) + ' · ' + escapeHtml(lead.city) + '</div><div style="margin-top:8px;">' + escapeHtml(lead.requirements || "") + '</div><div class="inline-actions" style="margin-top:12px;"><button class="primary-btn" type="button" onclick="sendQuote(\'' + lead.id + '\')">Отправить квоту</button><button class="ghost-btn" type="button" onclick="respondLead(\'' + lead.id + '\')">Быстрый ответ</button></div></div>'; }).join("") : '<div class="empty">Пока нет входящих заявок.</div>';
+    }
+    function renderQuotes(artist) {
+      const quotes = MarketplaceStore.getQuotesForArtist(artist.id);
+      byId("artist-quotes").innerHTML = quotes.length ? quotes.map(function (quote) { return '<div class="table-row"><div><strong>' + escapeHtml(quote.packageName) + '</strong></div><div>' + Number(quote.amount || 0).toLocaleString("ru-RU") + ' ₽</div><div><span class="badge gold">' + escapeHtml(quote.status) + '</span></div><div><button class="ghost-btn" type="button" onclick="openLeadChatByLead(\'' + quote.leadId + '\')">Чат</button></div></div>'; }).join("") : '<div class="empty">Пока нет отправленных предложений.</div>';
+    }
+    function renderChats(artist) {
+      const deals = MarketplaceStore.getDealsForArtist(artist.id);
+      byId("artist-chats").innerHTML = deals.length ? deals.map(function (deal) { return '<div class="table-row"><div><strong>' + escapeHtml(deal.clientName) + '</strong></div><div>' + escapeHtml(deal.status) + '</div><div><button class="primary-btn" type="button" onclick="openArtistChat(\'' + deal.id + '\')">Открыть</button></div></div>'; }).join("") : '<div class="empty">Пока нет активных сделок.</div>';
+    }
+    function renderAnalytics(profile) {
+      if (!profile) return byId("artist-analytics").innerHTML = '<div class="empty">Сначала заполните профиль.</div>';
+      const stats = profile.stats || {};
+      byId("artist-analytics").innerHTML = [["Просмотры", stats.profileViews || 0], ["Лиды", stats.leadCount || 0], ["Квоты", stats.quoteCount || 0], ["Заказы", stats.bookingCount || 0]].map(function (item) { return '<div class="metric-card"><span>' + item[0] + '</span><strong>' + item[1] + '</strong></div>'; }).join("");
+    }
+    function renderBoard(artist) {
+      const posts = MarketplaceStore.getBoardPostsForOwner("artist", artist.id);
+      byId("artist-board").innerHTML = posts.length ? posts.map(function (post) { return '<div class="detail-box"><strong>' + escapeHtml(post.title) + '</strong><div class="muted">' + escapeHtml(post.city) + '</div><div style="margin-top:8px;">' + escapeHtml(post.description) + '</div></div>'; }).join("") : '<div class="empty">У вас пока нет объявлений.</div>';
+    }
+    window.artistMediaAction = function (listName, index, direction) { moveMediaItem(listName, index, direction); };
+    window.removeArtistMedia = function (listName, index) { removeMediaItem(listName, index); };
+    window.clearArtistPhoto = function () { clearPhoto(); };
+    window.updateArtistMediaMeta = function (listName, index, key, value) {
+      const list = artistMediaState[listName];
+      if (!Array.isArray(list) || !list[index]) return;
+      list[index][key] = String(value || "").trim();
+      renderMediaPreview();
+    };
+    window.artistMediaDragStart = function (listName, index) {
+      artistMediaState.drag = { listName: listName, index: index };
+    };
+    window.artistMediaDragOver = function (event) { event.preventDefault(); };
+    window.artistMediaDrop = function (listName, index) {
+      if (!artistMediaState.drag || artistMediaState.drag.listName !== listName) return;
+      reorderMediaItem(listName, artistMediaState.drag.index, index);
+      artistMediaState.drag = null;
+    };
+    window.respondLead = function (leadId) {
+      const artist = MarketplaceStore.getCurrentArtist();
+      const text = prompt("Короткий ответ клиенту:", "Здравствуйте! Готов обсудить детали.");
+      if (!artist || !text) return;
+      const result = MarketplaceStore.respondToOrder(leadId, artist.id, text);
+      if (!result.ok) return showArtistMessage(result.message, "error");
+      showArtistMessage("Клиенту отправлен ответ.", "success");
+      renderArtistCabinet();
+      openArtistChat(result.deal.id);
+    };
+    window.sendQuote = function (leadId) {
+      const packageName = prompt("Название пакета:", "Персональный пакет");
+      const amount = prompt("Сумма предложения:", "50000");
+      if (!packageName || !amount) return;
+      const result = MarketplaceStore.createQuote({ leadId: leadId, packageName: packageName, amount: Number(amount), includes: "", comment: "" });
+      if (!result.ok) return showArtistMessage(result.message, "error");
+      showArtistMessage("Квота отправлена клиенту.", "success");
+      renderArtistCabinet();
+      openArtistChat(result.deal.id);
+    };
+    window.openArtistChat = function (dealId) {
+      const chat = MarketplaceStore.getChatByDealId(dealId);
+      const deal = MarketplaceStore.getDb().deals.find(function (item) { return item.id === dealId; });
+      if (!chat || !deal) return byId("artist-chat-box").innerHTML = '<div class="empty">Чат не найден.</div>';
+      byId("artist-chat-box").innerHTML = '<div class="section-head"><div><h2>Диалог</h2><p class="muted">' + escapeHtml(chat.clientName) + ' · ' + escapeHtml(deal.status) + '</p></div></div><div class="table-list">' + chat.messages.map(function (message) { return '<div class="hero-point"><strong>' + escapeHtml(message.sender) + '</strong><div class="muted">' + escapeHtml(message.createdAt.slice(0, 16).replace("T", " ")) + '</div><div>' + escapeHtml(message.text) + '</div></div>'; }).join("") + '</div><form id="artist-chat-form" class="form-grid one" style="margin-top:12px;"><label>Сообщение<textarea name="text" required></textarea></label><button class="primary-btn" type="submit">Отправить</button></form>';
+      byId("artist-chat-form").addEventListener("submit", function (event) {
+        event.preventDefault();
+        MarketplaceStore.addChatMessage(dealId, "artist", new FormData(event.target).get("text"));
+        openArtistChat(dealId);
+      });
+    };
+    window.openLeadChatByLead = function (leadId) { const deal = MarketplaceStore.ensureDealForLead(MarketplaceStore.getLeadById(leadId)); openArtistChat(deal.id); };
+    function renderArtistCabinet() {
+      const artist = MarketplaceStore.getCurrentArtist();
+      byId("artist-auth-view").style.display = artist ? "none" : "grid";
+      byId("artist-cabinet-view").style.display = artist ? "grid" : "none";
+      if (!artist) return;
+      const profile = MarketplaceStore.getArtistProfile(artist.id);
+      const leads = MarketplaceStore.getLeadsForArtist(artist.id);
+      const quotes = MarketplaceStore.getQuotesForArtist(artist.id);
+      byId("artist-summary").textContent = artist.name + " · " + artist.email + " · " + (profile ? ("статус профиля: " + profile.status) : "профиль еще не заполнен");
+      renderKpis(profile, leads, quotes);
+      fillArtistForm(artist, profile);
+      renderLeads(artist);
+      renderQuotes(artist);
+      renderChats(artist);
+      renderAnalytics(profile);
+      renderBoard(artist);
+      byId("artist-chat-box").innerHTML = '<div class="empty">Выберите сделку, чтобы открыть переписку.</div>';
+    }
+    byId("artist-register-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const result = MarketplaceStore.registerArtistAccount(Object.fromEntries(new FormData(event.target).entries()));
+      if (!result.ok) return showArtistMessage(result.message, "error");
+      renderArtistCabinet();
+    });
+    byId("artist-login-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const payload = Object.fromEntries(new FormData(event.target).entries());
+      const result = MarketplaceStore.loginArtist(payload.email, payload.password);
+      if (!result.ok) return showArtistMessage(result.message, "error");
+      renderArtistCabinet();
+    });
+    byId("artist-profile-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const artist = MarketplaceStore.getCurrentArtist();
+      if (!artist) return;
+      const payload = Object.fromEntries(new FormData(event.target).entries());
+      payload.categories = parseList(payload.categories);
+      payload.languages = parseList(payload.languages);
+      payload.eventFormats = parseList(payload.eventFormats);
+      payload.serviceFeatures = parseList(payload.serviceFeatures);
+      payload.photo = artistMediaState.photo;
+      payload.galleryFiles = artistMediaState.galleryFiles.slice();
+      payload.videoFiles = artistMediaState.videoFiles.slice();
+      payload.audioFiles = artistMediaState.audioFiles.slice();
+      payload.packages = parseRows(payload.packagesText, "package");
+      payload.addOns = parseRows(payload.addOnsText, "package");
+      payload.availability = parseRows(payload.availabilityText, "availability");
+      payload.faq = parseRows(payload.faqText, "faq");
+      payload.policies = { deposit: payload.depositPolicy, cancellation: payload.cancellationPolicy, technical: payload.technicalPolicy };
+      const result = MarketplaceStore.createOrUpdateArtistProfile(artist.id, payload);
+      if (!result.ok) return showArtistMessage(result.message, "error");
+      showArtistMessage("Профиль сохранен и отправлен на модерацию.", "success");
+      renderArtistCabinet();
+    });
+    byId("artist-profile-form").photo.addEventListener("input", function (event) { artistMediaState.photo = (event.target.value || "").trim(); renderMediaPreview(); });
+    byId("artist-profile-form").galleryRaw.addEventListener("input", function (event) { artistMediaState.galleryFiles = parseMediaList(event.target.value, "gallery"); renderMediaPreview(); });
+    byId("artist-profile-form").videoRaw.addEventListener("input", function (event) { artistMediaState.videoFiles = parseMediaList(event.target.value, "video"); renderMediaPreview(); });
+    byId("artist-profile-form").audioRaw.addEventListener("input", function (event) { artistMediaState.audioFiles = parseMediaList(event.target.value, "audio"); renderMediaPreview(); });
+    byId("artist-photo-file").addEventListener("change", async function (event) {
+      const files = await collectFiles(event.target);
+      artistMediaState.photo = files[0] || artistMediaState.photo;
+      event.target.value = "";
+      syncMediaInputs();
+      renderMediaPreview();
+    });
+    byId("artist-gallery-files").addEventListener("change", async function (event) {
+      artistMediaState.galleryFiles = artistMediaState.galleryFiles.concat((await collectFiles(event.target)).map(function (src) { return createMediaEntry("gallery", src); }));
+      event.target.value = "";
+      syncMediaInputs();
+      renderMediaPreview();
+    });
+    byId("artist-video-files").addEventListener("change", async function (event) {
+      artistMediaState.videoFiles = artistMediaState.videoFiles.concat((await collectFiles(event.target)).map(function (src) { return createMediaEntry("video", src); }));
+      event.target.value = "";
+      syncMediaInputs();
+      renderMediaPreview();
+    });
+    byId("artist-audio-files").addEventListener("change", async function (event) {
+      artistMediaState.audioFiles = artistMediaState.audioFiles.concat((await collectFiles(event.target)).map(function (src) { return createMediaEntry("audio", src); }));
+      event.target.value = "";
+      syncMediaInputs();
+      renderMediaPreview();
+    });
+    byId("artist-logout").addEventListener("click", function () { MarketplaceStore.logout(); renderArtistCabinet(); });
+    fillSelects();
+    renderArtistCabinet();
+  </script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Оставить заявку | PALAN HYPE</title>
+  <link rel="stylesheet" href="marketplace.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand"><strong>PALAN HYPE</strong><span>Форма заявки клиента</span></div>
+      <nav class="nav">
+        <a href="index.html">Витрина</a>
+        <a href="user.html">Кабинет клиента</a>
+        <button id="theme-toggle" class="ghost-btn theme-toggle" type="button">Светлая тема</button>
+      </nav>
+    </div>
+  </header>
+  <main class="shell section">
+    <div class="section-head"><div><h2>Запросить предложение</h2><p id="selected-profile" class="muted"></p></div></div>
+    <div id="lead-message"></div>
+    <form id="lead-form" class="panel">
+      <div class="form-grid">
+        <label>Имя организатора<input name="customerName" type="text" required></label>
+        <label>Телефон<input name="customerPhone" type="tel" required></label>
+        <label>E-mail<input name="customerEmail" type="email"></label>
+        <label>Город события<input name="city" type="text" required></label>
+        <label>Площадка<input name="venue" type="text"></label>
+        <label>Тип мероприятия<input name="eventType" type="text" placeholder="Свадьба, корпоратив"></label>
+        <label>Дата<input name="eventDate" type="date"></label>
+        <label>Время<input name="eventTime" type="time"></label>
+        <label>Количество гостей<input name="guestCount" type="number" min="0"></label>
+        <label>Бюджет<input name="budget" type="number" min="0" placeholder="60000"></label>
+        <label>Язык<input name="language" type="text" placeholder="Русский"></label>
+      </div>
+      <div class="form-grid one">
+        <label>Требования<textarea name="requirements" required></textarea></label>
+      </div>
+      <button class="primary-btn" type="submit">Отправить заявку</button>
+    </form>
+  </main>
+  <script src="marketplace-core.js"></script>
+  <script>
+    (function () { const key="palan_theme_mode"; const saved=localStorage.getItem(key)||"dark"; document.body.setAttribute("data-theme",saved); const button=document.getElementById("theme-toggle"); function sync(){button.textContent=(document.body.getAttribute("data-theme")||"dark")==="dark"?"Светлая тема":"Тёмная тема";} button.addEventListener("click",function(){const next=(document.body.getAttribute("data-theme")||"dark")==="dark"?"light":"dark"; document.body.setAttribute("data-theme",next); localStorage.setItem(key,next); sync();}); sync(); })();
+    const params = new URLSearchParams(location.search);
+    const profileId = params.get("profile");
+    const profile = profileId ? MarketplaceStore.getProfileById(profileId) : null;
+    const user = MarketplaceStore.getCurrentUser();
+    document.getElementById("selected-profile").textContent = profile ? ("Выбран исполнитель: " + profile.name + " · " + profile.city) : "Можно оставить общий запрос без выбора конкретной карточки.";
+    if (user) {
+      document.querySelector('[name="customerName"]').value = user.name || "";
+      document.querySelector('[name="customerPhone"]').value = user.phone || "";
+      document.querySelector('[name="customerEmail"]').value = user.email || "";
+      document.querySelector('[name="city"]').value = user.city || "";
+    }
+    document.getElementById("lead-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const payload = Object.fromEntries(new FormData(event.target).entries());
+      payload.userId = user ? user.id : null;
+      payload.profileId = profile ? profile.id : null;
+      payload.profileName = profile ? profile.name : "Общий запрос";
+      MarketplaceStore.createLead(payload);
+      document.getElementById("lead-message").innerHTML = '<div class="message success">Заявка отправлена. Исполнитель увидит ее в кабинете и сможет прислать предложение.</div>';
+      event.target.reset();
+    });
+  </script>
+</body>
+</html>

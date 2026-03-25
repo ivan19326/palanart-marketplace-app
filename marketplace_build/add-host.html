@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Быстрая анкета исполнителя | PALAN HYPE</title>
+  <link rel="stylesheet" href="marketplace.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand"><strong>PALAN HYPE</strong><span>Быстрый вход для новых исполнителей</span></div>
+      <nav class="nav">
+        <a href="artist.html">Полный кабинет</a>
+        <a href="index.html">Витрина</a>
+        <button id="theme-toggle" class="ghost-btn theme-toggle" type="button">Светлая тема</button>
+      </nav>
+    </div>
+  </header>
+  <main class="shell section">
+    <div class="section-head"><div><h2>Быстрая анкета исполнителя</h2><p>Создает аккаунт и черновик профиля для дальнейшей модерации.</p></div></div>
+    <div id="host-message"></div>
+    <form id="host-form" class="panel">
+      <div class="form-grid">
+        <label>Категория<select name="role" id="quick-role"></select></label>
+        <label>Имя / проект<input name="name" type="text" required></label>
+        <label>E-mail<input name="email" type="email" required></label>
+        <label>Телефон<input name="phone" type="tel" required></label>
+        <label>Пароль<input name="password" type="password" required></label>
+        <label>Город<input name="city" type="text" placeholder="Чебоксары" required></label>
+        <label>Цена от<input name="priceFrom" type="number" min="0" required></label>
+        <label>Заголовок<input name="title" type="text" placeholder="Ведущий свадеб и корпоративов"></label>
+        <label>Короткое позиционирование<input name="tagline" type="text" required></label>
+        <label>Фото<input name="photo" type="text" placeholder="https://..."></label>
+      </div>
+      <div class="form-grid one">
+        <label>Описание<textarea name="description" required></textarea></label>
+      </div>
+      <button class="primary-btn" type="submit">Создать анкету</button>
+    </form>
+  </main>
+  <script src="marketplace-core.js"></script>
+  <script>
+    (function () { const key="palan_theme_mode"; const saved=localStorage.getItem(key)||"dark"; document.body.setAttribute("data-theme",saved); const button=document.getElementById("theme-toggle"); function sync(){button.textContent=(document.body.getAttribute("data-theme")||"dark")==="dark"?"Светлая тема":"Тёмная тема";} button.addEventListener("click",function(){const next=(document.body.getAttribute("data-theme")||"dark")==="dark"?"light":"dark"; document.body.setAttribute("data-theme",next); localStorage.setItem(key,next); sync();}); sync(); })();
+    document.getElementById("quick-role").innerHTML = MarketplaceStore.getDictionaries().categories.map(function (item) { return '<option value="' + item.id + '">' + item.label + '</option>'; }).join("");
+    document.getElementById("host-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const payload = Object.fromEntries(new FormData(event.target).entries());
+      const result = MarketplaceStore.registerArtistAccount(payload);
+      if (!result.ok) return document.getElementById("host-message").innerHTML = '<div class="message error">' + result.message + '</div>';
+      MarketplaceStore.createOrUpdateArtistProfile(result.artist.id, { role: payload.role, categories: [payload.role], name: payload.name, title: payload.title, city: payload.city, region: payload.city, priceFrom: payload.priceFrom, tagline: payload.tagline, description: payload.description, phone: payload.phone, email: payload.email, photo: payload.photo });
+      document.getElementById("host-message").innerHTML = '<div class="message success">Анкета создана. Дальше можно продолжить настройку в полном кабинете исполнителя.</div>';
+      event.target.reset();
+    });
+  </script>
+</body>
+</html>

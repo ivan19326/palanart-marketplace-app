@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Админка | PALAN HYPE</title>
+  <link rel="stylesheet" href="marketplace.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand">
+        <strong>PALAN HYPE</strong>
+        <span>Управление маркетплейсом исполнителей</span>
+      </div>
+      <nav class="nav">
+        <a href="index.html">Витрина</a>
+        <a href="user.html">Клиент</a>
+        <a href="artist.html">Исполнитель</a>
+        <button id="theme-toggle" class="ghost-btn theme-toggle" type="button">Светлая тема</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section id="login-view" class="auth-wrap">
+      <div class="auth-box">
+        <h1>Вход администратора</h1>
+        <p class="muted">Тестовый доступ: `admin@palan.market` / `admin12345`</p>
+        <div id="login-message"></div>
+        <form id="admin-login" class="panel">
+          <div class="form-grid one">
+            <label>E-mail<input name="email" type="email" value="admin@palan.market" required></label>
+            <label>Пароль<input name="password" type="password" value="admin12345" required></label>
+          </div>
+          <div class="inline-actions">
+            <button class="primary-btn" type="submit">Войти</button>
+            <button id="reset-db" class="ghost-btn" type="button">Сбросить демо-данные</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section id="dashboard-view" class="section" style="display:none;">
+      <div class="section-head">
+        <div>
+          <h2>Панель управления</h2>
+          <p id="admin-name" class="muted"></p>
+        </div>
+        <button id="logout-admin" class="ghost-btn" type="button">Выйти</button>
+      </div>
+      <div id="admin-message"></div>
+      <div id="stats-grid" class="stats-grid"></div>
+
+      <div class="split" style="margin-top:18px;">
+        <div class="panel">
+          <div class="section-head"><div><h2>Настройки платформы</h2><p class="muted">Правила модерации и параметры работы без подключения оплаты.</p></div></div>
+          <form id="settings-form" class="form-grid">
+            <label>Модерация
+              <select name="moderationMode">
+                <option value="manual">Ручная</option>
+                <option value="auto">Автоодобрение</option>
+              </select>
+            </label>
+            <label>Депозит по умолчанию, %
+              <input name="defaultDepositPercent" type="number" min="0" max="100">
+            </label>
+            <label>Срок ответа на лид, часов
+              <input name="leadResponseHours" type="number" min="1" max="72">
+            </label>
+            <label>Комиссии
+              <select name="commissionsEnabled">
+                <option value="false">Выключены</option>
+                <option value="true">Включены</option>
+              </select>
+            </label>
+            <button class="primary-btn" type="submit">Сохранить</button>
+          </form>
+        </div>
+        <div class="panel">
+          <div class="section-head"><div><h2>Категории и тарифы</h2><p class="muted">Базовые справочники для масштабирования по городам и рынкам.</p></div></div>
+          <div id="dictionaries-box" class="table-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:18px;">
+        <div class="section-head"><div><h2>Профили и модерация</h2><p class="muted">Одобрение анкет, featured-статус и управление видимостью карточек.</p></div></div>
+        <div id="profiles-list" class="table-list"></div>
+      </div>
+
+      <div class="split" style="margin-top:18px;">
+        <div class="panel">
+          <div class="section-head"><div><h2>Лиды и предложения</h2><p class="muted">Сводка по заявкам клиентов и отправленным квотам.</p></div></div>
+          <div id="leads-list" class="table-list"></div>
+          <div id="quotes-list" class="table-list" style="margin-top:14px;"></div>
+        </div>
+        <div class="panel">
+          <div class="section-head"><div><h2>Отзывы</h2><p class="muted">Управление отзывами и featured reviews в карточках исполнителей.</p></div></div>
+          <div id="reviews-list" class="table-list"></div>
+        </div>
+      </div>
+
+      <div class="split" style="margin-top:18px;">
+        <div class="panel">
+          <div class="section-head"><div><h2>Чаты и сделки</h2><p class="muted">Обзор активных переговоров между клиентами и исполнителями.</p></div></div>
+          <div id="chats-list" class="table-list"></div>
+        </div>
+        <div id="chat-admin-box" class="panel">
+          <div class="empty">Выберите сделку, чтобы посмотреть чат.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="marketplace-core.js"></script>
+  <script>
+    (function () {
+      const key = "palan_theme_mode";
+      const saved = localStorage.getItem(key) || "dark";
+      document.body.setAttribute("data-theme", saved);
+      const button = document.getElementById("theme-toggle");
+      function sync() { button.textContent = (document.body.getAttribute("data-theme") || "dark") === "dark" ? "Светлая тема" : "Тёмная тема"; }
+      button.addEventListener("click", function () {
+        const next = (document.body.getAttribute("data-theme") || "dark") === "dark" ? "light" : "dark";
+        document.body.setAttribute("data-theme", next);
+        localStorage.setItem(key, next);
+        sync();
+      });
+      sync();
+    })();
+    function byId(id) { return document.getElementById(id); }
+    function escapeHtml(value) { return String(value || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+    function showMessage(target, text, kind) { byId(target).innerHTML = text ? '<div class="message ' + kind + '">' + text + '</div>' : ""; }
+    function renderStats() {
+      const stats = MarketplaceStore.getStats();
+      byId("stats-grid").innerHTML = [["Активные профили", stats.approvedProfiles], ["На модерации", stats.pendingProfiles], ["Клиенты", stats.users], ["Исполнители", stats.artists], ["Лиды", stats.leads], ["Квоты", stats.quotes], ["Сделки", stats.bookedDeals], ["Чаты", stats.chats]].map(function (item) {
+        return '<article class="stats-card"><h3>' + item[0] + '</h3><strong>' + item[1] + '</strong></article>';
+      }).join("");
+    }
+    function renderSettings() {
+      const settings = MarketplaceStore.getSettings();
+      const form = byId("settings-form");
+      form.moderationMode.value = settings.moderationMode || "manual";
+      form.defaultDepositPercent.value = settings.defaultDepositPercent || 30;
+      form.leadResponseHours.value = settings.leadResponseHours || 2;
+      form.commissionsEnabled.value = String(Boolean(settings.commissionsEnabled));
+    }
+    function renderDictionaries() {
+      const dict = MarketplaceStore.getDictionaries();
+      byId("dictionaries-box").innerHTML = '<div class="detail-box"><strong>Категории</strong><div class="skills" style="margin-top:12px;">' + dict.categories.map(function (item) { return '<span class="skill">' + escapeHtml(item.label) + '</span>'; }).join("") + '</div></div><div class="detail-box"><strong>Тарифы</strong><div class="detail-stack" style="margin-top:12px;">' + dict.plans.map(function (item) { return '<div>' + escapeHtml(item.label) + ' · лимит категорий ' + item.categoriesLimit + ' · featured reviews ' + item.featuredReviews + '</div>'; }).join("") + '</div></div>';
+    }
+    function renderProfiles() {
+      const profiles = MarketplaceStore.getDb().profiles;
+      byId("profiles-list").innerHTML = profiles.length ? profiles.map(function (profile) {
+        return '<div class="table-row"><div><strong>' + escapeHtml(profile.name) + '</strong><div class="muted">' + escapeHtml(profile.city) + ' · ' + escapeHtml(profile.categories.map(MarketplaceStore.categoryLabel).join(", ")) + '</div></div><div>' + escapeHtml(profile.planId) + '</div><div><span class="badge accent">' + escapeHtml(profile.status) + '</span></div><div>' + (profile.hidden ? 'Скрыт' : (profile.featured ? 'Featured' : 'Публичный')) + '</div><div class="inline-actions"><button class="primary-btn" type="button" onclick="approveProfile(\'' + profile.id + '\')">Одобрить</button><button class="ghost-btn" type="button" onclick="toggleFeatured(\'' + profile.id + '\')">Featured</button><button class="ghost-btn" type="button" onclick="toggleHidden(\'' + profile.id + '\')">' + (profile.hidden ? 'Показать' : 'Скрыть') + '</button></div></div>';
+      }).join("") : '<div class="empty">Профилей пока нет.</div>';
+    }
+    function renderLeadsAndQuotes() {
+      const leads = MarketplaceStore.getDb().leads;
+      const quotes = MarketplaceStore.getDb().quotes;
+      byId("leads-list").innerHTML = leads.length ? leads.map(function (lead) {
+        return '<div class="table-row"><div><strong>' + escapeHtml(lead.customerName) + '</strong><div class="muted">' + escapeHtml(lead.profileName || "Без исполнителя") + '</div></div><div>' + escapeHtml(lead.eventDate || "") + '</div><div>' + (lead.budget ? Number(lead.budget).toLocaleString("ru-RU") + ' ₽' : 'без бюджета') + '</div><div><span class="badge gold">' + escapeHtml(lead.status) + '</span></div><div></div></div>';
+      }).join("") : '<div class="empty">Пока нет лидов.</div>';
+      byId("quotes-list").innerHTML = quotes.length ? quotes.map(function (quote) {
+        return '<div class="table-row"><div><strong>' + escapeHtml(quote.packageName || "Квота") + '</strong><div class="muted">' + escapeHtml((MarketplaceStore.getLeadById(quote.leadId) || {}).customerName || "") + '</div></div><div>' + Number(quote.amount || 0).toLocaleString("ru-RU") + ' ₽</div><div>' + quote.depositPercent + '%</div><div><span class="badge accent">' + escapeHtml(quote.status) + '</span></div><div></div></div>';
+      }).join("") : '<div class="empty">Пока нет квот.</div>';
+    }
+    function renderReviews() {
+      const reviews = MarketplaceStore.getDb().reviews;
+      byId("reviews-list").innerHTML = reviews.length ? reviews.map(function (review) {
+        const profile = MarketplaceStore.getProfileById(review.profileId);
+        return '<div class="table-row"><div><strong>' + escapeHtml(review.authorName) + '</strong><div class="muted">' + escapeHtml(profile ? profile.name : "Исполнитель") + '</div></div><div>' + review.rating + ' / 5</div><div>' + escapeHtml(review.text.slice(0, 70)) + '</div><div>' + (review.featured ? 'Featured' : 'Обычный') + '</div><div><button class="ghost-btn" type="button" onclick="toggleReviewFeature(\'' + review.id + '\')">Переключить</button></div></div>';
+      }).join("") : '<div class="empty">Пока нет отзывов.</div>';
+    }
+    function renderChats() {
+      const deals = MarketplaceStore.getDb().deals;
+      byId("chats-list").innerHTML = deals.length ? deals.map(function (deal) {
+        return '<div class="table-row"><div><strong>' + escapeHtml(deal.profileName) + '</strong><div class="muted">' + escapeHtml(deal.clientName) + '</div></div><div>' + (deal.agreedAmount ? Number(deal.agreedAmount).toLocaleString("ru-RU") + ' ₽' : 'без суммы') + '</div><div><span class="badge accent">' + escapeHtml(deal.status) + '</span></div><div>Чат доступен</div><div><button class="primary-btn" type="button" onclick="openAdminChat(\'' + deal.id + '\')">Открыть</button></div></div>';
+      }).join("") : '<div class="empty">Сделок и чатов пока нет.</div>';
+    }
+    window.openAdminChat = function (dealId) {
+      const chat = MarketplaceStore.getChatByDealId(dealId);
+      const deal = MarketplaceStore.getDb().deals.find(function (item) { return item.id === dealId; });
+      if (!chat || !deal) return byId("chat-admin-box").innerHTML = '<div class="empty">Чат не найден.</div>';
+      byId("chat-admin-box").innerHTML = '<div class="section-head"><div><h2>Чат сделки</h2><p class="muted">' + escapeHtml(deal.profileName) + ' · ' + escapeHtml(deal.clientName) + '</p></div></div><div class="table-list">' + chat.messages.map(function (message) { return '<div class="hero-point"><strong>' + escapeHtml(message.sender) + '</strong><div class="muted">' + escapeHtml(message.createdAt.slice(0, 16).replace("T", " ")) + '</div><div>' + escapeHtml(message.text) + '</div></div>'; }).join("") + '</div>';
+    };
+    window.approveProfile = function (profileId) { MarketplaceStore.updateProfile(profileId, { status: "approved", verified: true, hidden: false }); showMessage("admin-message", "Профиль одобрен.", "success"); renderDashboard(); };
+    window.toggleHidden = function (profileId) { const profile = MarketplaceStore.getProfileById(profileId); MarketplaceStore.updateProfile(profileId, { hidden: !profile.hidden }); renderDashboard(); };
+    window.toggleFeatured = function (profileId) { const profile = MarketplaceStore.getProfileById(profileId); MarketplaceStore.updateProfile(profileId, { featured: !profile.featured, planId: !profile.featured ? "featured" : profile.planId }); renderDashboard(); };
+    window.toggleReviewFeature = function (reviewId) { MarketplaceStore.toggleFeaturedReview(reviewId); renderDashboard(); };
+    function renderDashboard() {
+      const admin = MarketplaceStore.getCurrentAdmin();
+      byId("login-view").style.display = admin ? "none" : "grid";
+      byId("dashboard-view").style.display = admin ? "block" : "none";
+      if (!admin) return;
+      byId("admin-name").textContent = "Авторизован: " + admin.name;
+      renderStats(); renderSettings(); renderDictionaries(); renderProfiles(); renderLeadsAndQuotes(); renderReviews(); renderChats();
+      byId("chat-admin-box").innerHTML = '<div class="empty">Выберите сделку, чтобы посмотреть чат.</div>';
+    }
+    byId("admin-login").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const payload = Object.fromEntries(new FormData(event.target).entries());
+      const result = MarketplaceStore.loginAdmin(payload.email, payload.password);
+      if (!result.ok) return showMessage("login-message", result.message, "error");
+      renderDashboard();
+    });
+    byId("logout-admin").addEventListener("click", function () { MarketplaceStore.logout(); renderDashboard(); });
+    byId("reset-db").addEventListener("click", function () { MarketplaceStore.resetDb(); showMessage("login-message", "Демо-данные сброшены.", "success"); renderDashboard(); });
+    byId("settings-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const payload = Object.fromEntries(new FormData(event.target).entries());
+      MarketplaceStore.updateSettings({ moderationMode: payload.moderationMode, defaultDepositPercent: Number(payload.defaultDepositPercent || 30), leadResponseHours: Number(payload.leadResponseHours || 2), commissionsEnabled: payload.commissionsEnabled === "true" });
+      showMessage("admin-message", "Настройки сохранены.", "success");
+      renderDashboard();
+    });
+    renderDashboard();
+  </script>
+</body>
+</html>
