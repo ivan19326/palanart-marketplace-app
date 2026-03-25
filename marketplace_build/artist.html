@@ -751,6 +751,7 @@
         : MarketplaceStore.registerArtistAccount(payload);
       if (!result.ok) return showArtistMessage(result.message, "error");
       if (result.artist) {
+        const preset = artistPresets[payload.role || "host"] || {};
         MarketplaceStore.createOrUpdateArtistProfile(result.artist.id, {
           role: payload.role || "host",
           name: payload.name || "",
@@ -760,19 +761,25 @@
           phone: payload.phone || "",
           telegram: payload.telegram || "",
           photo: payload.photo || "",
-          title: "",
-          tagline: "",
-          description: "",
+          title: preset.title || "",
+          tagline: preset.tagline || "",
+          description: preset.tagline || "",
           workStyle: "",
           categories: [],
-          languages: [],
-          eventFormats: [],
-          serviceFeatures: [],
-          packages: [],
+          languages: parseList(preset.languages || ""),
+          eventFormats: parseList(preset.eventFormats || ""),
+          serviceFeatures: parseList(preset.serviceFeatures || ""),
+          packages: parseRows(preset.packagesText || "", "package"),
           addOns: [],
           availability: [],
           faq: [],
-          policies: { deposit: "", cancellation: "", technical: "" }
+          policies: {
+            deposit: preset.depositPolicy || "",
+            cancellation: preset.cancellationPolicy || "",
+            technical: preset.technicalPolicy || ""
+          },
+          priceFrom: preset.priceFrom || "",
+          travelRadiusKm: preset.travelRadiusKm || "50"
         });
       }
       renderArtistCabinet();
