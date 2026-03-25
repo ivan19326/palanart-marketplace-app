@@ -197,6 +197,21 @@ img { max-width: 100%; }
   gap: 14px;
 }
 
+.auth-mode-note {
+  margin: 0 0 12px;
+}
+
+.auth-socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.auth-social-btn {
+  min-width: 180px;
+}
+
 .nav a,
 .ghost-btn,
 .primary-btn,

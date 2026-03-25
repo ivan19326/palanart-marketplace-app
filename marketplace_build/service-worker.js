@@ -1,4 +1,4 @@
-const CACHE_NAME = "palan-hype-cache-v3";
+const CACHE_NAME = "palan-hype-cache-v4";
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
@@ -17,6 +17,8 @@ const FILES_TO_CACHE = [
   "./icons/apple-touch-icon.png",
   "./marketplace.css",
   "./marketplace-core.js",
+  "./auth-config.js",
+  "./auth-bridge.js",
   "./category-template.js"
 ];
 

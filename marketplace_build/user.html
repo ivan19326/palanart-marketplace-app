@@ -46,6 +46,7 @@
         <div class="split">
           <form id="register-form" class="service-panel">
             <h2>Регистрация</h2>
+            <div id="user-auth-mode" class="muted auth-mode-note"></div>
             <div class="form-grid one">
               <label>Имя<input name="name" type="text" required></label>
               <label>E-mail<input name="email" type="email" required></label>
@@ -54,6 +55,9 @@
               <label>Пароль<input name="password" type="password" required></label>
             </div>
             <button class="primary-btn" type="submit">Создать аккаунт</button>
+            <div class="auth-socials">
+              <button class="ghost-btn auth-social-btn" type="button" data-user-social="google">Войти через Google</button>
+            </div>
           </form>
           <form id="login-form" class="service-panel">
             <h2>Вход</h2>
@@ -148,7 +152,9 @@
     </div>
   </main>
 
+  <script src="auth-config.js"></script>
   <script src="marketplace-core.js"></script>
+  <script src="auth-bridge.js"></script>
   <script>
     (function () {
       const key = "palan_theme_mode";
@@ -271,21 +277,59 @@
       renderKpis(user); renderLeads(user); renderQuotes(user); renderFavorites(user); renderDeals(user); renderBoard(user);
       byId("chat-box").innerHTML = '<div class="empty">Выберите сделку слева, чтобы открыть чат и продолжить согласование.</div>';
     }
-    byId("register-form").addEventListener("submit", function (event) {
-      event.preventDefault();
-      const result = MarketplaceStore.registerUser(Object.fromEntries(new FormData(event.target).entries()));
-      if (!result.ok) return showMessage(result.message, "error");
-      renderCabinet();
-    });
-    byId("login-form").addEventListener("submit", function (event) {
+    function renderAuthMode() {
+      const mode = window.PalanartAuthBridge ? window.PalanartAuthBridge.getMode() : "local";
+      byId("user-auth-mode").innerHTML = mode === "supabase"
+        ? "Сервисный вход включён. Можно использовать e-mail или соцвход."
+        : "Пока работает локальный режим. Для сервисного входа подключите Supabase в auth-config.js.";
+    }
+    byId("register-form").addEventListener("submit", async function (event) {
       event.preventDefault();
       const payload = Object.fromEntries(new FormData(event.target).entries());
-      const result = MarketplaceStore.loginUser(payload.email, payload.password);
+      const result = window.PalanartAuthBridge && window.PalanartAuthBridge.getMode() === "supabase"
+        ? await window.PalanartAuthBridge.signUpWithEmail("client", payload)
+        : MarketplaceStore.registerUser(payload);
       if (!result.ok) return showMessage(result.message, "error");
       renderCabinet();
     });
-    byId("logout-user").addEventListener("click", function () { MarketplaceStore.logout(); renderCabinet(); });
-    renderCabinet();
+    byId("login-form").addEventListener("submit", async function (event) {
+      event.preventDefault();
+      const payload = Object.fromEntries(new FormData(event.target).entries());
+      const result = window.PalanartAuthBridge && window.PalanartAuthBridge.getMode() === "supabase"
+        ? await window.PalanartAuthBridge.signInWithEmail("client", payload)
+        : MarketplaceStore.loginUser(payload.email, payload.password);
+      if (!result.ok) return showMessage(result.message, "error");
+      renderCabinet();
+    });
+    byId("logout-user").addEventListener("click", async function () {
+      if (window.PalanartAuthBridge) {
+        await window.PalanartAuthBridge.logout();
+      } else {
+        MarketplaceStore.logout();
+      }
+      renderCabinet();
+    });
+    document.querySelectorAll("[data-user-social]").forEach(function (button) {
+      button.addEventListener("click", async function () {
+        if (!window.PalanartAuthBridge) return;
+        const result = await window.PalanartAuthBridge.signInWithSocial("client", button.dataset.userSocial);
+        if (!result.ok) showMessage(result.message, "error");
+      });
+    });
+    renderAuthMode();
+    if (window.PalanartAuthBridge) {
+      window.PalanartAuthBridge.init({
+        role: "client",
+        onSession: function () {
+          renderCabinet();
+        }
+      }).then(function () {
+        renderAuthMode();
+        renderCabinet();
+      });
+    } else {
+      renderCabinet();
+    }
   </script>
 </body>
 </html>

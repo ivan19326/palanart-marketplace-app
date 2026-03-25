@@ -471,6 +471,64 @@
     clearSession();
   }
 
+  function ensureExternalUserAccount(payload) {
+    const db = getDb();
+    const email = String(payload.email || "").trim().toLowerCase();
+    if (!email) return { ok: false, message: "Не удалось определить e-mail аккаунта." };
+    let user = db.users.find(function (item) { return item.email === email; });
+    if (!user) {
+      user = normalizeUser({
+        id: newId("user"),
+        name: payload.name || email,
+        email: email,
+        phone: payload.phone || "",
+        password: "",
+        city: payload.city || "",
+        createdAt: new Date().toISOString(),
+        savedProfiles: [],
+        compareProfiles: []
+      });
+      db.users.unshift(user);
+    } else {
+      user.name = payload.name || user.name;
+      user.phone = payload.phone || user.phone;
+      user.city = payload.city || user.city;
+    }
+    saveDb(db);
+    setSession({ type: "user", id: user.id });
+    return { ok: true, user: user };
+  }
+
+  function ensureExternalArtistAccount(payload) {
+    const db = getDb();
+    const email = String(payload.email || "").trim().toLowerCase();
+    if (!email) return { ok: false, message: "Не удалось определить e-mail аккаунта." };
+    let artist = db.artists.find(function (item) { return item.email === email; });
+    if (!artist) {
+      artist = {
+        id: newId("artist"),
+        name: (payload.name || email).trim(),
+        email: email,
+        phone: (payload.phone || "").trim(),
+        telegram: (payload.telegram || "").trim(),
+        socials: { instagram: "", youtube: "", vk: "", website: "" },
+        photo: (payload.photo || "").trim(),
+        password: "",
+        profileId: null,
+        createdAt: new Date().toISOString()
+      };
+      db.artists.unshift(artist);
+    } else {
+      artist.name = payload.name || artist.name;
+      artist.phone = payload.phone || artist.phone;
+      artist.telegram = payload.telegram || artist.telegram;
+      artist.photo = payload.photo || artist.photo;
+    }
+    saveDb(db);
+    setSession({ type: "artist", id: artist.id });
+    return { ok: true, artist: artist };
+  }
+
   function getArtistProfile(artistId) {
     return getDb().profiles.find(function (profile) {
       return profile.artistId === artistId;
@@ -1096,6 +1154,8 @@
     registerArtistAccount: registerArtistAccount,
     loginArtist: loginArtist,
     loginAdmin: loginAdmin,
+    ensureExternalUserAccount: ensureExternalUserAccount,
+    ensureExternalArtistAccount: ensureExternalArtistAccount,
     logout: logout,
     getProfiles: getProfiles,
     getProfileById: getProfileById,
