@@ -26,16 +26,16 @@
     <section id="login-view" class="auth-wrap">
       <div class="auth-box">
         <h1>Вход администратора</h1>
-        <p class="muted">Тестовый доступ: `admin@palan.market` / `admin12345`</p>
+        <p class="muted">Здесь вы управляете модерацией, статусами профилей, чатами и общими настройками платформы.</p>
         <div id="login-message"></div>
         <form id="admin-login" class="panel">
           <div class="form-grid one">
-            <label>E-mail<input name="email" type="email" value="admin@palan.market" required></label>
-            <label>Пароль<input name="password" type="password" value="admin12345" required></label>
+            <label>E-mail<input name="email" type="email" required></label>
+            <label>Пароль<input name="password" type="password" required></label>
           </div>
           <div class="inline-actions">
             <button class="primary-btn" type="submit">Войти</button>
-            <button id="reset-db" class="ghost-btn" type="button">Сбросить демо-данные</button>
+            <button id="reset-db" class="ghost-btn" type="button">Очистить базу</button>
           </div>
         </form>
       </div>
@@ -205,7 +205,7 @@
       renderDashboard();
     });
     byId("logout-admin").addEventListener("click", function () { MarketplaceStore.logout(); renderDashboard(); });
-    byId("reset-db").addEventListener("click", function () { MarketplaceStore.resetDb(); showMessage("login-message", "Демо-данные сброшены.", "success"); renderDashboard(); });
+    byId("reset-db").addEventListener("click", function () { MarketplaceStore.resetDb(); showMessage("login-message", "База очищена и перезапущена без демо-данных.", "success"); renderDashboard(); });
     byId("settings-form").addEventListener("submit", function (event) {
       event.preventDefault();
       const payload = Object.fromEntries(new FormData(event.target).entries());

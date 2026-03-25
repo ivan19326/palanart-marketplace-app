@@ -37,7 +37,7 @@
         <article class="hero-card">
           <div class="highlight">Поиск, сравнение, заявки, квоты, чат и бронирование без подключения оплаты</div>
           <h1>Маркетплейс исполнителей для частных и корпоративных событий</h1>
-          <p>Платформа связывает организаторов мероприятий с ведущими, DJ, музыкантами, фотографами, видеографами, декораторами и другими подрядчиками. Витрина и поиск рассчитаны на любые города России и международные события, а локальные примеры и демо-сценарии можно адаптировать под ваш рынок.</p>
+          <p>Платформа связывает организаторов мероприятий с ведущими, DJ, музыкантами, фотографами, видеографами, декораторами и другими подрядчиками. Витрина и поиск рассчитаны на любые города России и международные события, а локальный старт можно быстро адаптировать под ваш рынок.</p>
           <div class="hero-points">
             <div class="hero-point">Для клиента: поиск по городу, категории, бюджету, языку и наличию видео.</div>
             <div class="hero-point">Для исполнителя: профиль, календарь, пакеты, FAQ, отзывы, лиды, квоты и чаты.</div>
@@ -301,7 +301,7 @@
       const grid = byId("catalog-grid");
       if (!profiles.length) {
         catalogState.selectedProfileId = null;
-        grid.innerHTML = '<div class="empty">Под текущие фильтры профили не нашлись. Попробуйте снять ограничение по городу, бюджету или категории.</div>';
+        grid.innerHTML = '<div class="empty">Пока нет опубликованных карточек. Зарегистрируйте первого исполнителя и заполните профиль, чтобы начать живой тест каталога.</div>';
         renderProfileDetail(null);
         return;
       }
@@ -326,7 +326,7 @@
     function renderProfileDetail(profile) {
       const host = byId("profile-detail");
       if (!profile) {
-        host.innerHTML = '<div class="empty">Выберите карточку из каталога, чтобы увидеть полный профиль, пакеты, условия и отзывы исполнителя.</div>';
+        host.innerHTML = '<div class="empty">Когда в каталоге появится первый исполнитель, здесь откроется его полный профиль с пакетами, условиями, медиа и отзывами.</div>';
         return;
       }
       const reviews = MarketplaceStore.getReviewsForProfile(profile.id);
@@ -352,14 +352,14 @@
       const requests = MarketplaceStore.getBoardPosts({ postType: "request" });
       const offers = MarketplaceStore.getBoardPosts({ postType: "offer" });
       function draw(items, targetId, emptyText) {
-        byId(targetId).innerHTML = items.length ? items.map(function (post) { return '<div class="table-row"><div><strong>' + escapeHtml(post.title) + '</strong><div class="muted">' + escapeHtml(post.city) + ' · ' + escapeHtml(post.category || "Категория не указана") + '</div></div><div>' + escapeHtml(post.budget || "По договоренности") + '</div><div>' + escapeHtml(post.contactName) + '</div><div>' + (post.replies ? post.replies.length : 0) + ' откликов</div><div><button class="ghost-btn" type="button" onclick="replyToPost(\'' + post.id + '\')">Откликнуться</button></div></div>'; }).join("") : '<div class="empty">' + emptyText + '</div>';
+      byId(targetId).innerHTML = items.length ? items.map(function (post) { return '<div class="table-row"><div><strong>' + escapeHtml(post.title) + '</strong><div class="muted">' + escapeHtml(post.city) + ' · ' + escapeHtml(post.category || "Категория не указана") + '</div></div><div>' + escapeHtml(post.budget || "По договоренности") + '</div><div>' + escapeHtml(post.contactName) + '</div><div>' + (post.replies ? post.replies.length : 0) + ' откликов</div><div><button class="ghost-btn" type="button" onclick="replyToPost(\'' + post.id + '\')">Откликнуться</button></div></div>'; }).join("") : '<div class="empty">' + emptyText + '</div>';
       }
       draw(requests, "requests-grid", "Пока нет запросов клиентов.");
       draw(offers, "offers-grid", "Пока нет предложений от исполнителей.");
     }
     function renderReviews() {
       const reviews = MarketplaceStore.getDb().reviews || [];
-      byId("reviews-grid").innerHTML = reviews.length ? reviews.slice(0, 8).map(function (review) { const profile = MarketplaceStore.getProfileById(review.profileId); return '<div class="hero-point"><strong>' + escapeHtml(review.authorName) + '</strong><div class="muted">' + escapeHtml(profile ? profile.name : "Исполнитель") + ' · ' + review.rating + ' / 5</div><div>' + escapeHtml(review.text) + '</div></div>'; }).join("") : '<div class="empty">Отзывы появятся после первых завершенных броней и помогут быстрее конвертировать новых клиентов.</div>';
+      byId("reviews-grid").innerHTML = reviews.length ? reviews.slice(0, 8).map(function (review) { const profile = MarketplaceStore.getProfileById(review.profileId); return '<div class="hero-point"><strong>' + escapeHtml(review.authorName) + '</strong><div class="muted">' + escapeHtml(profile ? profile.name : "Исполнитель") + ' · ' + review.rating + ' / 5</div><div>' + escapeHtml(review.text) + '</div></div>'; }).join("") : '<div class="empty">После первых тестовых сделок здесь появятся реальные отзывы клиентов.</div>';
     }
     window.selectProfile = function (profileId) { catalogState.selectedProfileId = profileId; renderCatalog(); byId("profile-detail").scrollIntoView({ behavior: "smooth", block: "start" }); };
     window.toggleFavorite = function (profileId) {

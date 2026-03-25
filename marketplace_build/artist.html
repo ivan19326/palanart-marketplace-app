@@ -42,8 +42,8 @@
       <form id="artist-login-form" class="service-panel">
         <h2>Вход</h2>
         <div class="form-grid one">
-          <label>E-mail<input name="email" type="email" value="anna@palan.market" required></label>
-          <label>Пароль<input name="password" type="password" value="artist12345" required></label>
+            <label>E-mail<input name="email" type="email" required></label>
+            <label>Пароль<input name="password" type="password" required></label>
         </div>
         <button class="ghost-btn" type="submit">Войти</button>
       </form>
@@ -433,7 +433,8 @@
       payload.policies = { deposit: payload.depositPolicy, cancellation: payload.cancellationPolicy, technical: payload.technicalPolicy };
       const result = MarketplaceStore.createOrUpdateArtistProfile(artist.id, payload);
       if (!result.ok) return showArtistMessage(result.message, "error");
-      showArtistMessage("Профиль сохранен и отправлен на модерацию.", "success");
+      const mode = MarketplaceStore.getSettings().moderationMode || "auto";
+      showArtistMessage(mode === "auto" ? "Профиль сохранен и опубликован." : "Профиль сохранен и отправлен на модерацию.", "success");
       renderArtistCabinet();
     });
     byId("artist-profile-form").photo.addEventListener("input", function (event) { artistMediaState.photo = (event.target.value || "").trim(); renderMediaPreview(); });

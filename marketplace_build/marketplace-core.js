@@ -1,5 +1,5 @@
 (function () {
-  const DB_KEY = "palan_marketplace_db_v6";
+  const DB_KEY = "palan_marketplace_db_v7";
   const LEGACY_DB_KEYS = ["palan_marketplace_db_v2"];
   const SESSION_KEY = "palan_marketplace_session_v3";
 
@@ -29,209 +29,7 @@
 
   function createSeed() {
     const now = new Date().toISOString();
-    const profiles = [
-      {
-        id: "profile-demo-host",
-        artistId: "artist-demo-host",
-        ownerName: "Анна Вельвет",
-        role: "host",
-        categories: ["host", "planner"],
-        planId: "featured",
-        featured: true,
-        verified: true,
-        hidden: false,
-        status: "approved",
-        name: "Анна Вельвет",
-        title: "Ведущая свадеб и корпоративов",
-        city: "Чебоксары",
-        region: "Чувашия, Россия и выезд по миру",
-        travelRadiusKm: 120,
-        tagline: "Интеллигентный event-хостинг из Чебоксар для свадеб, корпоративов и частных событий в России и мире.",
-        description: "Провожу свадьбы, корпоративы, городские вечера и камерные private events. Базовый фокус по Чебоксарам и Чувашии, работаю по всей России и на выездных международных событиях.",
-        workStyle: "Спокойная подача, плотная драматургия вечера, ненавязчивый юмор, адаптация под возраст и формат гостей.",
-        eventFormats: ["Свадьбы", "Корпоративы", "Частные вечеринки", "Премии и деловые ужины"],
-        serviceFeatures: ["Сценарный созвон", "Тайминг и чек-лист", "Подбор интерактивов без кринжа"],
-        languages: ["Русский", "Английский"],
-        priceFrom: 45000,
-        packages: [
-          { name: "Камерный вечер", duration: "4 часа", price: 45000, description: "Ведение + тайминг + коммуникация с подрядчиками." },
-          { name: "Свадебный день", duration: "6 часов", price: 70000, description: "Ведение, welcome-блок, координация подрядчиков." }
-        ],
-        addOns: [
-          { name: "Дополнительный час", price: 8000, description: "Продление программы после основной смены." },
-          { name: "Выезд в другой город", price: 5000, description: "Транспорт и логистика по России и за рубежом." }
-        ],
-        availability: [
-          { date: "2026-04-12", status: "busy" },
-          { date: "2026-04-19", status: "busy" },
-          { date: "2026-04-26", status: "available" }
-        ],
-        faq: DEFAULT_FAQ,
-        policies: {
-          deposit: "30% для фиксации даты.",
-          cancellation: "Бесплатная отмена более чем за 21 день, далее удерживается депозит.",
-          technical: "Нужен комплект звука от площадки или DJ."
-        },
-        media: {
-          photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
-          gallery: [
-            "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=900&q=80",
-            "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=900&q=80"
-          ],
-          video: ["https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"],
-          audio: []
-        },
-        socials: {
-          instagram: "https://instagram.com",
-          website: "https://example.com/host"
-        },
-        contact: {
-          phone: "+7 999 111-22-33",
-          email: "anna@palan.market",
-          telegram: "@anna_host"
-        },
-        stats: {
-          profileViews: 248,
-          leadCount: 18,
-          quoteCount: 11,
-          bookingCount: 7,
-          responseRate: 96,
-          avgTicket: 72000
-        }
-      },
-      {
-        id: "profile-demo-dj",
-        artistId: "artist-demo-dj",
-        ownerName: "NEON DRIVE",
-        role: "dj",
-        categories: ["dj", "musician"],
-        planId: "pro",
-        featured: false,
-        verified: true,
-        hidden: false,
-        status: "approved",
-        name: "NEON DRIVE",
-        title: "DJ и музыкальный продюсер",
-        city: "Санкт-Петербург",
-        region: "Санкт-Петербург и область",
-        travelRadiusKm: 180,
-        tagline: "House, disco и pop edits для свадеб, премиум-корпоративов и rooftop-вечеринок.",
-        description: "Собираю сет под аудиторию, тайминг и возраст гостей. Веду музыкальную драматургию, работаю с live-перкуссией и welcome-сетами.",
-        workStyle: "Современный саунд без случайных треков, чистая смена темпа, подготовка плейлиста под event goals.",
-        eventFormats: ["Свадьбы", "Ресторанные события", "Rooftop party", "Корпоративы"],
-        serviceFeatures: ["Персональный плейлист", "Саундчек", "Работа со светом"],
-        languages: ["Русский"],
-        priceFrom: 30000,
-        packages: [
-          { name: "DJ set", duration: "3 часа", price: 30000, description: "Подготовка сета и 1 саундчек." },
-          { name: "DJ + afterparty", duration: "5 часов", price: 47000, description: "Основной сет плюс ночной блок." }
-        ],
-        addOns: [
-          { name: "Live percussion", price: 12000, description: "Сет с живой перкуссией." }
-        ],
-        availability: [
-          { date: "2026-04-11", status: "available" },
-          { date: "2026-04-18", status: "busy" }
-        ],
-        faq: DEFAULT_FAQ,
-        policies: {
-          deposit: "20% для подтверждения даты.",
-          cancellation: "Перенос даты по возможности без штрафа.",
-          technical: "Пульт Pioneer или эквивалент, монитор и стабильное питание."
-        },
-        media: {
-          photo: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=800&q=80",
-          gallery: [
-            "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=900&q=80"
-          ],
-          video: ["https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm"],
-          audio: []
-        },
-        socials: {
-          instagram: "https://instagram.com",
-          youtube: "https://youtube.com"
-        },
-        contact: {
-          phone: "+7 999 444-55-66",
-          email: "neondrive@palan.market",
-          telegram: "@neondrive"
-        },
-        stats: {
-          profileViews: 167,
-          leadCount: 12,
-          quoteCount: 8,
-          bookingCount: 5,
-          responseRate: 92,
-          avgTicket: 51000
-        }
-      },
-      {
-        id: "profile-demo-photo",
-        artistId: "artist-demo-photo",
-        ownerName: "Мария Frame",
-        role: "photographer",
-        categories: ["photographer", "videographer"],
-        planId: "basic",
-        featured: false,
-        verified: true,
-        hidden: false,
-        status: "approved",
-        name: "Мария Frame",
-        title: "Фотограф и видеограф мероприятий",
-        city: "Казань",
-        region: "Казань и Татарстан",
-        travelRadiusKm: 150,
-        tagline: "Эмоциональный репортаж, быстрая отдача превью и спокойная коммуникация с парой.",
-        description: "Снимаю свадьбы, семейные события и бренд-мероприятия. Отдаю превью в течение 48 часов, полный материал в оговоренный срок.",
-        workStyle: "Репортаж + постановка без перегруза, работа со светом площадки, комфорт для гостей.",
-        eventFormats: ["Свадьбы", "Частные вечеринки", "Family day", "Бренд-съемки"],
-        serviceFeatures: ["Превью за 48 часов", "Портретная съемка гостей", "Облачная галерея"],
-        languages: ["Русский", "Татарский"],
-        priceFrom: 25000,
-        packages: [
-          { name: "Репортаж", duration: "4 часа", price: 25000, description: "Фоторепортаж события и онлайн-галерея." },
-          { name: "Фото + видео", duration: "6 часов", price: 52000, description: "Оператор и монтаж highlight ролика." }
-        ],
-        addOns: [
-          { name: "Love story", price: 15000, description: "Отдельный съемочный день до события." }
-        ],
-        availability: [
-          { date: "2026-04-05", status: "busy" },
-          { date: "2026-04-20", status: "available" }
-        ],
-        faq: DEFAULT_FAQ,
-        policies: {
-          deposit: "20% для брони даты.",
-          cancellation: "Перенос даты при наличии свободного окна.",
-          technical: "Важно заранее согласовать свет и тайминг ключевых блоков."
-        },
-        media: {
-          photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80",
-          gallery: [
-            "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=900&q=80",
-            "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=900&q=80"
-          ],
-          video: [],
-          audio: []
-        },
-        socials: {
-          website: "https://example.com/photo"
-        },
-        contact: {
-          phone: "+7 999 777-88-99",
-          email: "maria@palan.market",
-          telegram: "@mariaframe"
-        },
-        stats: {
-          profileViews: 123,
-          leadCount: 9,
-          quoteCount: 6,
-          bookingCount: 4,
-          responseRate: 89,
-          avgTicket: 43000
-        }
-      }
-    ];
+    const profiles = [];
 
     return {
       meta: {
@@ -241,7 +39,7 @@
       },
       settings: {
         commissionsEnabled: false,
-        moderationMode: "manual",
+        moderationMode: "auto",
         defaultDepositPercent: 30,
         leadResponseHours: 2
       },
@@ -257,157 +55,15 @@
           name: "Главный администратор"
         }
       ],
-      users: [
-        {
-          id: "user-demo-client",
-          name: "Елена Романова",
-          email: "client@palan.market",
-          phone: "+7 999 222-33-44",
-          password: "client12345",
-          city: "Чебоксары",
-          createdAt: now,
-          savedProfiles: ["profile-demo-host", "profile-demo-dj"],
-          compareProfiles: ["profile-demo-host", "profile-demo-dj"]
-        }
-      ],
-      artists: [
-        {
-          id: "artist-demo-host",
-          name: "Анна Вельвет",
-          email: "anna@palan.market",
-          phone: "+7 999 111-22-33",
-          telegram: "@anna_host",
-          socials: { instagram: "https://instagram.com", website: "https://example.com/host" },
-          photo: profiles[0].media.photo,
-          password: "artist12345",
-          profileId: "profile-demo-host",
-          createdAt: now
-        },
-        {
-          id: "artist-demo-dj",
-          name: "NEON DRIVE",
-          email: "neondrive@palan.market",
-          phone: "+7 999 444-55-66",
-          telegram: "@neondrive",
-          socials: { instagram: "https://instagram.com", youtube: "https://youtube.com" },
-          photo: profiles[1].media.photo,
-          password: "artist12345",
-          profileId: "profile-demo-dj",
-          createdAt: now
-        }
-      ],
+      users: [],
+      artists: [],
       profiles: profiles,
-      leads: [
-        {
-          id: "lead-demo-1",
-          userId: "user-demo-client",
-          profileId: "profile-demo-host",
-          profileName: "Анна Вельвет",
-          artistId: "artist-demo-host",
-          customerName: "Елена Романова",
-          customerPhone: "+7 999 222-33-44",
-          customerEmail: "client@palan.market",
-          city: "Чебоксары",
-          venue: "Volga Hall",
-          eventType: "Свадьба",
-          guestCount: 60,
-          eventDate: "2026-05-16",
-          eventTime: "17:00",
-          budget: 90000,
-          language: "Русский",
-          requirements: "Нужен интеллигентный ведущий без кринж-интерактивов.",
-          status: "quoted",
-          createdAt: now
-        }
-      ],
-      quotes: [
-        {
-          id: "quote-demo-1",
-          leadId: "lead-demo-1",
-          profileId: "profile-demo-host",
-          artistId: "artist-demo-host",
-          packageName: "Свадебный день",
-          amount: 70000,
-          depositPercent: 30,
-          includes: "Ведение 6 часов, сценарный созвон, welcome-блок, тайминг вечера.",
-          comment: "Готова подключиться к координации и совместной работе с площадкой.",
-          status: "sent",
-          createdAt: now
-        }
-      ],
-      deals: [
-        {
-          id: "deal-demo-1",
-          leadId: "lead-demo-1",
-          quoteId: "quote-demo-1",
-          profileId: "profile-demo-host",
-          profileName: "Анна Вельвет",
-          artistId: "artist-demo-host",
-          clientUserId: "user-demo-client",
-          clientName: "Елена Романова",
-          clientPhone: "+7 999 222-33-44",
-          clientEmail: "client@palan.market",
-          agreedAmount: 70000,
-          status: "quoted",
-          createdAt: now
-        }
-      ],
-      chats: [
-        {
-          id: "chat-demo-1",
-          dealId: "deal-demo-1",
-          leadId: "lead-demo-1",
-          profileId: "profile-demo-host",
-          profileName: "Анна Вельвет",
-          artistId: "artist-demo-host",
-          clientUserId: "user-demo-client",
-          clientName: "Елена Романова",
-          status: "open",
-          messages: [
-            { id: "msg-demo-1", sender: "system", text: "Чат открыт по заявке. Здесь можно обсуждать детали до подтверждения брони.", createdAt: now },
-            { id: "msg-demo-2", sender: "artist", text: "Здравствуйте! Отправила предложение и могу прислать черновой тайминг.", createdAt: now }
-          ]
-        }
-      ],
-      boardPosts: [
-        {
-          id: "board-demo-1",
-          authorType: "client",
-          postType: "request",
-          authorId: "user-demo-client",
-          title: "Ищу DJ на корпоратив в Чебоксарах",
-          description: "Нужен энергичный сет на 4 часа, аудитория 25-35 лет. Рассмотрим и локальных DJ, и выезд из соседних городов.",
-          category: "DJ",
-          city: "Чебоксары",
-          budget: "до 55 000 ₽",
-          contactName: "Елена",
-          contactInfo: "Через платформу",
-          replies: [],
-          createdAt: now
-        }
-      ],
-      reviews: [
-        {
-          id: "review-demo-1",
-          profileId: "profile-demo-host",
-          authorName: "Ксения и Артем",
-          rating: 5,
-          criteria: { communication: 5, punctuality: 5, quality: 5, value: 5 },
-          text: "Вечер прошел точно в нужном настроении: спокойно, интеллигентно и очень живо.",
-          featured: true,
-          createdAt: now
-        },
-        {
-          id: "review-demo-2",
-          profileId: "profile-demo-dj",
-          authorName: "Event Team Sfera",
-          rating: 5,
-          criteria: { communication: 5, punctuality: 5, quality: 5, value: 4 },
-          text: "Отличный feel по аудитории, чистый саунд и хороший темп вечера.",
-          featured: false,
-          createdAt: now
-        }
-      ],
+      leads: [],
+      quotes: [],
+      deals: [],
+      chats: [],
+      boardPosts: [],
+      reviews: [],
       tickets: []
     };
   }
@@ -517,7 +173,7 @@
       technical: "Технический райдер по запросу."
     };
     result.media = result.media || {};
-    result.media.photo = (result.media.photo || result.photo || "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80").trim();
+    result.media.photo = (result.media.photo || result.photo || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'><defs><linearGradient id='g' x1='0' x2='1' y1='0' y2='1'><stop stop-color='%23ff8a5b'/><stop offset='1' stop-color='%235dd1c2'/></linearGradient></defs><rect width='600' height='600' rx='120' fill='%230d1626'/><circle cx='300' cy='220' r='96' fill='url(%23g)' opacity='0.95'/><path d='M150 470c32-88 112-138 150-138s118 50 150 138' fill='url(%23g)' opacity='0.95'/></svg>").trim();
     result.media.gallery = (Array.isArray(result.media.gallery) ? result.media.gallery : []).map(function (entry, index) { return normalizeMediaEntry(entry, "gallery", index); }).filter(Boolean).filter(function (entry) { return entry.src; });
     result.media.video = (Array.isArray(result.media.video) ? result.media.video : []).map(function (entry, index) { return normalizeMediaEntry(entry, "video", index); }).filter(Boolean).filter(function (entry) { return entry.src; });
     result.media.audio = (Array.isArray(result.media.audio) ? result.media.audio : []).map(function (entry, index) { return normalizeMediaEntry(entry, "audio", index); }).filter(Boolean).filter(function (entry) { return entry.src; });
@@ -843,9 +499,9 @@
       categories: categories,
       planId: payload.planId || (profile && profile.planId) || "basic",
       featured: getPlan(payload.planId || (profile && profile.planId) || "basic").featured,
-      verified: profile ? profile.verified : false,
+      verified: (db.settings.moderationMode || "auto") === "auto" ? true : (profile ? profile.verified : false),
       hidden: false,
-      status: "pending",
+      status: (db.settings.moderationMode || "auto") === "auto" ? "approved" : "pending",
       name: payload.name,
       title: payload.title,
       city: payload.city,

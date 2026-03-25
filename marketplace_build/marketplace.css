@@ -1,17 +1,17 @@
 :root {
-  --bg: #0e1622;
-  --bg-strong: #172232;
-  --panel: rgba(21, 31, 47, 0.92);
-  --panel-strong: rgba(28, 41, 62, 0.98);
-  --text: #edf3ff;
-  --muted: #99a9c3;
-  --line: rgba(255, 255, 255, 0.1);
+  --bg: #09111c;
+  --bg-strong: #101b2d;
+  --panel: rgba(15, 24, 39, 0.94);
+  --panel-strong: rgba(18, 29, 48, 0.98);
+  --text: #ffffff;
+  --muted: #c2d0e6;
+  --line: rgba(255, 255, 255, 0.12);
   --accent: #ff8a5b;
   --accent-2: #5dd1c2;
   --accent-3: #f0bb4b;
   --danger: #ff7676;
   --success: #58cb91;
-  --shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+  --shadow: 0 28px 90px rgba(0, 0, 0, 0.42);
   --radius: 26px;
   --radius-sm: 18px;
 }
@@ -43,8 +43,10 @@ body {
     radial-gradient(circle at top right, rgba(93, 209, 194, 0.14), transparent 24%),
     linear-gradient(180deg, var(--bg) 0%, var(--bg-strong) 100%);
   min-height: 100vh;
+  text-rendering: optimizeLegibility;
 }
 a { color: inherit; }
+p, li { line-height: 1.65; }
 img { max-width: 100%; }
 .shell { width: min(1240px, calc(100% - 32px)); margin: 0 auto; }
 
@@ -52,7 +54,7 @@ img { max-width: 100%; }
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(10, 17, 28, 0.82);
+  background: rgba(6, 12, 21, 0.84);
   backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--line);
 }
@@ -76,6 +78,7 @@ img { max-width: 100%; }
   color: var(--accent);
   letter-spacing: 0.16em;
   font-size: 1rem;
+  text-shadow: 0 6px 18px rgba(255, 138, 91, 0.28);
 }
 .brand span,
 .muted { color: var(--muted); }
@@ -84,6 +87,7 @@ img { max-width: 100%; }
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .nav a,
@@ -102,8 +106,9 @@ img { max-width: 100%; }
 
 .nav a,
 .ghost-btn {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.07);
   border-color: var(--line);
+  color: var(--text);
 }
 
 body[data-theme="light"] .topbar {
@@ -118,6 +123,7 @@ body[data-theme="light"] .ghost-btn {
 .primary-btn {
   background: linear-gradient(135deg, var(--accent), #cb6e45);
   color: #fff6f0;
+  box-shadow: 0 16px 34px rgba(255, 138, 91, 0.28);
 }
 
 .danger-btn {
@@ -130,7 +136,8 @@ body[data-theme="light"] .ghost-btn {
 .ghost-btn:hover,
 .primary-btn:hover,
 .danger-btn:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 18px 30px rgba(0, 0, 0, 0.18);
 }
 
 .hero {
@@ -167,6 +174,7 @@ body[data-theme="light"] .ghost-btn {
   box-shadow: var(--shadow);
   position: relative;
   overflow: hidden;
+  transform-style: preserve-3d;
 }
 
 .hero-card,
@@ -190,6 +198,22 @@ body[data-theme="light"] .ghost-btn {
   width: 100%;
   height: 1px;
   background: linear-gradient(90deg, rgba(255,255,255,0.25), rgba(255,255,255,0.02) 42%, transparent 80%);
+}
+
+.hero-card::after,
+.panel::after,
+.card::after,
+.auth-box::after,
+.stats-card::after,
+.summary-card::after {
+  content: "";
+  position: absolute;
+  inset: -25% auto auto 55%;
+  width: 240px;
+  height: 240px;
+  background: radial-gradient(circle, rgba(93, 209, 194, 0.14), transparent 68%);
+  pointer-events: none;
+  filter: blur(4px);
 }
 
 .highlight {
@@ -217,6 +241,8 @@ body[data-theme="light"] .ghost-btn {
   font-size: clamp(2.2rem, 5vw, 4.6rem);
   line-height: 0.96;
   max-width: 14ch;
+  letter-spacing: -0.04em;
+  text-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
 }
 
 .hero-card p {
@@ -243,7 +269,7 @@ body[data-theme="light"] .ghost-btn {
 .message {
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 body[data-theme="light"] .hero-point,
@@ -307,13 +333,14 @@ body[data-theme="light"] .message {
 .card {
   display: grid;
   gap: 14px;
-  transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
+  transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease, background 0.24s ease;
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.36);
-  border-color: rgba(255, 138, 91, 0.18);
+  transform: translateY(-8px) rotateX(2deg);
+  box-shadow: 0 36px 100px rgba(0, 0, 0, 0.42);
+  border-color: rgba(255, 138, 91, 0.24);
+  background: rgba(20, 31, 49, 0.98);
 }
 
 .card-top {
@@ -395,7 +422,7 @@ body[data-theme="light"] .skill {
   padding: 16px;
   border-radius: 22px;
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 body[data-theme="light"] .contact-block,
@@ -429,9 +456,14 @@ textarea {
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
   padding: 13px 14px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.08);
   color: var(--text);
   font: inherit;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(194, 208, 230, 0.8);
 }
 
 body[data-theme="light"] input,
@@ -697,23 +729,8 @@ body[data-theme="light"] .mini-btn {
   border: 1px dashed rgba(33, 28, 22, 0.18);
   border-radius: 22px;
   color: var(--muted);
-  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
   position: relative;
-}
-
-.empty::before {
-  content: "Preview";
-  display: inline-block;
-  margin-bottom: 10px;
-  padding: 5px 9px;
-  border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--accent-2);
-  border: 1px solid rgba(93, 209, 194, 0.16);
-  background: rgba(93, 209, 194, 0.08);
 }
 
 body[data-theme="light"] .empty {
@@ -753,7 +770,7 @@ body[data-theme="light"] .empty {
   gap: 8px;
   padding: 8px 12px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.09);
   border: 1px solid var(--line);
   font-size: 0.9rem;
   backdrop-filter: blur(8px);
@@ -784,6 +801,23 @@ body[data-theme="light"] .summary-pill {
 
 @media (max-width: 720px) {
   .shell { width: min(100% - 20px, 1240px); }
+  .topbar-inner {
+    align-items: stretch;
+  }
+  .nav {
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+  }
+  .nav a,
+  .ghost-btn,
+  .primary-btn,
+  .danger-btn {
+    white-space: nowrap;
+  }
   .hero-card,
   .panel,
   .card,
@@ -794,5 +828,6 @@ body[data-theme="light"] .summary-pill {
   }
   .hero-card h1 {
     max-width: none;
+    font-size: clamp(1.8rem, 9vw, 3rem);
   }
 }
