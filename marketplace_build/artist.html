@@ -697,50 +697,100 @@
       const form = byId("artist-profile-form");
       if (!form || form.dataset.quickModeReady) return;
       form.dataset.quickModeReady = "1";
-      const essentialNames = {
-        role: true,
-        planId: true,
-        name: true,
-        title: true,
-        city: true,
-        region: true,
-        travelRadiusKm: true,
-        priceFrom: true,
-        tagline: true,
-        email: true,
-        phone: true,
-        telegram: true,
-        photo: true,
-        packagesText: true,
-        description: true
-      };
-      form.querySelectorAll("label").forEach(function (label) {
-        const field = label.querySelector("input, select, textarea");
-        if (!field || !field.name) return;
-        label.classList.add(essentialNames[field.name] ? "profile-essential" : "profile-advanced");
-      });
-      form.querySelectorAll(".quick-options").forEach(function (block) {
-        const fill = block.querySelector("[data-fill-textarea]");
-        const target = block.dataset.chipTarget || (fill ? fill.dataset.fillTextarea : "");
-        block.classList.add(essentialNames[target] ? "profile-essential" : "profile-advanced");
-      });
-      form.querySelectorAll(".detail-box").forEach(function (box) {
-        box.classList.add("profile-advanced");
-      });
       const toolbar = document.createElement("div");
       toolbar.className = "profile-form-toolbar";
-      toolbar.innerHTML = '<div><strong>Быстрый запуск карточки</strong><p class="muted">Сначала заполните только ключевые поля для публикации. Остальные блоки можно открыть позже.</p></div><button class="ghost-btn profile-form-toggle" type="button">Показать все поля</button>';
+      toolbar.innerHTML = '<div><strong>Быстрый запуск карточки</strong><p class="muted">Разбили анкету на короткие шаги. Сначала основное, потом наполнение, медиа и условия.</p></div><button class="ghost-btn profile-form-toggle" type="button">Показать все шаги</button>';
       const presetBox = form.querySelector(".preset-box");
       if (presetBox) {
         presetBox.insertAdjacentElement("afterend", toolbar);
       } else {
         form.insertAdjacentElement("afterbegin", toolbar);
       }
+
+      const submitButton = form.querySelector('button[type="submit"]');
+      const stepsHost = document.createElement("div");
+      stepsHost.className = "profile-step-host";
+      const nav = document.createElement("div");
+      nav.className = "profile-step-nav";
+      const content = document.createElement("div");
+      content.className = "profile-step-content";
+      stepsHost.appendChild(nav);
+      stepsHost.appendChild(content);
+      toolbar.insertAdjacentElement("afterend", stepsHost);
+
+      const sectionDefs = [
+        { key: "basic", title: "1. Основное", hint: "Кто вы, где работаете и как вас находят." },
+        { key: "content", title: "2. Услуги", hint: "Форматы, пакеты, описание и преимущества." },
+        { key: "media", title: "3. Медиа", hint: "Фото, видео, аудио и ссылки на площадки." },
+        { key: "policy", title: "4. Условия", hint: "FAQ, занятость, отмена и техтребования." }
+      ];
+      const fieldGroups = {
+        basic: { role: 1, categories: 1, planId: 1, name: 1, title: 1, city: 1, region: 1, travelRadiusKm: 1, priceFrom: 1, tagline: 1, email: 1, phone: 1, telegram: 1 },
+        content: { languages: 1, eventFormats: 1, serviceFeatures: 1, packagesText: 1, addOnsText: 1, description: 1, workStyle: 1 },
+        media: { instagram: 1, youtube: 1, vk: 1, website: 1, photo: 1, "artist-photo-file": 1, galleryRaw: 1, "artist-gallery-files": 1, videoRaw: 1, "artist-video-files": 1, audioRaw: 1, "artist-audio-files": 1 },
+        policy: { availabilityText: 1, faqText: 1, depositPolicy: 1, cancellationPolicy: 1, technicalPolicy: 1 }
+      };
+      const sectionMap = {};
+      sectionDefs.forEach(function (section, index) {
+        const button = document.createElement("button");
+        button.className = "ghost-btn profile-step-tab" + (index === 0 ? " is-active" : "");
+        button.type = "button";
+        button.textContent = section.title;
+        nav.appendChild(button);
+
+        const panel = document.createElement("section");
+        panel.className = "profile-step" + (index === 0 ? " is-active" : "");
+        panel.dataset.step = section.key;
+        panel.innerHTML = '<div class="profile-step-head"><strong>' + section.title + '</strong><p class="muted">' + section.hint + '</p></div><div class="profile-step-grid"></div>';
+        content.appendChild(panel);
+        sectionMap[section.key] = { button: button, panel: panel, grid: panel.querySelector(".profile-step-grid") };
+
+        button.addEventListener("click", function () {
+          Object.keys(sectionMap).forEach(function (key) {
+            sectionMap[key].button.classList.toggle("is-active", key === section.key);
+            sectionMap[key].panel.classList.toggle("is-active", key === section.key);
+          });
+        });
+      });
+
+      function groupForNode(node) {
+        if (node.classList && node.classList.contains("detail-box")) return "media";
+        if (node.classList && node.classList.contains("quick-options")) {
+          const fill = node.querySelector("[data-fill-textarea]");
+          const fieldName = node.dataset.chipTarget || (fill ? fill.dataset.fillTextarea : "");
+          return groupForField(fieldName);
+        }
+        if (node.tagName === "LABEL") {
+          const field = node.querySelector("input, select, textarea");
+          return groupForField(field ? (field.name || field.id || "") : "");
+        }
+        return "content";
+      }
+
+      function groupForField(fieldName) {
+        if (fieldGroups.basic[fieldName]) return "basic";
+        if (fieldGroups.content[fieldName]) return "content";
+        if (fieldGroups.media[fieldName]) return "media";
+        if (fieldGroups.policy[fieldName]) return "policy";
+        return "content";
+      }
+
+      Array.from(form.children).forEach(function (child) {
+        if (child === presetBox || child === toolbar || child === stepsHost || child === submitButton) return;
+        if (!(child.classList && (child.classList.contains("form-grid") || child.classList.contains("detail-box")))) return;
+        Array.from(child.children).forEach(function (node) {
+          const group = groupForNode(node);
+          sectionMap[group].grid.appendChild(node);
+        });
+        child.remove();
+      });
+
+      content.insertAdjacentElement("afterend", submitButton);
       form.classList.add("profile-form-collapsed");
       const toggle = toolbar.querySelector(".profile-form-toggle");
       toggle.addEventListener("click", function () {
         form.classList.toggle("profile-form-collapsed");
-        toggle.textContent = form.classList.contains("profile-form-collapsed") ? "Показать все поля" : "Скрыть лишнее";
+        toggle.textContent = form.classList.contains("profile-form-collapsed") ? "Показать все шаги" : "Показать всё сразу";
       });
     }
     byId("artist-register-form").addEventListener("submit", async function (event) {
