@@ -235,7 +235,7 @@
 
     return {
       meta: {
-        project: "Паланар",
+        project: "Паланарт",
         updatedAt: now,
         schemaVersion: 6
       },
