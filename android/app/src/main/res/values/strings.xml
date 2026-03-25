@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Паланарт</string>
+    <string name="title_activity_main">Паланарт</string>
+    <string name="package_name">ru.palanart.app</string>
+    <string name="custom_url_scheme">ru.palanart.app</string>
+</resources>
