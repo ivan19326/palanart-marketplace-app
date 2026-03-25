@@ -86,6 +86,32 @@
       </div>
 
       <div class="panel" style="margin-top:18px;">
+        <div class="section-head"><div><h2>Сервисный вход и соцсети</h2><p class="muted">Включение Google-входа через Supabase без правки файлов проекта.</p></div></div>
+        <form id="auth-settings-form" class="form-grid">
+          <label>Режим авторизации
+            <select name="mode">
+              <option value="local">Локальный</option>
+              <option value="supabase">Supabase</option>
+            </select>
+          </label>
+          <label>Supabase URL
+            <input name="supabaseUrl" type="url" placeholder="https://your-project.supabase.co">
+          </label>
+          <label>Supabase anon key
+            <input name="supabaseAnonKey" type="text" placeholder="eyJ...">
+          </label>
+          <label>Google вход
+            <select name="googleEnabled">
+              <option value="true">Включён</option>
+              <option value="false">Выключен</option>
+            </select>
+          </label>
+          <button class="primary-btn" type="submit">Сохранить auth</button>
+        </form>
+        <p class="muted" style="margin-top:12px;">После сохранения обновите страницу клиента или исполнителя. Для рабочего Google-входа провайдер Google должен быть включён в вашем проекте Supabase.</p>
+      </div>
+
+      <div class="panel" style="margin-top:18px;">
         <div class="section-head"><div><h2>Профили и модерация</h2><p class="muted">Одобрение анкет, featured-статус и управление видимостью карточек.</p></div></div>
         <div id="profiles-list" class="table-list"></div>
       </div>
@@ -157,6 +183,18 @@
       form.defaultDepositPercent.value = settings.defaultDepositPercent || 30;
       form.leadResponseHours.value = settings.leadResponseHours || 2;
       form.commissionsEnabled.value = String(Boolean(settings.commissionsEnabled));
+      const authForm = byId("auth-settings-form");
+      let authConfig = {};
+      try {
+        authConfig = JSON.parse(localStorage.getItem("palanart_auth_config") || "{}");
+      } catch (_error) {
+        authConfig = {};
+      }
+      authForm.mode.value = authConfig.mode || "local";
+      authForm.supabaseUrl.value = authConfig.supabaseUrl || "";
+      authForm.supabaseAnonKey.value = authConfig.supabaseAnonKey || "";
+      const providers = Array.isArray(authConfig.socialProviders) ? authConfig.socialProviders : [];
+      authForm.googleEnabled.value = String(providers.some(function (item) { return item.id === "google"; }));
     }
     function renderDictionaries() {
       const dict = MarketplaceStore.getDictionaries();
@@ -225,6 +263,19 @@
       MarketplaceStore.updateSettings({ moderationMode: payload.moderationMode, defaultDepositPercent: Number(payload.defaultDepositPercent || 30), leadResponseHours: Number(payload.leadResponseHours || 2), commissionsEnabled: payload.commissionsEnabled === "true" });
       showMessage("admin-message", "Настройки сохранены.", "success");
       renderDashboard();
+    });
+    byId("auth-settings-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const payload = Object.fromEntries(new FormData(event.target).entries());
+      const config = {
+        mode: payload.mode || "local",
+        supabaseUrl: (payload.supabaseUrl || "").trim(),
+        supabaseAnonKey: (payload.supabaseAnonKey || "").trim(),
+        socialProviders: payload.googleEnabled === "true" ? [{ id: "google", label: "Google" }] : []
+      };
+      localStorage.setItem("palanart_auth_config", JSON.stringify(config));
+      showMessage("admin-message", "Настройки сервисного входа сохранены. Обновите страницу клиента или исполнителя.", "success");
+      renderSettings();
     });
     renderDashboard();
   </script>
