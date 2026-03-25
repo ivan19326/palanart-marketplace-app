@@ -34,6 +34,7 @@
   </header>
 
   <main class="shell">
+    <div id="site-message"></div>
     <section class="hero">
       <div class="hero-grid">
         <article class="hero-card">
@@ -230,6 +231,114 @@
     </section>
   </main>
 
+  <div class="app-modal" id="request-modal">
+    <div class="app-modal-card">
+      <div class="app-modal-head">
+        <div>
+          <h3 id="request-modal-title">Новая заявка</h3>
+          <p id="request-modal-subtitle" class="muted">Быстро заполните несколько полей без всплывающих системных окон.</p>
+        </div>
+        <button class="app-modal-close" id="request-modal-close" type="button">×</button>
+      </div>
+      <form id="request-form" class="section-stack">
+        <input type="hidden" name="profileId">
+        <input type="hidden" name="mode" value="lead">
+        <div class="form-grid">
+          <label>Имя организатора<input name="customerName" type="text" required></label>
+          <label>Телефон<input name="customerPhone" type="tel" required></label>
+          <label>E-mail<input name="customerEmail" type="email"></label>
+          <label>Город<input name="city" type="text" list="city-options" required></label>
+          <label>Площадка<input name="venue" type="text" list="venue-options"></label>
+          <label>Тип события
+            <select name="eventType">
+              <option value="Свадьба">Свадьба</option>
+              <option value="Корпоратив">Корпоратив</option>
+              <option value="День рождения">День рождения</option>
+              <option value="Частная вечеринка">Частная вечеринка</option>
+              <option value="Премия">Премия</option>
+              <option value="Деловой ужин">Деловой ужин</option>
+            </select>
+          </label>
+          <label>Гостей
+            <select name="guestCount">
+              <option value="20">До 20</option>
+              <option value="50" selected>30-50</option>
+              <option value="100">60-100</option>
+              <option value="150">100+</option>
+            </select>
+          </label>
+          <label>Дата<input name="eventDate" type="date"></label>
+          <label>Время<input name="eventTime" type="time" value="17:00"></label>
+          <label>Бюджет
+            <select name="budget">
+              <option value="30000">До 30 000 ₽</option>
+              <option value="60000" selected>До 60 000 ₽</option>
+              <option value="100000">До 100 000 ₽</option>
+              <option value="150000">150 000 ₽ и выше</option>
+            </select>
+          </label>
+          <label>Язык
+            <select name="language">
+              <option value="Русский" selected>Русский</option>
+              <option value="Русский и английский">Русский и английский</option>
+              <option value="Чувашский и русский">Чувашский и русский</option>
+            </select>
+          </label>
+        </div>
+        <label>Что важно<textarea name="requirements" required></textarea></label>
+        <div class="quick-options">
+          <button class="quick-option" type="button" data-fill-target="requirements" data-fill-value="Нужен сильный локальный опыт и уверенная работа с публикой.">Локальный опыт</button>
+          <button class="quick-option" type="button" data-fill-target="requirements" data-fill-value="Хочу спокойную коммуникацию и чёткий тайминг без перегруза программы.">Спокойный формат</button>
+          <button class="quick-option" type="button" data-fill-target="requirements" data-fill-value="Важно наличие своего оборудования и готовность к выезду за город.">Со своим оборудованием</button>
+        </div>
+        <div class="inline-actions">
+          <button class="primary-btn" type="submit">Отправить</button>
+          <button class="ghost-btn" id="request-modal-cancel" type="button">Отмена</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="app-modal" id="reply-modal">
+    <div class="app-modal-card">
+      <div class="app-modal-head">
+        <div>
+          <h3>Отклик на объявление</h3>
+          <p class="muted">Оставьте короткий, но внятный ответ без системных окон.</p>
+        </div>
+        <button class="app-modal-close" id="reply-modal-close" type="button">×</button>
+      </div>
+      <form id="reply-form" class="section-stack">
+        <input type="hidden" name="postId">
+        <label>Ваше имя<input name="authorName" type="text" required></label>
+        <label>Отклик<textarea name="message" required></textarea></label>
+        <div class="quick-options">
+          <button class="quick-option" type="button" data-fill-target="message" data-fill-value="Готов обсудить детали и быстро прислать предложение.">Быстрый отклик</button>
+          <button class="quick-option" type="button" data-fill-target="message" data-fill-value="Работаю в вашем городе, могу прислать варианты пакетов и свободные даты сегодня.">Есть локальный выезд</button>
+        </div>
+        <div class="inline-actions">
+          <button class="primary-btn" type="submit">Отправить отклик</button>
+          <button class="ghost-btn" id="reply-modal-cancel" type="button">Отмена</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <datalist id="city-options">
+    <option value="Чебоксары"></option>
+    <option value="Новочебоксарск"></option>
+    <option value="Казань"></option>
+    <option value="Москва"></option>
+    <option value="Санкт-Петербург"></option>
+  </datalist>
+  <datalist id="venue-options">
+    <option value="Ресторан"></option>
+    <option value="Банкетный зал"></option>
+    <option value="Загородная площадка"></option>
+    <option value="Отель"></option>
+    <option value="Частный дом"></option>
+  </datalist>
+
   <footer class="shell footer">
     Паланарт. Каталог, заявки, квоты, чаты и админ-модерация для Чебоксар, всей России и международных событий.
   </footer>
@@ -275,6 +384,36 @@
       return String(value || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
     }
     function currentUser() { return MarketplaceStore.getCurrentUser(); }
+    const requestModal = byId("request-modal");
+    const replyModal = byId("reply-modal");
+    const requestForm = byId("request-form");
+    const replyForm = byId("reply-form");
+    function showSiteMessage(text, kind) {
+      byId("site-message").innerHTML = text ? '<div class="message ' + kind + '">' + text + '</div>' : "";
+    }
+    function openModal(modal) { modal.classList.add("open"); }
+    function closeModal(modal) { modal.classList.remove("open"); }
+    function fillRequestForm(profile, mode) {
+      const user = currentUser();
+      requestForm.reset();
+      requestForm.profileId.value = profile ? profile.id : "";
+      requestForm.mode.value = mode;
+      requestForm.customerName.value = user ? user.name : "";
+      requestForm.customerPhone.value = user ? user.phone : "";
+      requestForm.customerEmail.value = user ? user.email : "";
+      requestForm.city.value = profile ? (profile.city || "Чебоксары") : "Чебоксары";
+      requestForm.venue.value = "";
+      requestForm.eventType.value = mode === "chat" ? "Частная вечеринка" : "Свадьба";
+      requestForm.guestCount.value = "50";
+      requestForm.eventTime.value = "17:00";
+      requestForm.budget.value = profile ? String(Math.max(Number(profile.priceFrom || 0) * 2, 30000)) : "60000";
+      requestForm.language.value = "Русский";
+      requestForm.requirements.value = mode === "chat"
+        ? "Хочу уточнить пакет, свободную дату и как лучше собрать программу."
+        : "Нужен сильный локальный опыт и аккуратная коммуникация с гостями.";
+      byId("request-modal-title").textContent = mode === "chat" ? "Открыть чат" : "Запросить предложение";
+      byId("request-modal-subtitle").textContent = profile ? ("Исполнитель: " + profile.name + ". Заполните только главное.") : "Заполните только главное.";
+    }
     function profileRating(profileId) {
       const meta = MarketplaceStore.getProfileRating(profileId);
       return meta.average.toFixed(1) + " / 5";
@@ -381,42 +520,36 @@
     window.selectProfile = function (profileId) { catalogState.selectedProfileId = profileId; renderCatalog(); byId("profile-detail").scrollIntoView({ behavior: "smooth", block: "start" }); };
     window.toggleFavorite = function (profileId) {
       const user = currentUser();
-      if (!user) return alert("Войдите как клиент в user.html, чтобы работать с избранным.");
+      if (!user) return showSiteMessage('Сначала войдите как клиент в <a href="user.html">кабинете клиента</a>, и тогда избранное будет работать нормально.', "error");
       MarketplaceStore.toggleFavoriteProfile(user.id, profileId);
+      showSiteMessage("Избранное обновлено.", "success");
       renderCatalog();
     };
     window.toggleCompare = function (profileId) {
       const user = currentUser();
-      if (!user) return alert("Сравнение доступно после входа как клиент.");
+      if (!user) return showSiteMessage('Сравнение доступно после входа в <a href="user.html">кабинет клиента</a>.', "error");
       MarketplaceStore.toggleCompareProfile(user.id, profileId);
+      showSiteMessage("Сравнение обновлено.", "success");
       renderCatalog();
     };
     window.startLead = function (profileId) {
       const profile = MarketplaceStore.getProfileById(profileId);
-      const user = currentUser();
-      const payload = { userId: user ? user.id : null, profileId: profileId, customerName: prompt("Имя организатора:", user ? user.name : ""), customerPhone: prompt("Телефон:", user ? user.phone : ""), customerEmail: user ? user.email : prompt("E-mail:", ""), city: prompt("Город события:", profile ? profile.city : "Чебоксары"), venue: prompt("Площадка:", ""), eventType: prompt("Тип события:", "Свадьба"), guestCount: prompt("Количество гостей:", "50"), eventDate: prompt("Дата:", "2026-05-20"), eventTime: prompt("Время начала:", "17:00"), budget: prompt("Бюджет:", String(profile ? profile.priceFrom * 2 : 60000)), language: prompt("Язык:", "Русский"), requirements: prompt("Ключевые требования:", "Нужен сильный локальный опыт и аккуратная коммуникация.") };
-      if (!payload.customerName || !payload.customerPhone) return;
-      MarketplaceStore.createLead(payload);
-      alert("Заявка отправлена исполнителю. Дальше он сможет прислать квоту из кабинета.");
-      renderHeroStats();
+      fillRequestForm(profile, "lead");
+      openModal(requestModal);
     };
     window.startChatForProfile = function (profileId) {
       const profile = MarketplaceStore.getProfileById(profileId);
-      const user = currentUser();
-      const deal = MarketplaceStore.createOrOpenChat({ userId: user ? user.id : null, profileId: profileId, profileName: profile ? profile.name : "", customerName: user ? user.name : prompt("Имя:", ""), customerPhone: user ? user.phone : prompt("Телефон:", ""), customerEmail: user ? user.email : prompt("E-mail:", ""), city: prompt("Город события:", profile ? profile.city : "Чебоксары"), eventType: prompt("Тип события:", "Частная вечеринка"), requirements: prompt("Что важно обсудить?", "Хочу уточнить пакет и свободную дату.") });
-      alert("Чат открыт. Продолжить можно в кабинете клиента. ID сделки: " + deal.id);
+      fillRequestForm(profile, "chat");
+      openModal(requestModal);
     };
     window.replyToPost = function (postId) {
       const user = currentUser();
       const artist = MarketplaceStore.getCurrentArtist();
-      const authorType = artist ? "artist" : "client";
-      const authorId = artist ? artist.id : (user ? user.id : null);
-      const authorName = artist ? artist.name : (user ? user.name : prompt("Ваше имя:", ""));
-      const contactInfo = artist ? "Через кабинет исполнителя" : "Через кабинет клиента";
-      const message = prompt("Ваш отклик:", "Готов обсудить детали и прислать предложение.");
-      if (!authorName || !message) return;
-      MarketplaceStore.replyToBoardPost(postId, { authorType: authorType, authorId: authorId, authorName: authorName, contactInfo: contactInfo, message: message });
-      renderBoard();
+      replyForm.reset();
+      replyForm.postId.value = postId;
+      replyForm.authorName.value = artist ? artist.name : (user ? user.name : "");
+      replyForm.message.value = "Готов обсудить детали и прислать предложение.";
+      openModal(replyModal);
     };
     byId("board-form").addEventListener("submit", function (event) {
       event.preventDefault();
@@ -428,6 +561,74 @@
       byId("board-message").innerHTML = '<div class="message success">Объявление опубликовано.</div>';
       event.target.reset();
       renderBoard();
+    });
+    requestForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      const payload = Object.fromEntries(new FormData(event.target).entries());
+      const user = currentUser();
+      const profile = payload.profileId ? MarketplaceStore.getProfileById(payload.profileId) : null;
+      payload.userId = user ? user.id : null;
+      payload.profileId = payload.profileId || null;
+      payload.guestCount = Number(payload.guestCount || 0);
+      payload.budget = Number(payload.budget || 0);
+      if (payload.mode === "chat") {
+        const deal = MarketplaceStore.createOrOpenChat({
+          userId: payload.userId,
+          profileId: payload.profileId,
+          profileName: profile ? profile.name : "",
+          customerName: payload.customerName,
+          customerPhone: payload.customerPhone,
+          customerEmail: payload.customerEmail,
+          city: payload.city,
+          venue: payload.venue,
+          eventType: payload.eventType,
+          guestCount: payload.guestCount,
+          eventDate: payload.eventDate,
+          eventTime: payload.eventTime,
+          budget: payload.budget,
+          language: payload.language,
+          requirements: payload.requirements
+        });
+        closeModal(requestModal);
+        showSiteMessage('Чат открыт. Продолжить можно в <a href="user.html">кабинете клиента</a>. Сделка: ' + deal.id, "success");
+      } else {
+        MarketplaceStore.createLead(payload);
+        closeModal(requestModal);
+        showSiteMessage("Заявка отправлена исполнителю. Теперь он увидит её в кабинете и сможет прислать квоту.", "success");
+        renderHeroStats();
+      }
+    });
+    replyForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      const payload = Object.fromEntries(new FormData(event.target).entries());
+      const user = currentUser();
+      const artist = MarketplaceStore.getCurrentArtist();
+      MarketplaceStore.replyToBoardPost(payload.postId, {
+        authorType: artist ? "artist" : "client",
+        authorId: artist ? artist.id : (user ? user.id : null),
+        authorName: payload.authorName,
+        contactInfo: artist ? "Через кабинет исполнителя" : "Через кабинет клиента",
+        message: payload.message
+      });
+      closeModal(replyModal);
+      showSiteMessage("Отклик отправлен.", "success");
+      renderBoard();
+    });
+    byId("request-modal-close").addEventListener("click", function () { closeModal(requestModal); });
+    byId("request-modal-cancel").addEventListener("click", function () { closeModal(requestModal); });
+    byId("reply-modal-close").addEventListener("click", function () { closeModal(replyModal); });
+    byId("reply-modal-cancel").addEventListener("click", function () { closeModal(replyModal); });
+    [requestModal, replyModal].forEach(function (modal) {
+      modal.addEventListener("click", function (event) {
+        if (event.target === modal) closeModal(modal);
+      });
+    });
+    document.querySelectorAll("[data-fill-target]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        const field = button.form ? button.form.querySelector('[name="' + button.dataset.fillTarget + '"]') : null;
+        if (!field) return;
+        field.value = button.dataset.fillValue || "";
+      });
     });
     byId("clear-filters").addEventListener("click", function () {
       ["filter-category", "filter-city", "filter-price", "filter-language", "filter-search", "filter-sort"].forEach(function (id) {

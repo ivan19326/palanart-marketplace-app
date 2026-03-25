@@ -64,17 +64,42 @@
       </div>
 
       <form id="artist-profile-form" class="service-panel">
+        <div class="preset-box" style="margin-bottom:16px;">
+          <strong>Быстрый старт профиля</strong>
+          <div class="quick-options">
+            <button class="quick-option" type="button" data-profile-preset="host">Ведущий</button>
+            <button class="quick-option" type="button" data-profile-preset="dj">DJ</button>
+            <button class="quick-option" type="button" data-profile-preset="photographer">Фотограф</button>
+            <button class="quick-option" type="button" data-profile-preset="band">Музыканты</button>
+          </div>
+        </div>
         <div class="form-grid">
           <label>Основная категория<select name="role" id="artist-role"></select></label>
           <label>Дополнительные категории<input name="categories" type="text" placeholder="host, planner"></label>
           <label>Тариф<select name="planId" id="artist-plan"></select></label>
-          <label>Название профиля<input name="name" type="text" required></label>
-          <label>Заголовок<input name="title" type="text"></label>
-          <label>Город<input name="city" type="text" required></label>
-          <label>Регион<input name="region" type="text"></label>
-          <label>Радиус выезда, км<input name="travelRadiusKm" type="number" min="0" value="50"></label>
-          <label>Цена от<input name="priceFrom" type="number" min="0" required></label>
-          <label>Короткое позиционирование<input name="tagline" type="text" required></label>
+          <label>Название профиля<input name="name" type="text" list="artist-name-options" required></label>
+          <label>Заголовок<input name="title" type="text" list="artist-title-options"></label>
+          <label>Город<input name="city" type="text" list="artist-city-options" required></label>
+          <label>Регион<input name="region" type="text" list="artist-region-options"></label>
+          <label>Радиус выезда, км
+            <select name="travelRadiusKm">
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="120">120</option>
+              <option value="250">250</option>
+              <option value="1000">По всей стране</option>
+            </select>
+          </label>
+          <label>Цена от
+            <select name="priceFrom">
+              <option value="15000">15 000 ₽</option>
+              <option value="25000">25 000 ₽</option>
+              <option value="45000">45 000 ₽</option>
+              <option value="70000">70 000 ₽</option>
+              <option value="120000">120 000 ₽</option>
+            </select>
+          </label>
+          <label>Короткое позиционирование<input name="tagline" type="text" list="artist-tagline-options" required></label>
           <label>E-mail<input name="email" type="email" required></label>
           <label>Телефон<input name="phone" type="tel" required></label>
           <label>Telegram<input name="telegram" type="text"></label>
@@ -92,16 +117,45 @@
           <label>Аудио файлами<input id="artist-audio-files" type="file" accept="audio/*" multiple></label>
         </div>
         <div class="form-grid one">
-          <label>Языки<input name="languages" type="text"></label>
-          <label>Форматы мероприятий<input name="eventFormats" type="text"></label>
-          <label>Особенности сервиса<input name="serviceFeatures" type="text"></label>
+          <label>Языки<input name="languages" type="text" list="artist-language-options"></label>
+          <div class="quick-options" data-chip-target="languages">
+            <button class="quick-option" type="button" data-chip-value="Русский">Русский</button>
+            <button class="quick-option" type="button" data-chip-value="Английский">Английский</button>
+            <button class="quick-option" type="button" data-chip-value="Чувашский">Чувашский</button>
+          </div>
+          <label>Форматы мероприятий<input name="eventFormats" type="text" list="artist-format-options"></label>
+          <div class="quick-options" data-chip-target="eventFormats">
+            <button class="quick-option" type="button" data-chip-value="Свадьбы">Свадьбы</button>
+            <button class="quick-option" type="button" data-chip-value="Корпоративы">Корпоративы</button>
+            <button class="quick-option" type="button" data-chip-value="Частные вечеринки">Частные вечеринки</button>
+            <button class="quick-option" type="button" data-chip-value="Городские события">Городские события</button>
+          </div>
+          <label>Особенности сервиса<input name="serviceFeatures" type="text" list="artist-feature-options"></label>
+          <div class="quick-options" data-chip-target="serviceFeatures">
+            <button class="quick-option" type="button" data-chip-value="Сценарный созвон">Сценарный созвон</button>
+            <button class="quick-option" type="button" data-chip-value="Тайминг и чек-лист">Тайминг и чек-лист</button>
+            <button class="quick-option" type="button" data-chip-value="Выезд со своим оборудованием">Со своим оборудованием</button>
+            <button class="quick-option" type="button" data-chip-value="Работа с подрядчиками">Работа с подрядчиками</button>
+          </div>
           <label>Пакеты<textarea name="packagesText"></textarea></label>
+          <div class="quick-options">
+            <button class="quick-option" type="button" data-fill-textarea="packagesText" data-fill-block="Камерный вечер|4 часа|45000|Ведение, тайминг, коммуникация с площадкой&#10;Большой банкет|6 часов|70000|Полная программа, интерактив, координация подрядчиков">Шаблон пакетов</button>
+          </div>
           <label>Дополнительные опции<textarea name="addOnsText"></textarea></label>
+          <div class="quick-options">
+            <button class="quick-option" type="button" data-fill-textarea="addOnsText" data-fill-block="Дополнительный час||7000|Продление программы на 1 час&#10;Выезд за город||10000|Трансфер и логистика">Шаблон опций</button>
+          </div>
           <label>Календарь занятости<textarea name="availabilityText"></textarea></label>
+          <div class="quick-options">
+            <button class="quick-option" type="button" data-fill-textarea="availabilityText" data-fill-block="2026-05-20|busy&#10;2026-05-27|available&#10;2026-06-03|busy">Пример занятости</button>
+          </div>
           <label>FAQ<textarea name="faqText"></textarea></label>
-          <label>Депозит<input name="depositPolicy" type="text"></label>
-          <label>Отмена<input name="cancellationPolicy" type="text"></label>
-          <label>Технические требования<input name="technicalPolicy" type="text"></label>
+          <div class="quick-options">
+            <button class="quick-option" type="button" data-fill-textarea="faqText" data-fill-block="Что входит в цену?|Ведение, созвон, тайминг и базовая координация.&#10;Нужен ли депозит?|Да, чтобы зафиксировать дату.">Шаблон FAQ</button>
+          </div>
+          <label>Депозит<input name="depositPolicy" type="text" list="artist-deposit-options"></label>
+          <label>Отмена<input name="cancellationPolicy" type="text" list="artist-cancel-options"></label>
+          <label>Технические требования<input name="technicalPolicy" type="text" list="artist-tech-options"></label>
           <label>Подробное описание<textarea name="description" required></textarea></label>
           <label>Стиль работы<textarea name="workStyle"></textarea></label>
         </div>
@@ -129,6 +183,52 @@
       <div class="panel"><h2>Мои объявления</h2><div id="artist-board" class="table-list"></div></div>
     </section>
   </main>
+
+  <div class="app-modal" id="artist-action-modal">
+    <div class="app-modal-card">
+      <div class="app-modal-head">
+        <div>
+          <h3 id="artist-action-title">Действие по заявке</h3>
+          <p id="artist-action-subtitle" class="muted">Быстрое действие без системных окон.</p>
+        </div>
+        <button class="app-modal-close" id="artist-action-close" type="button">×</button>
+      </div>
+      <form id="artist-action-form" class="section-stack">
+        <input type="hidden" name="leadId">
+        <input type="hidden" name="mode">
+        <label id="artist-action-message-field">Сообщение<textarea name="text" required></textarea></label>
+        <div id="artist-quote-fields" class="form-grid" style="display:none;">
+          <label>Пакет<input name="packageName" type="text" list="artist-quote-package-options"></label>
+          <label>Сумма
+            <select name="amount">
+              <option value="25000">25 000 ₽</option>
+              <option value="45000">45 000 ₽</option>
+              <option value="70000">70 000 ₽</option>
+              <option value="100000">100 000 ₽</option>
+            </select>
+          </label>
+        </div>
+        <div class="quick-options" id="artist-action-quick"></div>
+        <div class="inline-actions">
+          <button class="primary-btn" type="submit">Готово</button>
+          <button class="ghost-btn" id="artist-action-cancel" type="button">Отмена</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <datalist id="artist-name-options"><option value="Паланарт Event"></option><option value="Паланарт Show"></option><option value="Паланарт Live"></option></datalist>
+  <datalist id="artist-title-options"><option value="Ведущий на свадьбы и корпоративы"></option><option value="DJ и музыкальное сопровождение"></option><option value="Фотограф на события"></option><option value="Кавер-группа для мероприятий"></option></datalist>
+  <datalist id="artist-city-options"><option value="Чебоксары"></option><option value="Новочебоксарск"></option><option value="Казань"></option><option value="Москва"></option></datalist>
+  <datalist id="artist-region-options"><option value="Чувашия"></option><option value="Татарстан"></option><option value="Москва"></option><option value="Россия"></option></datalist>
+  <datalist id="artist-tagline-options"><option value="Интеллигентное ведение без кринжа и затяжек"></option><option value="Современный звук и уверенная работа с публикой"></option><option value="Живой репортаж и спокойная коммуникация"></option></datalist>
+  <datalist id="artist-language-options"><option value="Русский"></option><option value="Русский, Английский"></option><option value="Русский, Чувашский"></option></datalist>
+  <datalist id="artist-format-options"><option value="Свадьбы, Корпоративы"></option><option value="Частные вечеринки, Дни рождения"></option><option value="Премии, Деловые события"></option></datalist>
+  <datalist id="artist-feature-options"><option value="Сценарный созвон, Тайминг и чек-лист"></option><option value="Работа с подрядчиками, Выезд со своим оборудованием"></option></datalist>
+  <datalist id="artist-deposit-options"><option value="30% для фиксации даты"></option><option value="20% для фиксации даты"></option><option value="Безналичный депозит по договорённости"></option></datalist>
+  <datalist id="artist-cancel-options"><option value="Бесплатная отмена более чем за 21 день"></option><option value="Перенос даты по согласованию"></option><option value="Удержание депозита при поздней отмене"></option></datalist>
+  <datalist id="artist-tech-options"><option value="Нужен комплект звука от площадки или DJ"></option><option value="Нужна гримёрка и питание"></option><option value="Нужна возможность раннего монтажа"></option></datalist>
+  <datalist id="artist-quote-package-options"><option value="Камерный вечер"></option><option value="Большой банкет"></option><option value="Персональный пакет"></option></datalist>
 
   <script src="marketplace-core.js"></script>
   <script>
@@ -271,6 +371,99 @@
       byId("artist-media-preview").innerHTML = items.length ? items.join("") : '<div class="empty">Добавьте фото, изображения, видео или аудио, чтобы собрать карточку исполнителя.</div>';
     }
     function showArtistMessage(text, kind) { byId("artist-message").innerHTML = text ? '<div class="message ' + kind + '">' + text + '</div>' : ""; }
+    const actionModal = byId("artist-action-modal");
+    const actionForm = byId("artist-action-form");
+    const quoteFields = byId("artist-quote-fields");
+    const actionQuick = byId("artist-action-quick");
+    const artistPresets = {
+      host: {
+        role: "host",
+        title: "Ведущий на свадьбы и корпоративы",
+        tagline: "Интеллигентное ведение без перегруза и кринжа",
+        priceFrom: "45000",
+        travelRadiusKm: "120",
+        languages: "Русский, Английский",
+        eventFormats: "Свадьбы, Корпоративы, Частные вечеринки",
+        serviceFeatures: "Сценарный созвон, Тайминг и чек-лист, Работа с подрядчиками",
+        depositPolicy: "30% для фиксации даты",
+        cancellationPolicy: "Бесплатная отмена более чем за 21 день",
+        technicalPolicy: "Нужен комплект звука от площадки или DJ",
+        packagesText: "Камерный вечер|4 часа|45000|Ведение, тайминг, коммуникация с площадкой\nБольшой банкет|6 часов|70000|Полная программа, интерактив, координация подрядчиков"
+      },
+      dj: {
+        role: "dj",
+        title: "DJ и музыкальное сопровождение",
+        tagline: "Современный звук, плотный танцпол и аккуратный вкус",
+        priceFrom: "25000",
+        travelRadiusKm: "250",
+        languages: "Русский",
+        eventFormats: "Свадьбы, Корпоративы, Частные вечеринки",
+        serviceFeatures: "Выезд со своим оборудованием, Тайминг и чек-лист",
+        depositPolicy: "20% для фиксации даты",
+        cancellationPolicy: "Перенос даты по согласованию",
+        technicalPolicy: "Нужен доступ к электропитанию и место под стойку",
+        packagesText: "DJ set|4 часа|25000|Сет, базовый свет, коммуникация с ведущим\nВечер под ключ|6 часов|45000|DJ, звук, подбор плейлистов и тайминг"
+      },
+      photographer: {
+        role: "photographer",
+        title: "Фотограф на события",
+        tagline: "Репортаж, портреты и спокойная работа с гостями",
+        priceFrom: "25000",
+        travelRadiusKm: "120",
+        languages: "Русский",
+        eventFormats: "Свадьбы, Корпоративы, Дни рождения",
+        serviceFeatures: "Сценарный созвон, Работа с подрядчиками",
+        depositPolicy: "30% для фиксации даты",
+        cancellationPolicy: "Перенос даты по согласованию",
+        technicalPolicy: "Нужен тайминг съёмки и контакт координатора",
+        packagesText: "Репортаж|4 часа|25000|Съёмка события и базовая цветокоррекция\nПолный день|10 часов|60000|Репортаж, портреты, анонс в день события"
+      },
+      band: {
+        role: "musicians",
+        title: "Кавер-группа для мероприятий",
+        tagline: "Живой звук, сильный вокал и гибкая программа под зал",
+        priceFrom: "70000",
+        travelRadiusKm: "250",
+        languages: "Русский, Английский",
+        eventFormats: "Корпоративы, Свадьбы, Городские события",
+        serviceFeatures: "Выезд со своим оборудованием, Работа с подрядчиками",
+        depositPolicy: "30% для фиксации даты",
+        cancellationPolicy: "Удержание депозита при поздней отмене",
+        technicalPolicy: "Нужна сцена или ровная площадка и питание линии",
+        packagesText: "Основной сет|60 минут|70000|Живое выступление, саундчек, согласование программы\nДва сета|90 минут|110000|Два блока, интерактив, финальный танцевальный блок"
+      }
+    };
+    function openArtistAction(mode, leadId) {
+      actionForm.reset();
+      actionForm.leadId.value = leadId;
+      actionForm.mode.value = mode;
+      quoteFields.style.display = mode === "quote" ? "grid" : "none";
+      byId("artist-action-title").textContent = mode === "quote" ? "Отправить квоту" : "Быстрый ответ клиенту";
+      byId("artist-action-subtitle").textContent = mode === "quote" ? "Выберите пакет и сумму без ручных prompt-окон." : "Отправьте короткий ответ прямо из кабинета.";
+      actionQuick.innerHTML = mode === "quote"
+        ? '<button class="quick-option" type="button" data-fill-action=\"packageName\" data-fill-value=\"Камерный вечер\">Камерный вечер</button><button class="quick-option" type="button" data-fill-action=\"packageName\" data-fill-value=\"Большой банкет\">Большой банкет</button><button class="quick-option" type="button" data-fill-action=\"text\" data-fill-value=\"В стоимость входит подготовка, созвон и работа по согласованному таймингу.\">Описание квоты</button>'
+        : '<button class="quick-option" type="button" data-fill-action=\"text\" data-fill-value=\"Здравствуйте! Посмотрел заявку и готов обсудить детали.\">Приветствие</button><button class="quick-option" type="button" data-fill-action=\"text\" data-fill-value=\"Свободен на вашу дату, могу сегодня прислать предложение и варианты программы.\">Свободная дата</button>';
+      actionModal.classList.add("open");
+    }
+    function closeArtistAction() {
+      actionModal.classList.remove("open");
+    }
+    function applyArtistPreset(name) {
+      const preset = artistPresets[name];
+      if (!preset) return;
+      const form = byId("artist-profile-form");
+      Object.keys(preset).forEach(function (key) {
+        if (form[key]) form[key].value = preset[key];
+      });
+    }
+    function toggleChipValue(fieldName, value) {
+      const form = byId("artist-profile-form");
+      const field = form[fieldName];
+      if (!field) return;
+      const items = parseList(field.value);
+      const next = items.indexOf(value) === -1 ? items.concat(value) : items.filter(function (item) { return item !== value; });
+      field.value = next.join(", ");
+    }
     function fillSelects() {
       const dict = MarketplaceStore.getDictionaries();
       byId("artist-role").innerHTML = dict.categories.map(function (item) { return '<option value="' + item.id + '">' + item.label + '</option>'; }).join("");
@@ -364,24 +557,10 @@
       artistMediaState.drag = null;
     };
     window.respondLead = function (leadId) {
-      const artist = MarketplaceStore.getCurrentArtist();
-      const text = prompt("Короткий ответ клиенту:", "Здравствуйте! Готов обсудить детали.");
-      if (!artist || !text) return;
-      const result = MarketplaceStore.respondToOrder(leadId, artist.id, text);
-      if (!result.ok) return showArtistMessage(result.message, "error");
-      showArtistMessage("Клиенту отправлен ответ.", "success");
-      renderArtistCabinet();
-      openArtistChat(result.deal.id);
+      openArtistAction("reply", leadId);
     };
     window.sendQuote = function (leadId) {
-      const packageName = prompt("Название пакета:", "Персональный пакет");
-      const amount = prompt("Сумма предложения:", "50000");
-      if (!packageName || !amount) return;
-      const result = MarketplaceStore.createQuote({ leadId: leadId, packageName: packageName, amount: Number(amount), includes: "", comment: "" });
-      if (!result.ok) return showArtistMessage(result.message, "error");
-      showArtistMessage("Квота отправлена клиенту.", "success");
-      renderArtistCabinet();
-      openArtistChat(result.deal.id);
+      openArtistAction("quote", leadId);
     };
     window.openArtistChat = function (dealId) {
       const chat = MarketplaceStore.getChatByDealId(dealId);
@@ -450,6 +629,38 @@
       showArtistMessage(mode === "auto" ? "Профиль сохранен и опубликован." : "Профиль сохранен и отправлен на модерацию.", "success");
       renderArtistCabinet();
     });
+    actionForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      const artist = MarketplaceStore.getCurrentArtist();
+      const payload = Object.fromEntries(new FormData(event.target).entries());
+      if (!artist) return;
+      if (payload.mode === "quote") {
+        const result = MarketplaceStore.createQuote({
+          leadId: payload.leadId,
+          packageName: payload.packageName,
+          amount: Number(payload.amount),
+          includes: payload.text || "",
+          comment: payload.text || ""
+        });
+        if (!result.ok) return showArtistMessage(result.message, "error");
+        closeArtistAction();
+        showArtistMessage("Квота отправлена клиенту.", "success");
+        renderArtistCabinet();
+        openArtistChat(result.deal.id);
+        return;
+      }
+      const result = MarketplaceStore.respondToOrder(payload.leadId, artist.id, payload.text);
+      if (!result.ok) return showArtistMessage(result.message, "error");
+      closeArtistAction();
+      showArtistMessage("Клиенту отправлен ответ.", "success");
+      renderArtistCabinet();
+      openArtistChat(result.deal.id);
+    });
+    byId("artist-action-close").addEventListener("click", closeArtistAction);
+    byId("artist-action-cancel").addEventListener("click", closeArtistAction);
+    actionModal.addEventListener("click", function (event) {
+      if (event.target === actionModal) closeArtistAction();
+    });
     byId("artist-profile-form").photo.addEventListener("input", function (event) { artistMediaState.photo = (event.target.value || "").trim(); renderMediaPreview(); });
     byId("artist-profile-form").galleryRaw.addEventListener("input", function (event) { artistMediaState.galleryFiles = parseMediaList(event.target.value, "gallery"); renderMediaPreview(); });
     byId("artist-profile-form").videoRaw.addEventListener("input", function (event) { artistMediaState.videoFiles = parseMediaList(event.target.value, "video"); renderMediaPreview(); });
@@ -478,6 +689,28 @@
       event.target.value = "";
       syncMediaInputs();
       renderMediaPreview();
+    });
+    document.querySelectorAll("[data-profile-preset]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        applyArtistPreset(button.dataset.profilePreset);
+      });
+    });
+    document.querySelectorAll("[data-chip-target] .quick-option").forEach(function (button) {
+      button.addEventListener("click", function () {
+        toggleChipValue(button.parentElement.dataset.chipTarget, button.dataset.chipValue);
+      });
+    });
+    document.querySelectorAll("[data-fill-textarea]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        const field = byId("artist-profile-form")[button.dataset.fillTextarea];
+        if (field) field.value = button.dataset.fillBlock || "";
+      });
+    });
+    actionQuick.addEventListener("click", function (event) {
+      const button = event.target.closest("[data-fill-action]");
+      if (!button) return;
+      const field = actionForm[button.dataset.fillAction];
+      if (field) field.value = button.dataset.fillValue || "";
     });
     byId("artist-logout").addEventListener("click", function () { MarketplaceStore.logout(); renderArtistCabinet(); });
     fillSelects();

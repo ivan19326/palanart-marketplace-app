@@ -107,6 +107,96 @@ img { max-width: 100%; }
   display: none;
 }
 
+.app-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(5, 10, 18, 0.72);
+  backdrop-filter: blur(10px);
+  z-index: 120;
+}
+
+.app-modal.open {
+  display: flex;
+}
+
+.app-modal-card {
+  width: min(760px, 100%);
+  max-height: min(88vh, 920px);
+  overflow: auto;
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.42);
+  padding: 24px;
+}
+
+.app-modal-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.app-modal-head h3 {
+  margin: 0 0 8px;
+  font-size: 1.5rem;
+}
+
+.app-modal-close {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  font: inherit;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.quick-options,
+.quick-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.quick-option {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 9px 14px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.95rem;
+}
+
+.quick-option.active {
+  background: rgba(255, 138, 91, 0.18);
+  border-color: rgba(255, 138, 91, 0.4);
+  color: #fff4ec;
+}
+
+.preset-box {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.section-stack {
+  display: grid;
+  gap: 14px;
+}
+
 .nav a,
 .ghost-btn,
 .primary-btn,
