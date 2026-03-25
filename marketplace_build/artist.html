@@ -693,6 +693,56 @@
         ? "Сервисный вход включён. Можно использовать e-mail или соцвход."
         : "Пока работает локальный режим. Для сервисного входа подключите Supabase в auth-config.js.";
     }
+    function setupArtistProfileQuickMode() {
+      const form = byId("artist-profile-form");
+      if (!form || form.dataset.quickModeReady) return;
+      form.dataset.quickModeReady = "1";
+      const essentialNames = {
+        role: true,
+        planId: true,
+        name: true,
+        title: true,
+        city: true,
+        region: true,
+        travelRadiusKm: true,
+        priceFrom: true,
+        tagline: true,
+        email: true,
+        phone: true,
+        telegram: true,
+        photo: true,
+        packagesText: true,
+        description: true
+      };
+      form.querySelectorAll("label").forEach(function (label) {
+        const field = label.querySelector("input, select, textarea");
+        if (!field || !field.name) return;
+        label.classList.add(essentialNames[field.name] ? "profile-essential" : "profile-advanced");
+      });
+      form.querySelectorAll(".quick-options").forEach(function (block) {
+        const fill = block.querySelector("[data-fill-textarea]");
+        const target = block.dataset.chipTarget || (fill ? fill.dataset.fillTextarea : "");
+        block.classList.add(essentialNames[target] ? "profile-essential" : "profile-advanced");
+      });
+      form.querySelectorAll(".detail-box").forEach(function (box) {
+        box.classList.add("profile-advanced");
+      });
+      const toolbar = document.createElement("div");
+      toolbar.className = "profile-form-toolbar";
+      toolbar.innerHTML = '<div><strong>Быстрый запуск карточки</strong><p class="muted">Сначала заполните только ключевые поля для публикации. Остальные блоки можно открыть позже.</p></div><button class="ghost-btn profile-form-toggle" type="button">Показать все поля</button>';
+      const presetBox = form.querySelector(".preset-box");
+      if (presetBox) {
+        presetBox.insertAdjacentElement("afterend", toolbar);
+      } else {
+        form.insertAdjacentElement("afterbegin", toolbar);
+      }
+      form.classList.add("profile-form-collapsed");
+      const toggle = toolbar.querySelector(".profile-form-toggle");
+      toggle.addEventListener("click", function () {
+        form.classList.toggle("profile-form-collapsed");
+        toggle.textContent = form.classList.contains("profile-form-collapsed") ? "Показать все поля" : "Скрыть лишнее";
+      });
+    }
     byId("artist-register-form").addEventListener("submit", async function (event) {
       event.preventDefault();
       const payload = Object.fromEntries(new FormData(event.target).entries());
@@ -886,6 +936,7 @@
     if (byId("artist-register-form").telegram) {
       byId("artist-register-form").telegram.setAttribute("placeholder", "@username");
     }
+    setupArtistProfileQuickMode();
     fillSelects();
     renderArtistAuthMode();
     if (window.PalanartAuthBridge) {

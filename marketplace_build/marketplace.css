@@ -337,6 +337,48 @@ img { max-width: 100%; }
   margin: 12px 0 0;
 }
 
+.profile-form-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 18px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.profile-form-toolbar strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.profile-form-toolbar .muted {
+  margin: 0;
+}
+
+.profile-form-toggle {
+  white-space: nowrap;
+}
+
+#artist-profile-form .profile-essential,
+#artist-profile-form .profile-advanced {
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+#artist-profile-form.profile-form-collapsed .profile-advanced {
+  display: none;
+}
+
+#artist-profile-form .profile-essential textarea {
+  min-height: 108px;
+}
+
+#artist-profile-form .profile-advanced textarea {
+  min-height: 88px;
+}
+
 .nav a,
 .ghost-btn,
 .primary-btn,
