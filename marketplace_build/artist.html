@@ -27,11 +27,77 @@
   <main class="shell section service-shell">
     <div id="artist-message"></div>
 
-    <section id="artist-auth-view" class="split">
-      <form id="artist-register-form" class="service-panel">
+    <section id="artist-auth-view" class="split auth-onboarding">
+      <div class="service-panel auth-welcome-card">
+        <div class="eyebrow">Паланарт для исполнителей</div>
+        <h1>Быстрый старт без длинной анкеты</h1>
+        <p class="muted">Сначала создаём кабинет за минуту, потом уже спокойно заполняем профиль, пакеты, календарь и медиа готовыми вариантами.</p>
+        <div class="section-head compact">
+          <div>
+            <div class="eyebrow">Регистрация</div>
+            <h2>Создать кабинет исполнителя</h2>
+          </div>
+          <span class="pill-badge">1 минута</span>
+        </div>
+        <div class="auth-preset-block">
+          <strong>Кто вы?</strong>
+          <div class="quick-options register-role-options">
+            <button class="quick-option" type="button" data-register-role="host">Ведущий</button>
+            <button class="quick-option" type="button" data-register-role="dj">DJ</button>
+            <button class="quick-option" type="button" data-register-role="photographer">Фотограф</button>
+            <button class="quick-option" type="button" data-register-role="band">Музыканты</button>
+          </div>
+        </div>
+        <div class="auth-socials auth-socials-stack">
+          <button class="ghost-btn auth-social-btn auth-social-btn--google" type="button" data-artist-social="google">Войти через Google</button>
+          <button class="ghost-btn auth-social-btn" type="button" disabled>VK ID скоро</button>
+          <button class="ghost-btn auth-social-btn" type="button" disabled>Telegram скоро</button>
+        </div>
+        <div class="auth-benefits">
+          <div class="auth-benefit-card">
+            <strong>Быстрый кабинет</strong>
+            <span>Тип исполнителя, имя, город и контакты.</span>
+          </div>
+          <div class="auth-benefit-card">
+            <strong>Профиль по шаблонам</strong>
+            <span>Пакеты, FAQ и занятость можно вставить кнопками уже после входа.</span>
+          </div>
+          <div class="auth-benefit-card">
+            <strong>Сразу в тест</strong>
+            <span>Можно идти по сценарию заявка → квота → чат → подтверждение.</span>
+          </div>
+        </div>
+      </div>
+      <form id="artist-register-form" class="service-panel auth-register-card">
         <h1>Регистрация исполнителя</h1>
-        <div id="artist-auth-mode" class="muted auth-mode-note"></div>
+        <div class="section-head compact">
+          <div>
+            <div class="eyebrow">Регистрация</div>
+            <h2>Создать кабинет исполнителя</h2>
+          </div>
+          <span class="pill-badge">1 минута</span>
+        </div>
+        <div class="auth-preset-block">
+          <strong>Кто вы?</strong>
+          <div class="quick-options register-role-options">
+            <button class="quick-option" type="button" data-register-role="host">Ведущий</button>
+            <button class="quick-option" type="button" data-register-role="dj">DJ</button>
+            <button class="quick-option" type="button" data-register-role="photographer">Фотограф</button>
+            <button class="quick-option" type="button" data-register-role="band">Музыканты</button>
+          </div>
+        </div>
         <div class="form-grid">
+          <label>Тип исполнителя
+            <select name="role" id="artist-register-role">
+              <option value="host">Ведущий</option>
+              <option value="dj">DJ</option>
+              <option value="photographer">Фотограф</option>
+              <option value="band">Музыканты</option>
+              <option value="videographer">Видеограф</option>
+              <option value="decorator">Декоратор</option>
+            </select>
+          </label>
+          <label>Город<input name="city" type="text" list="artist-city-options" required></label>
           <label>Имя или проект<input name="name" type="text" required></label>
           <label>E-mail<input name="email" type="email" required></label>
           <label>Телефон<input name="phone" type="tel" required></label>
@@ -43,9 +109,16 @@
         <div class="auth-socials">
           <button class="ghost-btn auth-social-btn" type="button" data-artist-social="google">Войти через Google</button>
         </div>
+        <div class="auth-inline-hints">
+          <button class="ghost-btn mini-chip" type="button" data-fill-register="city" data-fill-value="Чебоксары">Чебоксары</button>
+          <button class="ghost-btn mini-chip" type="button" data-fill-register="city" data-fill-value="Казань">Казань</button>
+          <button class="ghost-btn mini-chip" type="button" data-fill-register="city" data-fill-value="Москва">Москва</button>
+          <button class="ghost-btn mini-chip" type="button" data-fill-register="telegram" data-fill-value="@palanart">Шаблон Telegram</button>
+        </div>
+        <p class="muted auth-form-footnote">Пакеты, цены, календарь, медиа и FAQ добавите уже после входа. На старте не нужно тратить полчаса на форму.</p>
       </form>
 
-      <form id="artist-login-form" class="service-panel">
+      <form id="artist-login-form" class="service-panel auth-login-card">
         <h2>Вход</h2>
         <div class="form-grid one">
             <label>E-mail<input name="email" type="email" required></label>
@@ -600,6 +673,22 @@
     }
     function renderArtistAuthMode() {
       const mode = window.PalanartAuthBridge ? window.PalanartAuthBridge.getMode() : "local";
+      let modeNode = byId("artist-auth-mode");
+      if (!modeNode) {
+        const welcome = document.querySelector(".auth-welcome-card");
+        if (welcome) {
+          modeNode = document.createElement("div");
+          modeNode.id = "artist-auth-mode";
+          modeNode.className = "muted auth-mode-note";
+          welcome.insertBefore(modeNode, welcome.querySelector(".auth-socials"));
+        }
+      }
+      if (modeNode) {
+        modeNode.textContent = mode === "supabase"
+          ? "Сервисный вход включён. Можно использовать e-mail или соцвход."
+          : "Пока работает локальный режим. Для сервисного входа подключите Supabase в auth-config.js.";
+        return;
+      }
       byId("artist-auth-mode").innerHTML = mode === "supabase"
         ? "Сервисный вход включён. Можно использовать e-mail или соцвход."
         : "Пока работает локальный режим. Для сервисного входа подключите Supabase в auth-config.js.";
@@ -611,6 +700,31 @@
         ? await window.PalanartAuthBridge.signUpWithEmail("artist", payload)
         : MarketplaceStore.registerArtistAccount(payload);
       if (!result.ok) return showArtistMessage(result.message, "error");
+      if (result.artist) {
+        MarketplaceStore.createOrUpdateArtistProfile(result.artist.id, {
+          role: payload.role || "host",
+          name: payload.name || "",
+          city: payload.city || "",
+          region: payload.city || "",
+          email: payload.email || "",
+          phone: payload.phone || "",
+          telegram: payload.telegram || "",
+          photo: payload.photo || "",
+          title: "",
+          tagline: "",
+          description: "",
+          workStyle: "",
+          categories: [],
+          languages: [],
+          eventFormats: [],
+          serviceFeatures: [],
+          packages: [],
+          addOns: [],
+          availability: [],
+          faq: [],
+          policies: { deposit: "", cancellation: "", technical: "" }
+        });
+      }
       renderArtistCabinet();
     });
     byId("artist-login-form").addEventListener("submit", async function (event) {
@@ -712,6 +826,28 @@
         applyArtistPreset(button.dataset.profilePreset);
       });
     });
+    document.querySelectorAll("[data-register-role]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        const form = byId("artist-register-form");
+        const roleField = byId("artist-register-role");
+        if (roleField) roleField.value = button.dataset.registerRole;
+        if (form && form.name && !form.name.value) {
+          const defaults = {
+            host: "Ведущий Паланарт",
+            dj: "DJ Паланарт",
+            photographer: "Фотограф Паланарт",
+            band: "Группа Паланарт"
+          };
+          form.name.value = defaults[button.dataset.registerRole] || "";
+        }
+      });
+    });
+    document.querySelectorAll("[data-fill-register]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        const field = byId("artist-register-form")[button.dataset.fillRegister];
+        if (field) field.value = button.dataset.fillValue || "";
+      });
+    });
     document.querySelectorAll("[data-chip-target] .quick-option").forEach(function (button) {
       button.addEventListener("click", function () {
         toggleChipValue(button.parentElement.dataset.chipTarget, button.dataset.chipValue);
@@ -744,6 +880,12 @@
         if (!result.ok) showArtistMessage(result.message, "error");
       });
     });
+    if (byId("artist-register-form").name) {
+      byId("artist-register-form").name.setAttribute("list", "artist-name-options");
+    }
+    if (byId("artist-register-form").telegram) {
+      byId("artist-register-form").telegram.setAttribute("placeholder", "@username");
+    }
     fillSelects();
     renderArtistAuthMode();
     if (window.PalanartAuthBridge) {

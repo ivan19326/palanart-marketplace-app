@@ -212,6 +212,131 @@ img { max-width: 100%; }
   min-width: 180px;
 }
 
+.auth-onboarding {
+  align-items: start;
+  grid-template-columns: 1.08fr 1fr;
+}
+
+.auth-welcome-card,
+.auth-register-card,
+.auth-login-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-welcome-card::before,
+.auth-register-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 140px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 138, 91, 0.22), transparent 44%),
+    radial-gradient(circle at top left, rgba(120, 183, 255, 0.18), transparent 40%);
+  pointer-events: none;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.auth-socials-stack {
+  display: grid;
+}
+
+.auth-social-btn--google {
+  background: linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,138,91,0.12));
+}
+
+.auth-benefits {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.auth-benefit-card {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.auth-benefit-card strong {
+  color: var(--text);
+}
+
+.auth-welcome-card > .section-head,
+.auth-welcome-card > .auth-preset-block {
+  display: none;
+}
+
+.auth-register-card > h1,
+.auth-register-card > .auth-socials {
+  display: none;
+}
+
+.auth-login-card {
+  grid-column: 2;
+}
+
+.section-head.compact {
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.pill-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 138, 91, 0.28);
+  background: rgba(255, 138, 91, 0.12);
+  color: #ffd8c8;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.auth-preset-block {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 14px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.register-role-options .quick-option {
+  min-width: 120px;
+}
+
+.auth-inline-hints {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0 10px;
+}
+
+.mini-chip {
+  padding: 8px 12px;
+  font-size: 0.88rem;
+}
+
+.auth-form-footnote {
+  margin: 12px 0 0;
+}
+
 .nav a,
 .ghost-btn,
 .primary-btn,
@@ -918,6 +1043,10 @@ body[data-theme="light"] .summary-pill {
   .service-kpis,
   .metrics-grid {
     grid-template-columns: 1fr;
+  }
+
+  .auth-login-card {
+    grid-column: auto;
   }
 }
 
