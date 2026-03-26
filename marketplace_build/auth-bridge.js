@@ -16,7 +16,15 @@
   }
 
   function canUseProvider(provider) {
-    return Array.isArray(config.socialProviders) && config.socialProviders.some(function (item) { return item.id === provider; });
+    return Array.isArray(config.socialProviders) && config.socialProviders.some(function (item) {
+      return item.id === provider;
+    });
+  }
+
+  function getSetupMessage() {
+    if (!isSupabaseMode()) return "Соцвход пока выключен. Включите режим Supabase в админке.";
+    if (!isConfigured()) return "Соцвход еще не настроен. Добавьте Supabase URL и anon key в админке.";
+    return "";
   }
 
   function loadScript(src) {
@@ -49,7 +57,7 @@
     return clientPromise;
   }
 
-  function externalPayload(sessionUser, role) {
+  function externalPayload(sessionUser) {
     const meta = sessionUser.user_metadata || {};
     return {
       name: meta.full_name || meta.name || sessionUser.email || "",
@@ -64,9 +72,9 @@
   function syncMarketplaceSession(role, sessionUser) {
     if (!sessionUser || !window.MarketplaceStore) return null;
     if (role === "artist") {
-      return window.MarketplaceStore.ensureExternalArtistAccount(externalPayload(sessionUser, role));
+      return window.MarketplaceStore.ensureExternalArtistAccount(externalPayload(sessionUser));
     }
-    return window.MarketplaceStore.ensureExternalUserAccount(externalPayload(sessionUser, role));
+    return window.MarketplaceStore.ensureExternalUserAccount(externalPayload(sessionUser));
   }
 
   async function init(options) {
@@ -93,6 +101,7 @@
   }
 
   async function signUpWithEmail(role, payload) {
+    if (getMode() !== "supabase") return { ok: false, message: getSetupMessage() || "Сервисный вход пока не настроен." };
     const client = await ensureClient();
     const response = await client.auth.signUp({
       email: payload.email,
@@ -115,6 +124,7 @@
   }
 
   async function signInWithEmail(role, payload) {
+    if (getMode() !== "supabase") return { ok: false, message: getSetupMessage() || "Сервисный вход пока не настроен." };
     const client = await ensureClient();
     const response = await client.auth.signInWithPassword({
       email: payload.email,
@@ -128,7 +138,8 @@
   }
 
   async function signInWithSocial(role, provider) {
-    if (!canUseProvider(provider)) return { ok: false, message: "Провайдер пока не включён в конфиге." };
+    if (getMode() !== "supabase") return { ok: false, message: getSetupMessage() || "Соцвход пока не настроен." };
+    if (!canUseProvider(provider)) return { ok: false, message: "Этот провайдер пока не включен в настройках входа." };
     const client = await ensureClient();
     const response = await client.auth.signInWithOAuth({
       provider: provider,
@@ -153,6 +164,7 @@
     getMode: getMode,
     isConfigured: isConfigured,
     canUseProvider: canUseProvider,
+    getSetupMessage: getSetupMessage,
     init: init,
     signUpWithEmail: signUpWithEmail,
     signInWithEmail: signInWithEmail,
