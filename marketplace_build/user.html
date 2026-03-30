@@ -282,6 +282,10 @@
       byId("user-auth-mode").innerHTML = mode === "supabase"
         ? "Сервисный вход включён. Можно использовать e-mail или соцвход."
         : "Пока работает локальный режим. Для сервисного входа подключите Supabase в auth-config.js.";
+      document.querySelectorAll("[data-user-social]").forEach(function (button) {
+        button.disabled = mode !== "supabase";
+        button.title = mode === "supabase" ? "" : "Сначала настройте Supabase и Google.";
+      });
     }
     byId("register-form").addEventListener("submit", async function (event) {
       event.preventDefault();

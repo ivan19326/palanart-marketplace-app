@@ -680,7 +680,12 @@
           modeNode = document.createElement("div");
           modeNode.id = "artist-auth-mode";
           modeNode.className = "muted auth-mode-note";
-          welcome.insertBefore(modeNode, welcome.querySelector(".auth-socials"));
+          const socialsNode = welcome.querySelector(".auth-socials");
+          if (socialsNode && socialsNode.parentNode === welcome) {
+            welcome.insertBefore(modeNode, socialsNode);
+          } else {
+            welcome.appendChild(modeNode);
+          }
         }
       }
       if (modeNode) {
@@ -692,6 +697,10 @@
       byId("artist-auth-mode").innerHTML = mode === "supabase"
         ? "Сервисный вход включён. Можно использовать e-mail или соцвход."
         : "Пока работает локальный режим. Для сервисного входа подключите Supabase в auth-config.js.";
+      document.querySelectorAll("[data-artist-social]").forEach(function (button) {
+        button.disabled = mode !== "supabase";
+        button.title = mode === "supabase" ? "" : "Сначала настройте Supabase и Google.";
+      });
     }
     function setupArtistProfileQuickMode() {
       const form = byId("artist-profile-form");
