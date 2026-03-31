@@ -118,6 +118,12 @@
               <option value="false">Выключен</option>
             </select>
           </label>
+          <label style="grid-column:1/-1;">Внешний URL для VK ID
+            <input name="vkAuthUrl" type="url" placeholder="https://auth.example.com/vk/start">
+          </label>
+          <label style="grid-column:1/-1;">Внешний URL для Telegram
+            <input name="telegramAuthUrl" type="url" placeholder="https://auth.example.com/telegram/start">
+          </label>
           <button class="primary-btn" type="submit">Сохранить auth</button>
         </form>
         <p class="muted" style="margin-top:12px;">После сохранения обновите страницу клиента или исполнителя. Google, VK ID и Telegram управляются из этой панели. Полная внешняя OAuth-настройка для каждого провайдера подключается отдельно.</p>
@@ -204,11 +210,13 @@
       }
       authForm.mode.value = authConfig.mode || "local";
       authForm.supabaseUrl.value = authConfig.supabaseUrl || "";
-      authForm.supabaseAnonKey.value = authConfig.supabaseAnonKey || "";
-      const providers = Array.isArray(authConfig.socialProviders) ? authConfig.socialProviders : [];
-      authForm.googleEnabled.value = String(providers.some(function (item) { return item.id === "google"; }));
-      authForm.vkEnabled.value = String(providers.some(function (item) { return item.id === "vk"; }));
-      authForm.telegramEnabled.value = String(providers.some(function (item) { return item.id === "telegram"; }));
+        authForm.supabaseAnonKey.value = authConfig.supabaseAnonKey || "";
+        const providers = Array.isArray(authConfig.socialProviders) ? authConfig.socialProviders : [];
+        authForm.googleEnabled.value = String(providers.some(function (item) { return item.id === "google"; }));
+        authForm.vkEnabled.value = String(providers.some(function (item) { return item.id === "vk"; }));
+        authForm.telegramEnabled.value = String(providers.some(function (item) { return item.id === "telegram"; }));
+        authForm.vkAuthUrl.value = authConfig.externalProviderUrls && authConfig.externalProviderUrls.vk ? authConfig.externalProviderUrls.vk : "";
+        authForm.telegramAuthUrl.value = authConfig.externalProviderUrls && authConfig.externalProviderUrls.telegram ? authConfig.externalProviderUrls.telegram : "";
     }
     function renderDictionaries() {
       const dict = MarketplaceStore.getDictionaries();
@@ -281,16 +289,20 @@
     byId("auth-settings-form").addEventListener("submit", function (event) {
       event.preventDefault();
       const payload = Object.fromEntries(new FormData(event.target).entries());
-      const config = {
-        mode: payload.mode || "local",
-        supabaseUrl: (payload.supabaseUrl || "").trim(),
-        supabaseAnonKey: (payload.supabaseAnonKey || "").trim(),
-        socialProviders: [
-          payload.googleEnabled === "true" ? { id: "google", label: "Google" } : null,
-          payload.vkEnabled === "true" ? { id: "vk", label: "VK ID" } : null,
-          payload.telegramEnabled === "true" ? { id: "telegram", label: "Telegram" } : null
-        ].filter(Boolean)
-      };
+        const config = {
+          mode: payload.mode || "local",
+          supabaseUrl: (payload.supabaseUrl || "").trim(),
+          supabaseAnonKey: (payload.supabaseAnonKey || "").trim(),
+          socialProviders: [
+            payload.googleEnabled === "true" ? { id: "google", label: "Google" } : null,
+            payload.vkEnabled === "true" ? { id: "vk", label: "VK ID" } : null,
+            payload.telegramEnabled === "true" ? { id: "telegram", label: "Telegram" } : null
+          ].filter(Boolean),
+          externalProviderUrls: {
+            vk: (payload.vkAuthUrl || "").trim(),
+            telegram: (payload.telegramAuthUrl || "").trim()
+          }
+        };
       localStorage.setItem("palanart_auth_config", JSON.stringify(config));
       showMessage("admin-message", "Настройки сервисного входа сохранены. Обновите страницу клиента или исполнителя.", "success");
       renderSettings();

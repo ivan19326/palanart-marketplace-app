@@ -338,6 +338,17 @@ img { max-width: 100%; }
   font-size: 0.88rem;
 }
 
+.geo-inline-action {
+  display: flex;
+  align-items: center;
+  margin-top: -4px;
+  margin-bottom: 4px;
+}
+
+.geo-inline-action .mini-chip {
+  width: fit-content;
+}
+
 .auth-form-footnote {
   margin: 12px 0 0;
 }

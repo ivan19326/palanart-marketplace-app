@@ -7,7 +7,11 @@
       { id: "google", label: "Google" },
       { id: "vk", label: "VK ID" },
       { id: "telegram", label: "Telegram" }
-    ]
+    ],
+    externalProviderUrls: {
+      vk: "",
+      telegram: ""
+    }
   };
 
   let saved = {};
@@ -21,7 +25,10 @@
     ? saved.socialProviders
     : base.socialProviders;
 
+  const externalProviderUrls = Object.assign({}, base.externalProviderUrls, saved.externalProviderUrls || {});
+
   window.PalanartAuthConfig = Object.assign({}, base, saved, {
+    externalProviderUrls: externalProviderUrls,
     socialProviders: providers
   });
 })();

@@ -47,13 +47,16 @@
           <form id="register-form" class="service-panel">
             <h2>Регистрация</h2>
             <div id="user-auth-mode" class="muted auth-mode-note"></div>
-            <div class="form-grid one">
-              <label>Имя<input name="name" type="text" required></label>
-              <label>E-mail<input name="email" type="email" required></label>
-              <label>Телефон<input name="phone" type="tel" required></label>
-              <label>Город<input name="city" type="text" placeholder="Чебоксары"></label>
-              <label>Пароль<input name="password" type="password" required></label>
-            </div>
+              <div class="form-grid one">
+                <label>Имя<input name="name" type="text" required></label>
+                <label>E-mail<input name="email" type="email" required></label>
+                <label>Телефон<input name="phone" type="tel" required></label>
+                <label>Город<input name="city" type="text" placeholder="Чебоксары"></label>
+                <div class="geo-inline-action">
+                  <button id="detect-user-city" class="ghost-btn mini-chip" type="button">Определить город по геолокации</button>
+                </div>
+                <label>Пароль<input name="password" type="password" required></label>
+              </div>
             <button class="primary-btn" type="submit">Создать аккаунт</button>
             <div class="auth-socials">
               <button class="ghost-btn auth-social-btn" type="button" data-user-social="google">Войти через Google</button>
@@ -279,23 +282,58 @@
       renderKpis(user); renderLeads(user); renderQuotes(user); renderFavorites(user); renderDeals(user); renderBoard(user);
       byId("chat-box").innerHTML = '<div class="empty">Выберите сделку слева, чтобы открыть чат и продолжить согласование.</div>';
     }
-    function renderAuthMode() {
-      const mode = window.PalanartAuthBridge ? window.PalanartAuthBridge.getMode() : "local";
-      byId("user-auth-mode").innerHTML = mode === "supabase"
-        ? "Сервисный вход включён. Рабочий способ входа сейчас: e-mail и пароль через Supabase."
-        : "Пока работает локальный режим. Для сервисного входа подключите Supabase в auth-config.js.";
-      document.querySelectorAll("[data-user-social]").forEach(function (button) {
-        const enabled = mode === "supabase" && window.PalanartAuthBridge && window.PalanartAuthBridge.canUseProvider(button.dataset.userSocial);
-        button.disabled = mode !== "supabase";
-        button.hidden = false;
-        button.classList.toggle("is-unavailable", !enabled);
-        button.title = enabled ? "" : "Этот соцвход ещё не подключён полностью. Пока используйте e-mail вход.";
-      });
-    }
-    byId("register-form").addEventListener("submit", async function (event) {
-      event.preventDefault();
-      const payload = Object.fromEntries(new FormData(event.target).entries());
-      const result = window.PalanartAuthBridge && window.PalanartAuthBridge.getMode() === "supabase"
+      function renderAuthMode() {
+        const mode = window.PalanartAuthBridge ? window.PalanartAuthBridge.getMode() : "local";
+        byId("user-auth-mode").innerHTML = mode === "supabase"
+          ? "Сервисный вход включён. Рабочий способ входа сейчас: e-mail и пароль через Supabase. Google можно добить внешней OAuth-настройкой, VK ID и Telegram подключаются через отдельный auth-слой."
+          : "Пока работает локальный режим. Для сервисного входа подключите Supabase в auth-config.js.";
+        document.querySelectorAll("[data-user-social]").forEach(function (button) {
+          const enabled = mode === "supabase" && window.PalanartAuthBridge && window.PalanartAuthBridge.canUseProvider(button.dataset.userSocial);
+          button.disabled = mode !== "supabase";
+          button.hidden = false;
+          button.classList.toggle("is-unavailable", !enabled);
+          button.title = enabled ? "" : "Этот соцвход ещё не подключён полностью. Пока используйте e-mail вход.";
+        });
+      }
+      async function reverseLookupCity(latitude, longitude) {
+        const endpoint = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" + encodeURIComponent(latitude) + "&lon=" + encodeURIComponent(longitude) + "&accept-language=ru";
+        const response = await fetch(endpoint, { headers: { "Accept": "application/json" } });
+        if (!response.ok) throw new Error("Сервис геолокации не ответил.");
+        const data = await response.json();
+        const address = data.address || {};
+        return {
+          city: address.city || address.town || address.village || address.municipality || address.state || "",
+          region: address.state || address.region || address.county || ""
+        };
+      }
+      async function detectUserCity() {
+        if (!navigator.geolocation) return showMessage("Ваш браузер не поддерживает геолокацию.", "error");
+        const button = byId("detect-user-city");
+        button.disabled = true;
+        button.textContent = "Определяем...";
+        navigator.geolocation.getCurrentPosition(async function (position) {
+          try {
+            const result = await reverseLookupCity(position.coords.latitude, position.coords.longitude);
+            if (byId("register-form").city && result.city) {
+              byId("register-form").city.value = result.city;
+            }
+            showMessage(result.city ? "Город определён: " + result.city : "Координаты получены, но город не распознан. Можно вписать вручную.", result.city ? "success" : "error");
+          } catch (error) {
+            showMessage(error.message || "Не удалось определить город.", "error");
+          } finally {
+            button.disabled = false;
+            button.textContent = "Определить город по геолокации";
+          }
+        }, function () {
+          button.disabled = false;
+          button.textContent = "Определить город по геолокации";
+          showMessage("Не удалось получить геолокацию. Проверьте разрешение браузера.", "error");
+        }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 });
+      }
+      byId("register-form").addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const payload = Object.fromEntries(new FormData(event.target).entries());
+        const result = window.PalanartAuthBridge && window.PalanartAuthBridge.getMode() === "supabase"
         ? await window.PalanartAuthBridge.signUpWithEmail("client", payload)
         : MarketplaceStore.registerUser(payload);
       if (!result.ok) return showMessage(result.message, "error");
@@ -318,14 +356,15 @@
       }
       renderCabinet();
     });
-    document.querySelectorAll("[data-user-social]").forEach(function (button) {
-      button.addEventListener("click", async function () {
-        if (!window.PalanartAuthBridge) return;
-        const result = await window.PalanartAuthBridge.signInWithSocial("client", button.dataset.userSocial);
-        if (!result.ok) showMessage(result.message, "error");
+      document.querySelectorAll("[data-user-social]").forEach(function (button) {
+        button.addEventListener("click", async function () {
+          if (!window.PalanartAuthBridge) return;
+          const result = await window.PalanartAuthBridge.signInWithSocial("client", button.dataset.userSocial);
+          if (!result.ok) showMessage(result.message, "error");
+        });
       });
-    });
-    renderAuthMode();
+      byId("detect-user-city").addEventListener("click", detectUserCity);
+      renderAuthMode();
     if (window.PalanartAuthBridge) {
       window.PalanartAuthBridge.init({
         role: "client",

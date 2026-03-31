@@ -98,6 +98,9 @@
             </select>
           </label>
           <label>Город<input name="city" type="text" list="artist-city-options" required></label>
+          <div class="geo-inline-action">
+            <button id="detect-artist-register-city" class="ghost-btn mini-chip" type="button">Определить город по геолокации</button>
+          </div>
           <label>Имя или проект<input name="name" type="text" required></label>
           <label>E-mail<input name="email" type="email" required></label>
           <label>Телефон<input name="phone" type="tel" required></label>
@@ -722,11 +725,11 @@
       }
       if (modeNode) {
         modeNode.textContent = mode === "supabase"
-          ? "Сервисный вход включён. Рабочий способ входа сейчас: e-mail и пароль через Supabase."
+          ? "Сервисный вход включён. Рабочий способ входа сейчас: e-mail и пароль через Supabase. Google добивается внешней OAuth-настройкой, VK ID и Telegram подключаются через отдельный auth-слой."
           : "Пока работает локальный режим. Для сервисного входа подключите Supabase в auth-config.js.";
       } else {
         byId("artist-auth-mode").innerHTML = mode === "supabase"
-          ? "Сервисный вход включён. Рабочий способ входа сейчас: e-mail и пароль через Supabase."
+          ? "Сервисный вход включён. Рабочий способ входа сейчас: e-mail и пароль через Supabase. Google добивается внешней OAuth-настройкой, VK ID и Telegram подключаются через отдельный auth-слой."
           : "Пока работает локальный режим. Для сервисного входа подключите Supabase в auth-config.js.";
       }
       document.querySelectorAll("[data-artist-social]").forEach(function (button) {
@@ -736,6 +739,47 @@
         button.classList.toggle("is-unavailable", !enabled);
         button.title = enabled ? "" : "Этот соцвход ещё не подключён полностью. Пока используйте e-mail вход.";
       });
+    }
+    async function reverseLookupArtistCity(latitude, longitude) {
+      const endpoint = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" + encodeURIComponent(latitude) + "&lon=" + encodeURIComponent(longitude) + "&accept-language=ru";
+      const response = await fetch(endpoint, { headers: { "Accept": "application/json" } });
+      if (!response.ok) throw new Error("Сервис геолокации не ответил.");
+      const data = await response.json();
+      const address = data.address || {};
+      return {
+        city: address.city || address.town || address.village || address.municipality || address.state || "",
+        region: address.state || address.region || address.county || ""
+      };
+    }
+    function applyArtistGeoResult(result) {
+      const registerForm = byId("artist-register-form");
+      const profileForm = byId("artist-profile-form");
+      if (registerForm && registerForm.city && result.city) registerForm.city.value = result.city;
+      if (profileForm && profileForm.city && result.city) profileForm.city.value = result.city;
+      if (profileForm && profileForm.region && result.region) profileForm.region.value = result.region;
+      showArtistMessage(result.city ? "Город определён: " + result.city : "Координаты получены, но город не распознан. Можно вписать вручную.", result.city ? "success" : "error");
+    }
+    function detectArtistCity(buttonId) {
+      if (!navigator.geolocation) return showArtistMessage("Ваш браузер не поддерживает геолокацию.", "error");
+      const button = byId(buttonId);
+      if (!button) return;
+      button.disabled = true;
+      button.textContent = "Определяем...";
+      navigator.geolocation.getCurrentPosition(async function (position) {
+        try {
+          const result = await reverseLookupArtistCity(position.coords.latitude, position.coords.longitude);
+          applyArtistGeoResult(result);
+        } catch (error) {
+          showArtistMessage(error.message || "Не удалось определить город.", "error");
+        } finally {
+          button.disabled = false;
+          button.textContent = "Определить город по геолокации";
+        }
+      }, function () {
+        button.disabled = false;
+        button.textContent = "Определить город по геолокации";
+        showArtistMessage("Не удалось получить геолокацию. Проверьте разрешение браузера.", "error");
+      }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 });
     }
     function setupArtistProfileQuickMode() {
       const form = byId("artist-profile-form");
@@ -998,6 +1042,9 @@
         const field = byId("artist-register-form")[button.dataset.fillRegister];
         if (field) field.value = button.dataset.fillValue || "";
       });
+    });
+    byId("detect-artist-register-city").addEventListener("click", function () {
+      detectArtistCity("detect-artist-register-city");
     });
     document.querySelectorAll("[data-chip-target] .quick-option").forEach(function (button) {
       button.addEventListener("click", function () {

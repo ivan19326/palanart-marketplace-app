@@ -26,9 +26,14 @@
     return labels[provider] || provider;
   }
 
+  function externalProviderUrl(provider) {
+    const urls = config.externalProviderUrls || {};
+    return typeof urls[provider] === "string" ? urls[provider].trim() : "";
+  }
+
   function getSetupMessage() {
     if (!isSupabaseMode()) return "Соцвход пока выключен. Включите режим Supabase в админке.";
-    if (!isConfigured()) return "Соцвход еще не настроен. Добавьте Supabase URL и anon key в админке.";
+    if (!isConfigured()) return "Соцвход еще не настроен. Добавьте Supabase URL и publishable key в админке.";
     return "";
   }
 
@@ -41,6 +46,7 @@
         if (window.supabase && window.supabase.createClient) resolve();
         return;
       }
+
       const script = document.createElement("script");
       script.src = src;
       script.async = true;
@@ -88,13 +94,16 @@
       if (options && options.onMode) options.onMode("local");
       return { mode: "local" };
     }
+
     const client = await ensureClient();
     if (options && options.onMode) options.onMode("supabase");
+
     const result = await client.auth.getSession();
     if (result.data && result.data.session && result.data.session.user) {
       syncMarketplaceSession(role, result.data.session.user);
       if (options && options.onSession) options.onSession(result.data.session);
     }
+
     if (!authSubscription) {
       authSubscription = client.auth.onAuthStateChange(function (_event, session) {
         if (session && session.user) syncMarketplaceSession(role, session.user);
@@ -102,11 +111,15 @@
         if (options && options.onSession) options.onSession(session || null);
       });
     }
+
     return { mode: "supabase", client: client };
   }
 
   async function signUpWithEmail(role, payload) {
-    if (getMode() !== "supabase") return { ok: false, message: getSetupMessage() || "Сервисный вход пока не настроен." };
+    if (getMode() !== "supabase") {
+      return { ok: false, message: getSetupMessage() || "Сервисный вход пока не настроен." };
+    }
+
     const client = await ensureClient();
     const response = await client.auth.signUp({
       email: payload.email,
@@ -121,31 +134,53 @@
         }
       }
     });
+
     if (response.error) return { ok: false, message: response.error.message };
-    if (response.data && response.data.user) {
-      syncMarketplaceSession(role, response.data.user);
-    }
+    if (response.data && response.data.user) syncMarketplaceSession(role, response.data.user);
     return { ok: true, data: response.data };
   }
 
   async function signInWithEmail(role, payload) {
-    if (getMode() !== "supabase") return { ok: false, message: getSetupMessage() || "Сервисный вход пока не настроен." };
+    if (getMode() !== "supabase") {
+      return { ok: false, message: getSetupMessage() || "Сервисный вход пока не настроен." };
+    }
+
     const client = await ensureClient();
     const response = await client.auth.signInWithPassword({
       email: payload.email,
       password: payload.password
     });
+
     if (response.error) return { ok: false, message: response.error.message };
-    if (response.data && response.data.user) {
-      syncMarketplaceSession(role, response.data.user);
-    }
+    if (response.data && response.data.user) syncMarketplaceSession(role, response.data.user);
     return { ok: true, data: response.data };
   }
 
   async function signInWithSocial(role, provider) {
-    if (getMode() !== "supabase") return { ok: false, message: getSetupMessage() || "Соцвход пока не настроен." };
-    if (!canUseProvider(provider)) return { ok: false, message: providerLabel(provider) + " пока не включён в настройках входа." };
-    if (provider !== "google") return { ok: false, message: providerLabel(provider) + " уже выведен в интерфейс, но внешний OAuth для него ещё не подключён. Пока используйте e-mail вход." };
+    if (getMode() !== "supabase") {
+      return { ok: false, message: getSetupMessage() || "Соцвход пока не настроен." };
+    }
+
+    if (!canUseProvider(provider)) {
+      return { ok: false, message: providerLabel(provider) + " пока не включен в настройках входа." };
+    }
+
+    if (provider !== "google") {
+      const externalUrl = externalProviderUrl(provider);
+      if (!externalUrl) {
+        return {
+          ok: false,
+          message: providerLabel(provider) + " показан в интерфейсе, но внешний auth-слой еще не подключен. Добавьте URL провайдера в админке или используйте e-mail вход."
+        };
+      }
+
+      const url = new URL(externalUrl, window.location.origin);
+      url.searchParams.set("role", role);
+      url.searchParams.set("returnTo", window.location.href.split("#")[0]);
+      window.location.href = url.toString();
+      return { ok: true };
+    }
+
     const client = await ensureClient();
     const response = await client.auth.signInWithOAuth({
       provider: provider,
@@ -153,6 +188,7 @@
         redirectTo: window.location.href.split("#")[0] + "?auth_role=" + encodeURIComponent(role)
       }
     });
+
     if (response.error) return { ok: false, message: response.error.message };
     return { ok: true };
   }
