@@ -106,9 +106,21 @@
               <option value="false">Выключен</option>
             </select>
           </label>
+          <label>VK ID
+            <select name="vkEnabled">
+              <option value="true">Включён</option>
+              <option value="false">Выключен</option>
+            </select>
+          </label>
+          <label>Telegram
+            <select name="telegramEnabled">
+              <option value="true">Включён</option>
+              <option value="false">Выключен</option>
+            </select>
+          </label>
           <button class="primary-btn" type="submit">Сохранить auth</button>
         </form>
-        <p class="muted" style="margin-top:12px;">После сохранения обновите страницу клиента или исполнителя. Для рабочего Google-входа провайдер Google должен быть включён в вашем проекте Supabase.</p>
+        <p class="muted" style="margin-top:12px;">После сохранения обновите страницу клиента или исполнителя. Google, VK ID и Telegram управляются из этой панели. Полная внешняя OAuth-настройка для каждого провайдера подключается отдельно.</p>
       </div>
 
       <div class="panel" style="margin-top:18px;">
@@ -195,6 +207,8 @@
       authForm.supabaseAnonKey.value = authConfig.supabaseAnonKey || "";
       const providers = Array.isArray(authConfig.socialProviders) ? authConfig.socialProviders : [];
       authForm.googleEnabled.value = String(providers.some(function (item) { return item.id === "google"; }));
+      authForm.vkEnabled.value = String(providers.some(function (item) { return item.id === "vk"; }));
+      authForm.telegramEnabled.value = String(providers.some(function (item) { return item.id === "telegram"; }));
     }
     function renderDictionaries() {
       const dict = MarketplaceStore.getDictionaries();
@@ -271,7 +285,11 @@
         mode: payload.mode || "local",
         supabaseUrl: (payload.supabaseUrl || "").trim(),
         supabaseAnonKey: (payload.supabaseAnonKey || "").trim(),
-        socialProviders: payload.googleEnabled === "true" ? [{ id: "google", label: "Google" }] : []
+        socialProviders: [
+          payload.googleEnabled === "true" ? { id: "google", label: "Google" } : null,
+          payload.vkEnabled === "true" ? { id: "vk", label: "VK ID" } : null,
+          payload.telegramEnabled === "true" ? { id: "telegram", label: "Telegram" } : null
+        ].filter(Boolean)
       };
       localStorage.setItem("palanart_auth_config", JSON.stringify(config));
       showMessage("admin-message", "Настройки сервисного входа сохранены. Обновите страницу клиента или исполнителя.", "success");

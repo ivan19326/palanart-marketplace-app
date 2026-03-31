@@ -57,6 +57,8 @@
             <button class="primary-btn" type="submit">Создать аккаунт</button>
             <div class="auth-socials">
               <button class="ghost-btn auth-social-btn" type="button" data-user-social="google">Войти через Google</button>
+              <button class="ghost-btn auth-social-btn" type="button" data-user-social="vk">Войти через VK ID</button>
+              <button class="ghost-btn auth-social-btn" type="button" data-user-social="telegram">Войти через Telegram</button>
             </div>
           </form>
           <form id="login-form" class="service-panel">
@@ -284,9 +286,10 @@
         : "Пока работает локальный режим. Для сервисного входа подключите Supabase в auth-config.js.";
       document.querySelectorAll("[data-user-social]").forEach(function (button) {
         const enabled = mode === "supabase" && window.PalanartAuthBridge && window.PalanartAuthBridge.canUseProvider(button.dataset.userSocial);
-        button.disabled = !enabled;
-        button.hidden = !enabled;
-        button.title = enabled ? "" : "Google-вход появится после полной настройки OAuth.";
+        button.disabled = mode !== "supabase";
+        button.hidden = false;
+        button.classList.toggle("is-unavailable", !enabled);
+        button.title = enabled ? "" : "Этот соцвход ещё не подключён полностью. Пока используйте e-mail вход.";
       });
     }
     byId("register-form").addEventListener("submit", async function (event) {

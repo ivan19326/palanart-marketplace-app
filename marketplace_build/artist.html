@@ -50,8 +50,8 @@
         </div>
         <div class="auth-socials auth-socials-stack">
           <button class="ghost-btn auth-social-btn auth-social-btn--google" type="button" data-artist-social="google">Войти через Google</button>
-          <button class="ghost-btn auth-social-btn" type="button" disabled>VK ID скоро</button>
-          <button class="ghost-btn auth-social-btn" type="button" disabled>Telegram скоро</button>
+          <button class="ghost-btn auth-social-btn" type="button" data-artist-social="vk">Войти через VK ID</button>
+          <button class="ghost-btn auth-social-btn" type="button" data-artist-social="telegram">Войти через Telegram</button>
         </div>
         <div class="auth-benefits">
           <div class="auth-benefit-card">
@@ -108,6 +108,8 @@
         <button class="primary-btn" type="submit">Создать кабинет</button>
         <div class="auth-socials">
           <button class="ghost-btn auth-social-btn" type="button" data-artist-social="google">Войти через Google</button>
+          <button class="ghost-btn auth-social-btn" type="button" data-artist-social="vk">Войти через VK ID</button>
+          <button class="ghost-btn auth-social-btn" type="button" data-artist-social="telegram">Войти через Telegram</button>
         </div>
         <div class="auth-inline-hints">
           <button class="ghost-btn mini-chip" type="button" data-fill-register="city" data-fill-value="Чебоксары">Чебоксары</button>
@@ -699,9 +701,10 @@
       }
       document.querySelectorAll("[data-artist-social]").forEach(function (button) {
         const enabled = mode === "supabase" && window.PalanartAuthBridge && window.PalanartAuthBridge.canUseProvider(button.dataset.artistSocial);
-        button.disabled = !enabled;
-        button.hidden = !enabled;
-        button.title = enabled ? "" : "Google-вход появится после полной настройки OAuth.";
+        button.disabled = mode !== "supabase";
+        button.hidden = false;
+        button.classList.toggle("is-unavailable", !enabled);
+        button.title = enabled ? "" : "Этот соцвход ещё не подключён полностью. Пока используйте e-mail вход.";
       });
     }
     function setupArtistProfileQuickMode() {

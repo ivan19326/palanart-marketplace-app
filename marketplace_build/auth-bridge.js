@@ -21,6 +21,11 @@
     });
   }
 
+  function providerLabel(provider) {
+    const labels = { google: "Google", vk: "VK ID", telegram: "Telegram" };
+    return labels[provider] || provider;
+  }
+
   function getSetupMessage() {
     if (!isSupabaseMode()) return "Соцвход пока выключен. Включите режим Supabase в админке.";
     if (!isConfigured()) return "Соцвход еще не настроен. Добавьте Supabase URL и anon key в админке.";
@@ -139,7 +144,8 @@
 
   async function signInWithSocial(role, provider) {
     if (getMode() !== "supabase") return { ok: false, message: getSetupMessage() || "Соцвход пока не настроен." };
-    if (!canUseProvider(provider)) return { ok: false, message: "Этот провайдер пока не включен в настройках входа." };
+    if (!canUseProvider(provider)) return { ok: false, message: providerLabel(provider) + " пока не включён в настройках входа." };
+    if (provider !== "google") return { ok: false, message: providerLabel(provider) + " уже выведен в интерфейс, но внешний OAuth для него ещё не подключён. Пока используйте e-mail вход." };
     const client = await ensureClient();
     const response = await client.auth.signInWithOAuth({
       provider: provider,

@@ -212,6 +212,11 @@ img { max-width: 100%; }
   min-width: 180px;
 }
 
+.auth-social-btn.is-unavailable {
+  opacity: 0.74;
+  border-style: dashed;
+}
+
 .auth-onboarding {
   align-items: start;
   grid-template-columns: 1.08fr 1fr;
