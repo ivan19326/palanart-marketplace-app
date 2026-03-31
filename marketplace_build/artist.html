@@ -106,7 +106,10 @@
           <label>Телефон<input name="phone" type="tel" required></label>
           <label>Пароль<input name="password" type="password" required></label>
           <label>Telegram<input name="telegram" type="text"></label>
-          <label>Фото профиля<input name="photo" type="text" placeholder="https://..."></label>
+          <label>Фото профиля из загрузок<input id="artist-register-photo-file" type="file" accept="image/*"></label>
+        </div>
+        <div id="artist-register-photo-preview" class="register-photo-preview">
+          <div class="empty">Загрузите фото, если хотите сразу создать аккуратную карточку исполнителя.</div>
         </div>
         <button class="primary-btn" type="submit">Создать кабинет</button>
         <div class="auth-socials">
@@ -909,9 +912,23 @@
         toggle.textContent = form.classList.contains("profile-form-collapsed") ? "Показать все шаги" : "Показать всё сразу";
       });
     }
+    let artistRegisterPhotoData = "";
+    function renderArtistRegisterPhotoPreview() {
+      const box = byId("artist-register-photo-preview");
+      if (!box) return;
+      box.innerHTML = artistRegisterPhotoData
+        ? '<div class="photo-source-option is-active"><img src="' + escapeHtml(artistRegisterPhotoData) + '" alt="Фото профиля"><span>Фото будет использовано при создании кабинета</span></div>'
+        : '<div class="empty">Загрузите фото, если хотите сразу создать аккуратную карточку исполнителя.</div>';
+    }
+    byId("artist-register-photo-file").addEventListener("change", async function (event) {
+      const files = await collectFiles(event.target);
+      artistRegisterPhotoData = files[0] || "";
+      renderArtistRegisterPhotoPreview();
+    });
     byId("artist-register-form").addEventListener("submit", async function (event) {
       event.preventDefault();
       const payload = Object.fromEntries(new FormData(event.target).entries());
+      payload.photo = artistRegisterPhotoData;
       const result = window.PalanartAuthBridge && window.PalanartAuthBridge.getMode() === "supabase"
         ? await window.PalanartAuthBridge.signUpWithEmail("artist", payload)
         : MarketplaceStore.registerArtistAccount(payload);
@@ -1109,8 +1126,9 @@
       button.addEventListener("click", async function () {
         if (!window.PalanartAuthBridge) return;
         const result = await window.PalanartAuthBridge.signInWithSocial("artist", button.dataset.artistSocial);
-        if (!result.ok) showArtistMessage(result.message, "error");
-      });
+      if (!result.ok) showArtistMessage(result.message, "error");
+    });
+    renderArtistRegisterPhotoPreview();
     });
     if (byId("artist-register-form").name) {
       byId("artist-register-form").name.setAttribute("list", "artist-name-options");
