@@ -26,9 +26,16 @@
     return labels[provider] || provider;
   }
 
+  function defaultExternalProviderUrl(provider) {
+    if (!config.supabaseUrl) return "";
+    const base = String(config.supabaseUrl).replace(/\/+$/, "");
+    return base + "/functions/v1/auth-" + provider + "-start";
+  }
+
   function externalProviderUrl(provider) {
     const urls = config.externalProviderUrls || {};
-    return typeof urls[provider] === "string" ? urls[provider].trim() : "";
+    const explicit = typeof urls[provider] === "string" ? urls[provider].trim() : "";
+    return explicit || defaultExternalProviderUrl(provider);
   }
 
   function getSetupMessage() {
