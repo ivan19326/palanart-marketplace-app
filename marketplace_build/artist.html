@@ -192,22 +192,29 @@
           <label>Telegram<input name="telegram" type="text"></label>
           <label>Instagram<input name="instagram" type="url"></label>
           <label>YouTube<input name="youtube" type="url"></label>
-          <label>VK<input name="vk" type="url"></label>
-          <label>Сайт<input name="website" type="url"></label>
-          <label>Фото профиля по ссылке<input name="photo" type="text" placeholder="https://..."></label>
-          <label>Фото профиля файлом<input id="artist-photo-file" type="file" accept="image/*"></label>
-          <label>Галерея по ссылкам<input name="galleryRaw" type="text" placeholder="https://img1, https://img2"></label>
-          <label>Галерея файлами<input id="artist-gallery-files" type="file" accept="image/*" multiple></label>
-          <label>Видео по ссылкам<input name="videoRaw" type="text" placeholder="https://video1, https://video2"></label>
-          <label>Видео файлами<input id="artist-video-files" type="file" accept="video/*" multiple></label>
-          <label>Аудио по ссылкам<input name="audioRaw" type="text" placeholder="https://audio1, https://audio2"></label>
-          <label>Аудио файлами<input id="artist-audio-files" type="file" accept="audio/*" multiple></label>
-        </div>
-        <div class="form-grid one">
-          <label>Языки<input name="languages" type="text" list="artist-language-options"></label>
-          <div class="quick-options" data-chip-target="languages">
-            <button class="quick-option" type="button" data-chip-value="Русский">Русский</button>
-            <button class="quick-option" type="button" data-chip-value="Английский">Английский</button>
+            <label>VK<input name="vk" type="url"></label>
+            <label>Сайт<input name="website" type="url"></label>
+            <label>Фото профиля по ссылке<input name="photo" type="text" placeholder="https://..."></label>
+            <label>Фото профиля файлом<input id="artist-photo-file" type="file" accept="image/*"></label>
+            <label>Галерея по ссылкам<input name="galleryRaw" type="text" placeholder="https://img1, https://img2"></label>
+            <label>Галерея файлами<input id="artist-gallery-files" type="file" accept="image/*" multiple></label>
+            <label>Видео по ссылкам<input name="videoRaw" type="text" placeholder="https://video1, https://video2"></label>
+            <label>Видео файлами<input id="artist-video-files" type="file" accept="video/*" multiple></label>
+            <label>Аудио по ссылкам<input name="audioRaw" type="text" placeholder="https://audio1, https://audio2"></label>
+            <label>Аудио файлами<input id="artist-audio-files" type="file" accept="audio/*" multiple></label>
+          </div>
+          <div class="detail-box media-source-box">
+            <strong>Фото профиля из галереи</strong>
+            <p class="muted">Загрузите изображения в галерею и выберите любое из них как основное фото профиля.</p>
+            <div id="artist-photo-source-picker" class="photo-source-picker">
+              <div class="empty">Сначала добавьте изображения в галерею, тогда здесь появится быстрый выбор.</div>
+            </div>
+          </div>
+          <div class="form-grid one">
+            <label>Языки<input name="languages" type="text" list="artist-language-options"></label>
+            <div class="quick-options" data-chip-target="languages">
+              <button class="quick-option" type="button" data-chip-value="Русский">Русский</button>
+              <button class="quick-option" type="button" data-chip-value="Английский">Английский</button>
             <button class="quick-option" type="button" data-chip-value="Чувашский">Чувашский</button>
           </div>
           <label>Форматы мероприятий<input name="eventFormats" type="text" list="artist-format-options"></label>
@@ -451,6 +458,19 @@
       const dragAttrs = kind === "photo" ? "" : ' draggable="true" ondragstart="artistMediaDragStart(\'' + listName + '\', ' + index + ')" ondragover="artistMediaDragOver(event)" ondrop="artistMediaDrop(\'' + listName + '\', ' + index + ')"';
       return '<div class="media-card media-card-' + kind + '"' + dragAttrs + '><div class="media-card-head"><span class="media-kind">' + label + '</span></div>' + body + '<span>' + escapeHtml(mediaCaption(entry, label + " #" + (index + 1))) + '</span>' + captionField + posterField + actions + '</div>';
     }
+    function renderPhotoSourcePicker() {
+      const box = byId("artist-photo-source-picker");
+      if (!box) return;
+      const gallery = artistMediaState.galleryFiles || [];
+      if (!gallery.length) {
+        box.innerHTML = '<div class="empty">Сначала добавьте изображения в галерею, тогда здесь появится быстрый выбор.</div>';
+        return;
+      }
+      box.innerHTML = gallery.map(function (item, index) {
+        const isActive = artistMediaState.photo && mediaSrc(item) === artistMediaState.photo;
+        return '<button class="photo-source-option' + (isActive ? ' is-active' : '') + '" type="button" onclick="setArtistPhotoFromGallery(' + index + ')"><img src="' + escapeHtml(mediaSrc(item)) + '" alt="Фото из галереи"><span>' + escapeHtml(item.caption || ('Галерея #' + (index + 1))) + '</span></button>';
+      }).join("");
+    }
     function renderMediaPreview() {
       const items = [];
       if (artistMediaState.photo) items.push(mediaCard("photo", artistMediaState.photo, 0, 1));
@@ -458,6 +478,7 @@
       artistMediaState.videoFiles.forEach(function (src, index) { items.push(mediaCard("video", src, index, artistMediaState.videoFiles.length)); });
       artistMediaState.audioFiles.forEach(function (src, index) { items.push(mediaCard("audio", src, index, artistMediaState.audioFiles.length)); });
       byId("artist-media-preview").innerHTML = items.length ? items.join("") : '<div class="empty">Добавьте фото, изображения, видео или аудио, чтобы собрать карточку исполнителя.</div>';
+      renderPhotoSourcePicker();
     }
     function showArtistMessage(text, kind) { byId("artist-message").innerHTML = text ? '<div class="message ' + kind + '">' + text + '</div>' : ""; }
     const actionModal = byId("artist-action-modal");
@@ -630,6 +651,13 @@
     window.artistMediaAction = function (listName, index, direction) { moveMediaItem(listName, index, direction); };
     window.removeArtistMedia = function (listName, index) { removeMediaItem(listName, index); };
     window.clearArtistPhoto = function () { clearPhoto(); };
+    window.setArtistPhotoFromGallery = function (index) {
+      const entry = artistMediaState.galleryFiles[index];
+      if (!entry) return;
+      artistMediaState.photo = mediaSrc(entry);
+      syncMediaInputs();
+      renderMediaPreview();
+    };
     window.updateArtistMediaMeta = function (listName, index, key, value) {
       const list = artistMediaState[listName];
       if (!Array.isArray(list) || !list[index]) return;
