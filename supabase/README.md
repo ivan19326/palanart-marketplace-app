@@ -35,6 +35,19 @@ Telegram:
 - `TELEGRAM_AUTHORIZE_URL` (optional, default `https://oauth.telegram.org/auth`)
 - `TELEGRAM_TOKEN_URL` (optional, default `https://oauth.telegram.org/token`)
 
+## CLI setup on this laptop
+
+1. Create `supabase/functions/.env.local` from `.env.example`
+2. Put your personal access token into the environment:
+   - `setx SUPABASE_ACCESS_TOKEN "<your-token>"`
+3. Link the project:
+   - `npm run supabase:link`
+4. Deploy functions:
+   - `npm run supabase:functions:deploy`
+
+The repo already contains `supabase/config.toml` with `verify_jwt = false`
+for public auth entry points.
+
 ## What the flow does
 
 1. The frontend opens `/functions/v1/auth-vk-start` or

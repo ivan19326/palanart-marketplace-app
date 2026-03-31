@@ -17,6 +17,13 @@ supabase functions deploy auth-telegram-start
 supabase functions deploy auth-telegram-callback
 ```
 
+From this repository you can also use:
+
+```bash
+npm run supabase:functions:serve
+npm run supabase:functions:deploy
+```
+
 ## Default frontend URLs
 
 When the site knows only `SUPABASE_URL`, it now automatically routes:

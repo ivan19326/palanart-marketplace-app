@@ -9,6 +9,9 @@
     "cap:open:ios": "npx cap open ios",
     "cap:add:android": "npx cap add android",
     "cap:add:ios": "npx cap add ios",
+    "supabase:link": "npx supabase link --project-ref jioakguorsfvjuzyclrg",
+    "supabase:functions:serve": "npx supabase functions serve --env-file supabase/functions/.env.local",
+    "supabase:functions:deploy": "npx supabase functions deploy auth-vk-start auth-vk-callback auth-telegram-start auth-telegram-callback",
     "twa:init": "npx @bubblewrap/cli init --manifest https://ivan19326.github.io/palanart-marketplace-app/manifest.json",
     "twa:build": "npx @bubblewrap/cli build"
   },
