@@ -436,8 +436,23 @@ body[data-theme="light"] .photo-source-option {
 }
 
 .cabinet-action-row .ghost-btn,
-.cabinet-action-row .primary-btn {
+.cabinet-action-row .primary-btn,
+.cabinet-action-row .danger-btn {
   text-decoration: none;
+}
+
+.inline-confirm-panel {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 16px 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(184, 64, 64, 0.22);
+  background: rgba(184, 64, 64, 0.08);
+}
+
+.inline-confirm-panel .muted {
+  margin: 0;
 }
 
 .profile-form-toggle {

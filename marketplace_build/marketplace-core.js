@@ -631,6 +631,9 @@
 
   function deleteProfile(id) {
     const db = getDb();
+    db.artists.forEach(function (artist) {
+      if (artist.profileId === id) artist.profileId = null;
+    });
     db.profiles = db.profiles.filter(function (profile) { return profile.id !== id; });
     db.leads = db.leads.filter(function (lead) { return lead.profileId !== id; });
     db.quotes = db.quotes.filter(function (quote) { return quote.profileId !== id; });
