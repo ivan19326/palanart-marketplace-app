@@ -140,6 +140,11 @@
           <button id="artist-logout" class="ghost-btn" type="button">Выйти</button>
         </div>
         <div id="artist-kpis" class="service-kpis"></div>
+        <div class="cabinet-action-row">
+          <button id="artist-edit-card" class="primary-btn" type="button">Редактировать карточку</button>
+          <button id="artist-preview-card" class="ghost-btn" type="button">Предпросмотр карточки</button>
+          <a class="ghost-btn" href="index.html#catalog">Открыть витрину</a>
+        </div>
       </div>
 
       <form id="artist-profile-form" class="service-panel">
@@ -655,6 +660,30 @@
       });
     };
     window.openLeadChatByLead = function (leadId) { const deal = MarketplaceStore.ensureDealForLead(MarketplaceStore.getLeadById(leadId)); openArtistChat(deal.id); };
+    function scrollArtistProfileForm() {
+      const form = byId("artist-profile-form");
+      if (!form) return;
+      form.scrollIntoView({ behavior: "smooth", block: "start" });
+      const focusField = form.querySelector('input[name="name"], input[name="title"], textarea[name="description"]');
+      if (focusField) focusField.focus({ preventScroll: true });
+    }
+    function openArtistProfilePreview() {
+      const artist = MarketplaceStore.getCurrentArtist();
+      if (!artist) return showArtistMessage("Сначала войдите как исполнитель, чтобы открыть карточку.", "error");
+      const profile = MarketplaceStore.getArtistProfile(artist.id);
+      if (!profile) return showArtistMessage("Сначала сохраните карточку, чтобы открыть публичный предпросмотр.", "error");
+      localStorage.setItem("palanart_preview_profile_id", profile.id);
+      window.location.href = "index.html#profile-detail";
+    }
+    function syncArtistCabinetActions(profile) {
+      const editButton = byId("artist-edit-card");
+      const previewButton = byId("artist-preview-card");
+      if (editButton) editButton.disabled = false;
+      if (previewButton) {
+        previewButton.disabled = !profile;
+        previewButton.title = profile ? "" : "Сначала сохраните карточку исполнителя.";
+      }
+    }
     function renderArtistCabinet() {
       const artist = MarketplaceStore.getCurrentArtist();
       byId("artist-auth-view").style.display = artist ? "none" : "grid";
@@ -671,6 +700,7 @@
       renderChats(artist);
       renderAnalytics(profile);
       renderBoard(artist);
+      syncArtistCabinetActions(profile);
       byId("artist-chat-box").innerHTML = '<div class="empty">Выберите сделку, чтобы открыть переписку.</div>';
     }
     function renderArtistAuthMode() {
@@ -993,6 +1023,12 @@
         MarketplaceStore.logout();
       }
       renderArtistCabinet();
+    });
+    byId("artist-edit-card").addEventListener("click", function () {
+      scrollArtistProfileForm();
+    });
+    byId("artist-preview-card").addEventListener("click", function () {
+      openArtistProfilePreview();
     });
     document.querySelectorAll("[data-artist-social]").forEach(function (button) {
       button.addEventListener("click", async function () {

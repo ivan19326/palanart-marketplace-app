@@ -3,7 +3,11 @@
     mode: "supabase",
     supabaseUrl: "https://jioakguorsfvjuzyclrg.supabase.co",
     supabaseAnonKey: "sb_publishable__wR9JFE18O3i_LyxMXhAfw__zhG1t_P",
-    socialProviders: []
+    socialProviders: [
+      { id: "google", label: "Google" },
+      { id: "vk", label: "VK ID" },
+      { id: "telegram", label: "Telegram" }
+    ]
   };
 
   let saved = {};

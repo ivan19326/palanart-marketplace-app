@@ -363,6 +363,18 @@ img { max-width: 100%; }
   margin: 0;
 }
 
+.cabinet-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.cabinet-action-row .ghost-btn,
+.cabinet-action-row .primary-btn {
+  text-decoration: none;
+}
+
 .profile-form-toggle {
   white-space: nowrap;
 }
