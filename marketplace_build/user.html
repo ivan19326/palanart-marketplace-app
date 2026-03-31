@@ -280,11 +280,13 @@
     function renderAuthMode() {
       const mode = window.PalanartAuthBridge ? window.PalanartAuthBridge.getMode() : "local";
       byId("user-auth-mode").innerHTML = mode === "supabase"
-        ? "Сервисный вход включён. Можно использовать e-mail или соцвход."
+        ? "Сервисный вход включён. Рабочий способ входа сейчас: e-mail и пароль через Supabase."
         : "Пока работает локальный режим. Для сервисного входа подключите Supabase в auth-config.js.";
       document.querySelectorAll("[data-user-social]").forEach(function (button) {
-        button.disabled = mode !== "supabase";
-        button.title = mode === "supabase" ? "" : "Сначала настройте Supabase и Google.";
+        const enabled = mode === "supabase" && window.PalanartAuthBridge && window.PalanartAuthBridge.canUseProvider(button.dataset.userSocial);
+        button.disabled = !enabled;
+        button.hidden = !enabled;
+        button.title = enabled ? "" : "Google-вход появится после полной настройки OAuth.";
       });
     }
     byId("register-form").addEventListener("submit", async function (event) {
