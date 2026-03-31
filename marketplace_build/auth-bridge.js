@@ -177,7 +177,7 @@
       if (!externalUrl) {
         return {
           ok: false,
-          message: providerLabel(provider) + " показан в интерфейсе, но внешний auth-слой еще не подключен. Добавьте URL провайдера в админке или используйте e-mail вход."
+          message: providerLabel(provider) + " показан в интерфейсе, но внешний auth-слой еще не подключен. Добавьте URL провайдера в админке или используйте вход по e-mail."
         };
       }
 
