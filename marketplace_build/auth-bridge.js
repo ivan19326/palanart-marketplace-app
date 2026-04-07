@@ -15,12 +15,6 @@
     return isSupabaseMode() && isConfigured() ? "supabase" : "local";
   }
 
-  function canUseProvider(provider) {
-    return Array.isArray(config.socialProviders) && config.socialProviders.some(function (item) {
-      return item.id === provider;
-    });
-  }
-
   function providerLabel(provider) {
     const labels = { google: "Google", vk: "VK ID", telegram: "Telegram" };
     return labels[provider] || provider;
@@ -38,9 +32,19 @@
     return explicit || defaultExternalProviderUrl(provider);
   }
 
+  function canUseProvider(provider) {
+    const listed = Array.isArray(config.socialProviders) && config.socialProviders.some(function (item) {
+      return item.id === provider;
+    });
+    if (listed) return true;
+    if (getMode() !== "supabase") return false;
+    if (provider === "google") return false;
+    return Boolean(externalProviderUrl(provider));
+  }
+
   function getSetupMessage() {
-    if (!isSupabaseMode()) return "Соцвход пока выключен. Включите режим Supabase в админке.";
-    if (!isConfigured()) return "Соцвход еще не настроен. Добавьте Supabase URL и publishable key в админке.";
+    if (!isSupabaseMode()) return "Соцвход пока выключен. Включите режим Supabase в настройках входа.";
+    if (!isConfigured()) return "Соцвход ещё не настроен. Добавьте Supabase URL и publishable key в настройках входа.";
     return "";
   }
 
@@ -169,7 +173,7 @@
     }
 
     if (!canUseProvider(provider)) {
-      return { ok: false, message: providerLabel(provider) + " пока не включен в настройках входа." };
+      return { ok: false, message: providerLabel(provider) + " пока не включён в настройках входа." };
     }
 
     if (provider !== "google") {
@@ -177,7 +181,7 @@
       if (!externalUrl) {
         return {
           ok: false,
-          message: providerLabel(provider) + " показан в интерфейсе, но внешний auth-слой еще не подключен. Добавьте URL провайдера в админке или используйте вход по e-mail."
+          message: providerLabel(provider) + " показан в интерфейсе, но внешний auth-слой ещё не подключён. Добавьте URL провайдера в настройках входа или используйте вход по e-mail."
         };
       }
 

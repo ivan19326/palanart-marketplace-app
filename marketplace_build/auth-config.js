@@ -21,9 +21,16 @@
     saved = {};
   }
 
-  const providers = Array.isArray(saved.socialProviders) && saved.socialProviders.length
-    ? saved.socialProviders
-    : base.socialProviders;
+  const providerMap = new Map();
+  base.socialProviders.forEach(function (provider) {
+    providerMap.set(provider.id, provider);
+  });
+  if (Array.isArray(saved.socialProviders)) {
+    saved.socialProviders.forEach(function (provider) {
+      if (provider && provider.id) providerMap.set(provider.id, provider);
+    });
+  }
+  const providers = Array.from(providerMap.values());
 
   const externalProviderUrls = Object.assign({}, base.externalProviderUrls, saved.externalProviderUrls || {});
 
