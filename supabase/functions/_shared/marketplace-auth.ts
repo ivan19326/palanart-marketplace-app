@@ -12,6 +12,14 @@ function optionalEnv(name: string, fallback = ""): string {
   return Deno.env.get(name) || fallback;
 }
 
+function mustEnvAny(...names: string[]): string {
+  for (const name of names) {
+    const value = Deno.env.get(name);
+    if (value) return value;
+  }
+  throw new Error(`Missing environment variable: ${names.join(" or ")}`);
+}
+
 function base64UrlEncode(input: Uint8Array | string): string {
   const bytes = typeof input === "string" ? new TextEncoder().encode(input) : input;
   let binary = "";
@@ -75,7 +83,7 @@ export async function verifyAuthState(token: string): Promise<AuthState> {
 }
 
 export function getProviderCallbackUrl(provider: "vk" | "telegram"): string {
-  const base = mustEnv("SUPABASE_URL").replace(/\/+$/, "");
+  const base = mustEnvAny("PROJECT_SUPABASE_URL", "SUPABASE_URL").replace(/\/+$/, "");
   return `${base}/functions/v1/auth-${provider}-callback`;
 }
 
@@ -105,9 +113,13 @@ export function redirect(location: string): Response {
 }
 
 export function createServiceClient() {
-  return createClient(mustEnv("SUPABASE_URL"), mustEnv("SUPABASE_SERVICE_ROLE_KEY"), {
+  return createClient(
+    mustEnvAny("PROJECT_SUPABASE_URL", "SUPABASE_URL"),
+    mustEnvAny("PROJECT_SUPABASE_SERVICE_ROLE_KEY", "SUPABASE_SERVICE_ROLE_KEY"),
+    {
     auth: { autoRefreshToken: false, persistSession: false },
-  });
+    },
+  );
 }
 
 async function findUserByEmail(email: string) {

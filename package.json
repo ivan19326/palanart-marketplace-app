@@ -22,6 +22,7 @@
     "@bubblewrap/cli": "^1.22.2",
     "@capacitor/android": "^7.0.0",
     "@capacitor/cli": "^7.0.0",
-    "@capacitor/ios": "^7.0.0"
+    "@capacitor/ios": "^7.0.0",
+    "supabase": "^2.87.2"
   }
 }
