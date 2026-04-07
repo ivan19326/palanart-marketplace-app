@@ -9,8 +9,8 @@
       { id: "telegram", label: "Telegram" }
     ],
     externalProviderUrls: {
-      vk: "",
-      telegram: ""
+      vk: "https://jioakguorsfvjuzyclrg.supabase.co/functions/v1/auth-vk-start",
+      telegram: "https://jioakguorsfvjuzyclrg.supabase.co/functions/v1/auth-telegram-start"
     }
   };
 
@@ -33,9 +33,19 @@
   const providers = Array.from(providerMap.values());
 
   const externalProviderUrls = Object.assign({}, base.externalProviderUrls, saved.externalProviderUrls || {});
-
-  window.PalanartAuthConfig = Object.assign({}, base, saved, {
+  const merged = Object.assign({}, base, saved, {
+    mode: base.mode,
+    supabaseUrl: base.supabaseUrl,
+    supabaseAnonKey: base.supabaseAnonKey,
     externalProviderUrls: externalProviderUrls,
     socialProviders: providers
   });
+
+  window.PalanartAuthConfig = merged;
+
+  try {
+    localStorage.setItem("palanart_auth_config", JSON.stringify(merged));
+  } catch (_error) {
+    // Ignore storage write failures; the in-memory config is enough for runtime.
+  }
 })();
