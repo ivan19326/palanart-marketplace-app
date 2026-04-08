@@ -24,6 +24,16 @@ Deno.serve(async (request) => {
     ].join("; ");
 
     const callbackUrl = getProviderCallbackUrl("telegram");
+    const widgetScript = `<script async src="https://oauth.telegram.org/js/telegram-login.js?3"
+      data-client-id="${clientId}"
+      data-size="large"
+      data-radius="14"
+      data-lang="ru"
+      data-request-access="write"
+      data-onauth="telegramLoginComplete"
+      data-onerror="telegramLoginError"
+      data-userpic="false"></script>`;
+
     const body = `<!doctype html>
 <html lang="ru">
   <head>
@@ -60,7 +70,7 @@ Deno.serve(async (request) => {
     <main class="panel">
       <h1>Вход через Telegram</h1>
       <p>Подтвердите вход через Telegram. После подтверждения мы автоматически вернём вас обратно в Паланарт.</p>
-      <div id="telegram-login-host"></div>
+      <div id="telegram-login-host">${widgetScript}</div>
       <div id="telegram-error" class="error" hidden></div>
       <div class="hint">Если окно входа не открылось само, нажмите кнопку Telegram ниже.</div>
     </main>
@@ -86,15 +96,6 @@ Deno.serve(async (request) => {
         error.textContent = (payload && payload.error) ? String(payload.error) : "Не удалось завершить вход через Telegram.";
       };
     </script>
-    <script async src="https://oauth.telegram.org/js/telegram-login.js?3"
-      data-client-id="${clientId}"
-      data-size="large"
-      data-radius="14"
-      data-lang="ru"
-      data-request-access="write"
-      data-onauth="telegramLoginComplete"
-      data-onerror="telegramLoginError"
-      data-userpic="false"></script>
   </body>
 </html>`;
 
