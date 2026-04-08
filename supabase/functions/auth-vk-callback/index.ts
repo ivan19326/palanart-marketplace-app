@@ -7,6 +7,17 @@ import {
   verifyAuthState,
 } from "../_shared/marketplace-auth.ts";
 
+async function resolveDecodedState(primary: string, fallback: string): Promise<Awaited<ReturnType<typeof verifyAuthState>>> {
+  try {
+    return await verifyAuthState(primary);
+  } catch (_primaryError) {
+    if (fallback && fallback !== primary) {
+      return await verifyAuthState(fallback);
+    }
+    throw _primaryError;
+  }
+}
+
 async function readBodyParams(request: Request): Promise<URLSearchParams> {
   if (request.method === "GET" || request.method === "HEAD") {
     return new URLSearchParams();
@@ -58,9 +69,9 @@ Deno.serve(async (request) => {
   try {
     const url = new URL(request.url);
     const bodyParams = await readBodyParams(request.clone());
-    const queryState = url.searchParams.get("state") || bodyParams.get("state");
     const cookieState = readCookie(request, "palanart_vk_state");
-    const state = queryState || cookieState;
+    const queryState = url.searchParams.get("state") || bodyParams.get("state");
+    const state = cookieState || queryState;
     const code = url.searchParams.get("code") || bodyParams.get("code");
     const deviceId = url.searchParams.get("device_id") ||
       url.searchParams.get("deviceId") ||
@@ -98,7 +109,7 @@ Deno.serve(async (request) => {
       );
     }
 
-    const decoded = await verifyAuthState(state);
+    const decoded = await resolveDecodedState(state, queryState);
     const tokenUrl = Deno.env.get("VK_TOKEN_URL") || "https://id.vk.com/oauth2/auth";
     const tokenBody = new URLSearchParams();
     tokenBody.set("grant_type", "authorization_code");
