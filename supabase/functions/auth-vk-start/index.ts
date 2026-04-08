@@ -1,4 +1,4 @@
-import { createPkcePair, getProviderCallbackUrl, normalizeReturnTo, redirect, signAuthState } from "../_shared/marketplace-auth.ts";
+import { createPkcePair, getProviderCallbackUrl, normalizeReturnTo, signAuthState } from "../_shared/marketplace-auth.ts";
 
 Deno.serve(async (request) => {
   try {
@@ -32,7 +32,7 @@ Deno.serve(async (request) => {
       "Path=/functions/v1/auth-vk-callback",
       "HttpOnly",
       "Secure",
-      "SameSite=Lax",
+      "SameSite=None",
       "Max-Age=900",
     ].join("; ");
 
