@@ -1,4 +1,4 @@
-import { createPkcePair, getProviderCallbackUrl, normalizeReturnTo, redirect, signAuthState } from "../_shared/marketplace-auth.ts";
+import { createPkcePair, getProviderCallbackUrl, normalizeReturnTo, signAuthState } from "../_shared/marketplace-auth.ts";
 
 Deno.serve(async (request) => {
   try {
@@ -26,7 +26,22 @@ Deno.serve(async (request) => {
     authorizeUrl.searchParams.set("code_challenge", challenge);
     authorizeUrl.searchParams.set("code_challenge_method", "S256");
 
-    return redirect(authorizeUrl.toString());
+    const cookie = [
+      `palanart_telegram_state=${encodeURIComponent(state)}`,
+      "Path=/functions/v1/auth-telegram-callback",
+      "HttpOnly",
+      "Secure",
+      "SameSite=None",
+      "Max-Age=900",
+    ].join("; ");
+
+    return new Response(null, {
+      status: 302,
+      headers: {
+        location: authorizeUrl.toString(),
+        "set-cookie": cookie,
+      },
+    });
   } catch (error) {
     return new Response((error as Error).message, { status: 500 });
   }
