@@ -4,22 +4,50 @@ import {
   getProviderCallbackUrl,
   issueMarketplaceSession,
   parseJwtPayload,
-  redirect,
   verifyAuthState,
 } from "../_shared/marketplace-auth.ts";
+
+function readCookie(request: Request, name: string): string {
+  const raw = request.headers.get("cookie") || "";
+  for (const part of raw.split(";")) {
+    const [key, ...rest] = part.trim().split("=");
+    if (key === name) {
+      return decodeURIComponent(rest.join("="));
+    }
+  }
+  return "";
+}
+
+function clearStateCookie(): string {
+  return [
+    "palanart_vk_state=",
+    "Path=/functions/v1/auth-vk-callback",
+    "HttpOnly",
+    "Secure",
+    "SameSite=Lax",
+    "Max-Age=0",
+  ].join("; ");
+}
 
 Deno.serve(async (request) => {
   try {
     const url = new URL(request.url);
-    const state = url.searchParams.get("state");
+    const queryState = url.searchParams.get("state");
+    const cookieState = readCookie(request, "palanart_vk_state");
+    const state = queryState || cookieState;
     const code = url.searchParams.get("code");
     const deviceId = url.searchParams.get("device_id") || url.searchParams.get("deviceId") || "";
     const providerError = url.searchParams.get("error_description") || url.searchParams.get("error");
+
     if (providerError) {
       return errorHtml("VK ID", `Вход остановлен провайдером: ${providerError}`);
     }
+
     if (!state || !code) {
-      return errorHtml("VK ID", "Не хватает параметров callback.");
+      return new Response(
+        "<!doctype html><html lang=\"ru\"><meta charset=\"utf-8\"><title>VK ID</title><body style=\"font-family:Arial,sans-serif;background:#0b1220;color:#fff;padding:32px\"><h1>VK ID</h1><p>Неверное состояние аутентификации</p></body></html>",
+        { status: 400, headers: { "content-type": "text/html; charset=utf-8", "set-cookie": clearStateCookie() } },
+      );
     }
 
     const decoded = await verifyAuthState(state);
@@ -51,6 +79,7 @@ Deno.serve(async (request) => {
       claims.sub ||
       "",
     );
+
     if (!accessToken || !userId) {
       return errorHtml("VK ID", "VK ID не вернул access token или user id.");
     }
@@ -80,7 +109,13 @@ Deno.serve(async (request) => {
       username,
     }, decoded.role, decoded.returnTo);
 
-    return redirect(authLink);
+    return new Response(null, {
+      status: 302,
+      headers: {
+        location: authLink,
+        "set-cookie": clearStateCookie(),
+      },
+    });
   } catch (error) {
     return errorHtml("VK ID", (error as Error).message);
   }

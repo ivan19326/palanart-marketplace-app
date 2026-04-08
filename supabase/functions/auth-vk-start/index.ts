@@ -27,7 +27,22 @@ Deno.serve(async (request) => {
     authorizeUrl.searchParams.set("scope", Deno.env.get("VK_SCOPE") || "email");
     authorizeUrl.searchParams.set("state", state);
 
-    return redirect(authorizeUrl.toString());
+    const cookie = [
+      `palanart_vk_state=${encodeURIComponent(state)}`,
+      "Path=/functions/v1/auth-vk-callback",
+      "HttpOnly",
+      "Secure",
+      "SameSite=Lax",
+      "Max-Age=900",
+    ].join("; ");
+
+    return new Response(null, {
+      status: 302,
+      headers: {
+        location: authorizeUrl.toString(),
+        "set-cookie": cookie,
+      },
+    });
   } catch (error) {
     return new Response((error as Error).message, { status: 500 });
   }
