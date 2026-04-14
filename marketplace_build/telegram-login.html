@@ -45,7 +45,16 @@
     <main class="panel">
       <h1>Вход через Telegram</h1>
       <p>Подтвердите вход через Telegram. После подтверждения мы автоматически вернём вас обратно в Паланарт.</p>
-      <div id="telegram-login-host"></div>
+      <div id="telegram-login-host">
+        <script async src="https://telegram.org/js/telegram-widget.js?22"
+          data-telegram-login="PalanAuthBot"
+          data-size="large"
+          data-radius="14"
+          data-lang="ru"
+          data-request-access="write"
+          data-userpic="false"
+          data-onauth="telegramLoginComplete(user)"></script>
+      </div>
       <div id="telegram-error" class="error" hidden></div>
       <div class="hint">Если окно входа не открылось само, нажмите кнопку Telegram ниже.</div>
     </main>
@@ -56,12 +65,10 @@
       (function () {
         var params = new URLSearchParams(window.location.search);
         var state = params.get("state") || "";
-        var botUsername = params.get("bot") || "PalanAuthBot";
         var error = document.getElementById("telegram-error");
-        var host = document.getElementById("telegram-login-host");
         var form = document.getElementById("telegram-complete");
 
-        if (!state || !botUsername) {
+        if (!state) {
           error.hidden = false;
           error.textContent = "Не хватает параметров входа Telegram. Вернитесь назад и попробуйте снова.";
           return;
@@ -89,22 +96,6 @@
 
           form.submit();
         };
-
-        var script = document.createElement("script");
-        script.async = true;
-        script.src = "https://telegram.org/js/telegram-widget.js?22";
-        script.setAttribute("data-telegram-login", botUsername);
-        script.setAttribute("data-size", "large");
-        script.setAttribute("data-radius", "14");
-        script.setAttribute("data-lang", "ru");
-        script.setAttribute("data-request-access", "write");
-        script.setAttribute("data-userpic", "false");
-        script.setAttribute("data-onauth", "telegramLoginComplete(user)");
-        script.onerror = function () {
-          error.hidden = false;
-          error.textContent = "Не удалось загрузить Telegram Login. Проверьте сеть и попробуйте снова.";
-        };
-        host.appendChild(script);
       })();
     </script>
   </body>
