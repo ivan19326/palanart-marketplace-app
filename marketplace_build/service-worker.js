@@ -1,10 +1,11 @@
-const CACHE_NAME = "palan-hype-cache-v5";
+const CACHE_NAME = "palan-hype-cache-v6";
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
   "./admin.html",
   "./user.html",
   "./artist.html",
+  "./telegram-login.html",
   "./vedushie.html",
   "./dj.html",
   "./music.html",
