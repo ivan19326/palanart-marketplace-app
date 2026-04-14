@@ -40,6 +40,38 @@
         color: #ff8e8e;
       }
     </style>
+    <script>
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var state = params.get("state") || "";
+
+        window.telegramLoginComplete = function (user) {
+          var error = document.getElementById("telegram-error");
+          var form = document.getElementById("telegram-complete");
+          if (!user || !user.id || !user.auth_date || !user.hash) {
+            if (error) {
+              error.hidden = false;
+              error.textContent = "Telegram не вернул данные входа. Повторите вход ещё раз.";
+            }
+            return;
+          }
+
+          ["id", "first_name", "last_name", "username", "photo_url", "auth_date", "hash"].forEach(function (key) {
+            var input = form.querySelector('input[name="' + key + '"]');
+            if (!input) {
+              input = document.createElement("input");
+              input.type = "hidden";
+              input.name = key;
+              form.appendChild(input);
+            }
+            input.value = user[key] || "";
+          });
+
+          form.querySelector('#telegram-state').value = state;
+          form.submit();
+        };
+      })();
+    </script>
   </head>
   <body>
     <main class="panel">
@@ -66,36 +98,12 @@
         var params = new URLSearchParams(window.location.search);
         var state = params.get("state") || "";
         var error = document.getElementById("telegram-error");
-        var form = document.getElementById("telegram-complete");
 
         if (!state) {
           error.hidden = false;
           error.textContent = "Не хватает параметров входа Telegram. Вернитесь назад и попробуйте снова.";
           return;
         }
-
-        document.getElementById("telegram-state").value = state;
-
-        window.telegramLoginComplete = function (user) {
-          if (!user || !user.id || !user.auth_date || !user.hash) {
-            error.hidden = false;
-            error.textContent = "Telegram не вернул данные входа. Повторите вход ещё раз.";
-            return;
-          }
-
-          ["id", "first_name", "last_name", "username", "photo_url", "auth_date", "hash"].forEach(function (key) {
-            var input = form.querySelector('input[name="' + key + '"]');
-            if (!input) {
-              input = document.createElement("input");
-              input.type = "hidden";
-              input.name = key;
-              form.appendChild(input);
-            }
-            input.value = user[key] || "";
-          });
-
-          form.submit();
-        };
       })();
     </script>
   </body>
