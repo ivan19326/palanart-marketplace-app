@@ -74,7 +74,7 @@ async function verifyTelegramWidgetPayload(payload: URLSearchParams): Promise<Re
   );
 
   const dataEntries = Array.from(payload.entries())
-    .filter(([key, value]) => key !== "hash" && value)
+    .filter(([key, value]) => key !== "hash" && key !== "state" && value)
     .sort(([a], [b]) => a.localeCompare(b));
   const dataCheckString = dataEntries.map(([key, value]) => `${key}=${value}`).join("\n");
   const signature = new Uint8Array(
