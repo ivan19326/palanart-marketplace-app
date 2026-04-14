@@ -30,22 +30,6 @@
         display: flex;
         justify-content: center;
       }
-      .telegram-login-button {
-        min-width: 260px;
-        min-height: 52px;
-        border: none;
-        border-radius: 18px;
-        background: linear-gradient(135deg, #2aa7ff 0%, #1d7bd7 100%);
-        color: #fff;
-        font-size: 18px;
-        font-weight: 700;
-        cursor: pointer;
-        box-shadow: 0 18px 40px rgba(20, 102, 190, 0.28);
-      }
-      .telegram-login-button[disabled] {
-        cursor: wait;
-        opacity: 0.72;
-      }
       .hint {
         margin-top: 16px;
         font-size: 14px;
@@ -61,26 +45,23 @@
     <main class="panel">
       <h1>Вход через Telegram</h1>
       <p>Подтвердите вход через Telegram. После подтверждения мы автоматически вернём вас обратно в Паланарт.</p>
-      <div id="telegram-login-host">
-        <button id="telegram-login-button" class="telegram-login-button" type="button">Войти через Telegram</button>
-      </div>
+      <div id="telegram-login-host"></div>
       <div id="telegram-error" class="error" hidden></div>
       <div class="hint">Если окно входа не открылось само, нажмите кнопку Telegram ниже.</div>
     </main>
     <form id="telegram-complete" action="https://jioakguorsfvjuzyclrg.supabase.co/functions/v1/auth-telegram-callback" method="post" hidden>
       <input type="hidden" name="state" id="telegram-state">
-      <input type="hidden" name="id_token" id="telegram-id-token">
     </form>
     <script>
       (function () {
         var params = new URLSearchParams(window.location.search);
         var state = params.get("state") || "";
-        var clientId = params.get("client_id") || "";
+        var botUsername = params.get("bot") || "PalanAuthBot";
         var error = document.getElementById("telegram-error");
-        var button = document.getElementById("telegram-login-button");
-        var autoOpened = false;
+        var host = document.getElementById("telegram-login-host");
+        var form = document.getElementById("telegram-complete");
 
-        if (!state || !clientId) {
+        if (!state || !botUsername) {
           error.hidden = false;
           error.textContent = "Не хватает параметров входа Telegram. Вернитесь назад и попробуйте снова.";
           return;
@@ -88,61 +69,42 @@
 
         document.getElementById("telegram-state").value = state;
 
-        window.telegramLoginComplete = function (payload) {
-          if (!payload || !payload.id_token) {
+        window.telegramLoginComplete = function (user) {
+          if (!user || !user.id || !user.auth_date || !user.hash) {
             error.hidden = false;
-            error.textContent = "Telegram не вернул id_token. Повторите вход ещё раз.";
-            return;
-          }
-          document.getElementById("telegram-id-token").value = payload.id_token;
-          document.getElementById("telegram-complete").submit();
-        };
-
-        window.telegramLoginError = function (payload) {
-          error.hidden = false;
-          error.textContent = payload && payload.error
-            ? String(payload.error)
-            : "Не удалось завершить вход через Telegram.";
-        };
-
-        function startTelegramLogin() {
-          if (!window.Telegram || !window.Telegram.Login || typeof window.Telegram.Login.auth !== "function") {
-            error.hidden = false;
-            error.textContent = "Библиотека Telegram Login не загрузилась. Обновите страницу и попробуйте снова.";
+            error.textContent = "Telegram не вернул данные входа. Повторите вход ещё раз.";
             return;
           }
 
-          error.hidden = true;
-          button.disabled = true;
-          window.Telegram.Login.auth({
-            client_id: Number(clientId),
-            request_access: ["write"],
-            lang: "ru"
-          }, function (payload) {
-            button.disabled = false;
-            if (payload && payload.id_token) {
-              window.telegramLoginComplete(payload);
-              return;
+          ["id", "first_name", "last_name", "username", "photo_url", "auth_date", "hash"].forEach(function (key) {
+            var input = form.querySelector('input[name="' + key + '"]');
+            if (!input) {
+              input = document.createElement("input");
+              input.type = "hidden";
+              input.name = key;
+              form.appendChild(input);
             }
-            window.telegramLoginError(payload || { error: "Telegram не вернул данные входа." });
+            input.value = user[key] || "";
           });
-        }
 
-        button.addEventListener("click", startTelegramLogin);
+          form.submit();
+        };
 
         var script = document.createElement("script");
         script.async = true;
-        script.src = "https://oauth.telegram.org/js/telegram-login.js?3";
-        script.onload = function () {
-          if (autoOpened) return;
-          autoOpened = true;
-          startTelegramLogin();
-        };
+        script.src = "https://telegram.org/js/telegram-widget.js?22";
+        script.setAttribute("data-telegram-login", botUsername);
+        script.setAttribute("data-size", "large");
+        script.setAttribute("data-radius", "14");
+        script.setAttribute("data-lang", "ru");
+        script.setAttribute("data-request-access", "write");
+        script.setAttribute("data-userpic", "false");
+        script.setAttribute("data-onauth", "telegramLoginComplete(user)");
         script.onerror = function () {
           error.hidden = false;
           error.textContent = "Не удалось загрузить Telegram Login. Проверьте сеть и попробуйте снова.";
         };
-        document.head.appendChild(script);
+        host.appendChild(script);
       })();
     </script>
   </body>

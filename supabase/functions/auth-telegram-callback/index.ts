@@ -8,11 +8,10 @@ async function readBodyParams(request: Request): Promise<URLSearchParams> {
       ? new URLSearchParams(Object.entries(json).map(([key, value]) => [key, String(value)]))
       : new URLSearchParams();
   }
-  if (contentType.includes("application/x-www-form-urlencoded")) {
-    const form = await request.formData();
-    return new URLSearchParams(Array.from(form.entries()).map(([key, value]) => [key, String(value)]));
-  }
-  if (contentType.includes("multipart/form-data")) {
+  if (
+    contentType.includes("application/x-www-form-urlencoded") ||
+    contentType.includes("multipart/form-data")
+  ) {
     const form = await request.formData();
     return new URLSearchParams(Array.from(form.entries()).map(([key, value]) => [key, String(value)]));
   }
@@ -41,7 +40,7 @@ async function resolveDecodedState(primary: string | null, fallback: string | nu
     try {
       return await verifyAuthState(primary);
     } catch {
-      // Fall through to the secondary state source when the first one is stale.
+      // Try fallback source next.
     }
   }
   if (fallback) {
@@ -50,65 +49,48 @@ async function resolveDecodedState(primary: string | null, fallback: string | nu
   return null;
 }
 
-function base64UrlDecode(input: string): Uint8Array {
-  const base64 = input.replace(/-/g, "+").replace(/_/g, "/").padEnd(Math.ceil(input.length / 4) * 4, "=");
-  const binary = atob(base64);
-  return Uint8Array.from(binary, (char) => char.charCodeAt(0));
+function toHex(bytes: Uint8Array): string {
+  return Array.from(bytes).map((byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
-function parseJwtSections(token: string) {
-  const parts = token.split(".");
-  if (parts.length !== 3) throw new Error("Telegram вернул некорректный id_token.");
-  const [headerPart, payloadPart, signaturePart] = parts;
-  return {
-    header: JSON.parse(new TextDecoder().decode(base64UrlDecode(headerPart))) as Record<string, unknown>,
-    payload: JSON.parse(new TextDecoder().decode(base64UrlDecode(payloadPart))) as Record<string, unknown>,
-    signingInput: new TextEncoder().encode(`${headerPart}.${payloadPart}`),
-    signature: base64UrlDecode(signaturePart),
-  };
-}
+async function verifyTelegramWidgetPayload(payload: URLSearchParams): Promise<Record<string, string>> {
+  const hash = payload.get("hash") || "";
+  const authDate = payload.get("auth_date") || "";
+  const userId = payload.get("id") || "";
+  if (!hash || !authDate || !userId) {
+    throw new Error("Telegram не вернул обязательные параметры входа.");
+  }
 
-async function verifyTelegramIdToken(idToken: string): Promise<Record<string, unknown>> {
-  const clientId = Deno.env.get("TELEGRAM_CLIENT_ID");
-  if (!clientId) throw new Error("Missing TELEGRAM_CLIENT_ID");
+  const botToken = Deno.env.get("TELEGRAM_CLIENT_SECRET");
+  if (!botToken) throw new Error("Missing TELEGRAM_CLIENT_SECRET");
 
-  const { header, payload, signingInput, signature } = parseJwtSections(idToken);
-  const kid = String(header.kid || "");
-  if (!kid) throw new Error("Telegram id_token не содержит kid.");
-
-  const response = await fetch("https://oauth.telegram.org/.well-known/jwks.json");
-  if (!response.ok) throw new Error("Не удалось получить публичные ключи Telegram.");
-  const jwks = await response.json();
-  const jwk = Array.isArray(jwks.keys)
-    ? jwks.keys.find((item: Record<string, unknown>) => item.kid === kid)
-    : null;
-  if (!jwk) throw new Error("Telegram public key not found.");
-
-  const key = await crypto.subtle.importKey(
-    "jwk",
-    jwk,
-    { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
+  const secretBytes = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(botToken)));
+  const hmacKey = await crypto.subtle.importKey(
+    "raw",
+    secretBytes,
+    { name: "HMAC", hash: "SHA-256" },
     false,
-    ["verify"],
+    ["sign"],
   );
 
-  const valid = await crypto.subtle.verify("RSASSA-PKCS1-v1_5", key, signature, signingInput);
-  if (!valid) throw new Error("Telegram id_token не прошёл криптографическую проверку.");
+  const dataEntries = Array.from(payload.entries())
+    .filter(([key, value]) => key !== "hash" && value)
+    .sort(([a], [b]) => a.localeCompare(b));
+  const dataCheckString = dataEntries.map(([key, value]) => `${key}=${value}`).join("\n");
+  const signature = new Uint8Array(
+    await crypto.subtle.sign("HMAC", hmacKey, new TextEncoder().encode(dataCheckString)),
+  );
 
-  if (String(payload.iss || "") !== "https://oauth.telegram.org") {
-    throw new Error("Telegram вернул неверного издателя токена.");
+  if (toHex(signature) !== hash) {
+    throw new Error("Telegram вернул данные с неверной подписью.");
   }
 
-  if (String(payload.aud || "") !== clientId) {
-    throw new Error("Telegram вернул токен для другого клиента.");
+  const authDateMs = Number(authDate) * 1000;
+  if (!authDateMs || authDateMs < Date.now() - 15 * 60 * 1000) {
+    throw new Error("Вход через Telegram уже устарел. Повторите попытку.");
   }
 
-  const expiresAt = Number(payload.exp || 0) * 1000;
-  if (!expiresAt || expiresAt < Date.now()) {
-    throw new Error("Telegram id_token уже истёк. Повторите вход.");
-  }
-
-  return payload;
+  return Object.fromEntries(dataEntries);
 }
 
 Deno.serve(async (request) => {
@@ -118,9 +100,6 @@ Deno.serve(async (request) => {
     const queryState = url.searchParams.get("state");
     const bodyState = bodyParams.get("state");
     const cookieState = getCookie(request, "palanart_telegram_state");
-    const queryToken = url.searchParams.get("id_token");
-    const bodyToken = bodyParams.get("id_token");
-    const idToken = queryToken || bodyToken;
     const providerError =
       url.searchParams.get("error_description") ||
       url.searchParams.get("error") ||
@@ -131,37 +110,31 @@ Deno.serve(async (request) => {
       return errorHtml("Telegram", `Вход остановлен провайдером: ${providerError}`);
     }
 
-    if (!idToken) {
-      return errorHtml(
-        "Telegram",
-        `Не хватает параметров callback. method=${request.method}; query_state=${Boolean(queryState)}; body_state=${Boolean(bodyState)}; cookie_state=${Boolean(cookieState)}; query_id_token=${Boolean(queryToken)}; body_id_token=${Boolean(bodyToken)}`,
-      );
-    }
-
     const decoded = await resolveDecodedState(
+      bodyState || queryState || cookieState,
       cookieState || queryState || bodyState,
-      queryState || bodyState || cookieState,
     );
     if (!decoded) {
       return errorHtml(
         "Telegram",
-        `Invalid auth state. method=${request.method}; query_state=${Boolean(queryState)}; body_state=${Boolean(bodyState)}; cookie_state=${Boolean(cookieState)}; query_id_token=${Boolean(queryToken)}; body_id_token=${Boolean(bodyToken)}`,
+        `Invalid auth state. method=${request.method}; query_state=${Boolean(queryState)}; body_state=${Boolean(bodyState)}; cookie_state=${Boolean(cookieState)}`,
       );
     }
 
-    const claims = await verifyTelegramIdToken(idToken);
-    const providerUserId = String(claims.sub || claims.id || "");
+    const payload = Array.from(bodyParams.entries()).length ? bodyParams : url.searchParams;
+    const claims = await verifyTelegramWidgetPayload(payload);
+    const providerUserId = String(claims.id || "");
     if (!providerUserId) {
       return errorHtml("Telegram", "Telegram не вернул идентификатор пользователя.");
     }
 
+    const displayName = [claims.first_name || "", claims.last_name || ""].join(" ").trim() || "Telegram user";
     const authLink = await issueMarketplaceSession({
       provider: "telegram",
       providerUserId,
-      name: String(claims.name || "Telegram user"),
-      avatarUrl: String(claims.picture || ""),
-      phone: String(claims.phone_number || ""),
-      username: String(claims.preferred_username || ""),
+      name: displayName,
+      avatarUrl: String(claims.photo_url || ""),
+      username: String(claims.username || ""),
     }, decoded.role, decoded.returnTo);
 
     const response = redirect(authLink);
