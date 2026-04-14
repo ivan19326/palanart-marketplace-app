@@ -18,9 +18,15 @@
     </div>
   </header>
   <main class="shell section">
-    <div class="section-head"><div><h2>Запросить предложение</h2><p id="selected-profile" class="muted"></p></div></div>
+    <div class="section-head">
+      <div>
+        <h2 id="lead-title">Запросить предложение</h2>
+        <p id="selected-profile" class="muted"></p>
+      </div>
+    </div>
     <div id="lead-message"></div>
     <form id="lead-form" class="panel">
+      <input name="mode" type="hidden" value="lead">
       <div class="form-grid">
         <label>Имя организатора<input name="customerName" type="text" required></label>
         <label>Телефон<input name="customerPhone" type="tel" required></label>
@@ -37,29 +43,78 @@
       <div class="form-grid one">
         <label>Требования<textarea name="requirements" required></textarea></label>
       </div>
-      <button class="primary-btn" type="submit">Отправить заявку</button>
+      <button id="lead-submit" class="primary-btn" type="submit">Отправить заявку</button>
     </form>
   </main>
   <script src="marketplace-core.js"></script>
   <script>
-    (function () { const key="palan_theme_mode"; const saved=localStorage.getItem(key)||"dark"; document.body.setAttribute("data-theme",saved); const button=document.getElementById("theme-toggle"); function sync(){button.textContent=(document.body.getAttribute("data-theme")||"dark")==="dark"?"Светлая тема":"Тёмная тема";} button.addEventListener("click",function(){const next=(document.body.getAttribute("data-theme")||"dark")==="dark"?"light":"dark"; document.body.setAttribute("data-theme",next); localStorage.setItem(key,next); sync();}); sync(); })();
+    (function () {
+      const key = "palan_theme_mode";
+      const saved = localStorage.getItem(key) || "dark";
+      document.body.setAttribute("data-theme", saved);
+      const button = document.getElementById("theme-toggle");
+      function sync() {
+        button.textContent = (document.body.getAttribute("data-theme") || "dark") === "dark" ? "Светлая тема" : "Тёмная тема";
+      }
+      button.addEventListener("click", function () {
+        const next = (document.body.getAttribute("data-theme") || "dark") === "dark" ? "light" : "dark";
+        document.body.setAttribute("data-theme", next);
+        localStorage.setItem(key, next);
+        sync();
+      });
+      sync();
+    })();
+
     const params = new URLSearchParams(location.search);
     const profileId = params.get("profile");
+    const mode = params.get("mode") === "chat" ? "chat" : "lead";
     const profile = profileId ? MarketplaceStore.getProfileById(profileId) : null;
     const user = MarketplaceStore.getCurrentUser();
-    document.getElementById("selected-profile").textContent = profile ? ("Выбран исполнитель: " + profile.name + " · " + profile.city) : "Можно оставить общий запрос без выбора конкретной карточки.";
+    const title = document.getElementById("lead-title");
+    const submit = document.getElementById("lead-submit");
+
+    document.querySelector('[name="mode"]').value = mode;
+    document.getElementById("selected-profile").textContent = profile
+      ? ("Выбран исполнитель: " + profile.name + " · " + profile.city)
+      : "Можно оставить общий запрос без выбора конкретной карточки.";
+
+    if (mode === "chat") {
+      title.textContent = "Открыть чат с исполнителем";
+      submit.textContent = "Перейти в чат";
+      document.querySelector('[name="eventType"]').value = "Обсуждение услуги";
+      document.querySelector('[name="requirements"]').value = "Хочу уточнить стоимость, свободную дату и детали сотрудничества.";
+    }
+
     if (user) {
       document.querySelector('[name="customerName"]').value = user.name || "";
       document.querySelector('[name="customerPhone"]').value = user.phone || "";
       document.querySelector('[name="customerEmail"]').value = user.email || "";
       document.querySelector('[name="city"]').value = user.city || "";
     }
+
     document.getElementById("lead-form").addEventListener("submit", function (event) {
       event.preventDefault();
       const payload = Object.fromEntries(new FormData(event.target).entries());
       payload.userId = user ? user.id : null;
       payload.profileId = profile ? profile.id : null;
       payload.profileName = profile ? profile.name : "Общий запрос";
+
+      if (mode === "chat" && profile) {
+        const deal = MarketplaceStore.createOrOpenChat({
+          userId: payload.userId,
+          profileId: payload.profileId,
+          profileName: payload.profileName,
+          customerName: payload.customerName,
+          customerPhone: payload.customerPhone,
+          customerEmail: payload.customerEmail,
+          city: payload.city,
+          eventType: payload.eventType,
+          requirements: payload.requirements
+        });
+        location.href = "user.html?deal=" + encodeURIComponent(deal.id);
+        return;
+      }
+
       MarketplaceStore.createLead(payload);
       document.getElementById("lead-message").innerHTML = '<div class="message success">Заявка отправлена. Исполнитель увидит ее в кабинете и сможет прислать предложение.</div>';
       event.target.reset();

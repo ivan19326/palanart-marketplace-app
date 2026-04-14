@@ -273,6 +273,15 @@
       showMessage("Предложение подтверждено. Сделка переведена в booked.", "success");
       renderCabinet();
     };
+    function maybeOpenDealFromUrl() {
+      const params = new URLSearchParams(location.search);
+      const dealId = params.get("deal");
+      if (!dealId) return;
+      openClientChat(dealId);
+      params.delete("deal");
+      const nextUrl = location.pathname + (params.toString() ? "?" + params.toString() : "") + location.hash;
+      history.replaceState({}, "", nextUrl);
+    }
     function renderCabinet() {
       const user = MarketplaceStore.getCurrentUser();
       byId("auth-view").style.display = user ? "none" : "grid";
@@ -281,6 +290,7 @@
       byId("user-summary").textContent = user.name + " · " + user.email + " · " + (user.city || "город не указан");
       renderKpis(user); renderLeads(user); renderQuotes(user); renderFavorites(user); renderDeals(user); renderBoard(user);
       byId("chat-box").innerHTML = '<div class="empty">Выберите сделку слева, чтобы открыть чат и продолжить согласование.</div>';
+      maybeOpenDealFromUrl();
     }
       function renderAuthMode() {
         const mode = window.PalanartAuthBridge ? window.PalanartAuthBridge.getMode() : "local";
