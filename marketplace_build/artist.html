@@ -155,8 +155,8 @@
       </div>
 
         <div id="artist-delete-panel" class="inline-confirm-panel" style="display:none;">
-          <strong>Удаление карточки</strong>
-          <p class="muted">Карточка, лиды, квоты, сделки и чаты будут удалены. Аккаунт исполнителя останется, и новую карточку можно будет создать заново.</p>
+          <strong id="artist-delete-title">Удаление карточки</strong>
+          <p id="artist-delete-text" class="muted">Карточка, лиды, квоты, сделки и чаты будут удалены. Аккаунт исполнителя останется, и новую карточку можно будет создать заново.</p>
           <div class="inline-actions">
             <button id="artist-delete-confirm" class="danger-btn" type="button">Подтвердить удаление</button>
             <button id="artist-delete-cancel" class="ghost-btn" type="button">Отмена</button>
@@ -767,11 +767,29 @@
     function openArtistDeletePanel() {
       const artist = MarketplaceStore.getCurrentArtist();
       const profile = artist ? MarketplaceStore.getArtistProfile(artist.id) : null;
-      if (!profile) return showArtistMessage("Сначала создайте или сохраните карточку, чтобы ей управлять.", "error");
+      const titleNode = byId("artist-delete-title");
+      const textNode = byId("artist-delete-text");
+      const confirmButton = byId("artist-delete-confirm");
+      if (titleNode) {
+        titleNode.textContent = profile ? "Удаление карточки" : "Карточка ещё не создана";
+      }
+      if (textNode) {
+        textNode.textContent = profile
+          ? "Карточка, лиды, квоты, сделки и чаты будут удалены. Аккаунт исполнителя останется, и новую карточку можно будет создать заново."
+          : "Сейчас удалять нечего: профиль ещё не сохранён. Сначала заполните и сохраните карточку, если хотите управлять ей дальше.";
+      }
+      if (confirmButton) {
+        confirmButton.disabled = !profile;
+        confirmButton.textContent = profile ? "Подтвердить удаление" : "Нечего удалять";
+      }
       const panel = byId("artist-delete-panel");
       if (panel) {
         panel.style.display = "grid";
         panel.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      if (!profile) {
+        showArtistMessage("Карточка ещё не сохранена. Сначала создайте профиль, потом его можно будет удалить отсюда.", "error");
+        return;
       }
     }
     function deleteArtistCard() {
