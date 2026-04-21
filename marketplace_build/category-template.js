@@ -19,7 +19,7 @@ function renderCategoryPage(categoryId, title, description, targetId) {
           '<div>' +
             '<div class="badge-row">' +
               '<span class="badge accent">' + MarketplaceStore.categoryLabel(profile.categories[0]) + '</span>' +
-              (profile.featured ? '<span class="badge gold">Featured</span>' : '') +
+    (profile.featured ? '<span class="badge gold">Витрина</span>' : '') +
             '</div>' +
             '<h3>' + profile.name + '</h3>' +
             '<div class="muted">' + (profile.title || profile.tagline || "") + '</div>' +

@@ -130,7 +130,7 @@
       </div>
 
       <div class="panel" style="margin-top:18px;">
-        <div class="section-head"><div><h2>Профили и модерация</h2><p class="muted">Одобрение анкет, featured-статус и управление видимостью карточек.</p></div></div>
+        <div class="section-head"><div><h2>Профили и модерация</h2><p class="muted">Одобрение анкет, продвижение в витрине и управление видимостью карточек.</p></div></div>
         <div id="profiles-list" class="table-list"></div>
       </div>
 
@@ -141,7 +141,7 @@
           <div id="quotes-list" class="table-list" style="margin-top:14px;"></div>
         </div>
         <div class="panel">
-          <div class="section-head"><div><h2>Отзывы</h2><p class="muted">Управление отзывами и featured reviews в карточках исполнителей.</p></div></div>
+          <div class="section-head"><div><h2>Отзывы</h2><p class="muted">Управление отзывами и выделенными отзывами в карточках исполнителей.</p></div></div>
           <div id="reviews-list" class="table-list"></div>
         </div>
       </div>
@@ -220,12 +220,12 @@
     }
     function renderDictionaries() {
       const dict = MarketplaceStore.getDictionaries();
-      byId("dictionaries-box").innerHTML = '<div class="detail-box"><strong>Категории</strong><div class="skills" style="margin-top:12px;">' + dict.categories.map(function (item) { return '<span class="skill">' + escapeHtml(item.label) + '</span>'; }).join("") + '</div></div><div class="detail-box"><strong>Тарифы</strong><div class="detail-stack" style="margin-top:12px;">' + dict.plans.map(function (item) { return '<div>' + escapeHtml(item.label) + ' · лимит категорий ' + item.categoriesLimit + ' · featured reviews ' + item.featuredReviews + '</div>'; }).join("") + '</div></div>';
+      byId("dictionaries-box").innerHTML = '<div class="detail-box"><strong>Категории</strong><div class="skills" style="margin-top:12px;">' + dict.categories.map(function (item) { return '<span class="skill">' + escapeHtml(item.label) + '</span>'; }).join("") + '</div></div><div class="detail-box"><strong>Тарифы</strong><div class="detail-stack" style="margin-top:12px;">' + dict.plans.map(function (item) { return '<div>' + escapeHtml(item.label) + ' · лимит категорий ' + item.categoriesLimit + ' · выделенных отзывов ' + item.featuredReviews + '</div>'; }).join("") + '</div></div>';
     }
     function renderProfiles() {
       const profiles = MarketplaceStore.getDb().profiles;
       byId("profiles-list").innerHTML = profiles.length ? profiles.map(function (profile) {
-        return '<div class="table-row"><div><strong>' + escapeHtml(profile.name) + '</strong><div class="muted">' + escapeHtml(profile.city) + ' · ' + escapeHtml(profile.categories.map(MarketplaceStore.categoryLabel).join(", ")) + '</div></div><div>' + escapeHtml(profile.planId) + '</div><div><span class="badge accent">' + escapeHtml(profile.status) + '</span></div><div>' + (profile.hidden ? 'Скрыт' : (profile.featured ? 'Featured' : 'Публичный')) + '</div><div class="inline-actions"><button class="primary-btn" type="button" onclick="approveProfile(\'' + profile.id + '\')">Одобрить</button><button class="ghost-btn" type="button" onclick="toggleFeatured(\'' + profile.id + '\')">Featured</button><button class="ghost-btn" type="button" onclick="toggleHidden(\'' + profile.id + '\')">' + (profile.hidden ? 'Показать' : 'Скрыть') + '</button></div></div>';
+        return '<div class="table-row"><div><strong>' + escapeHtml(profile.name) + '</strong><div class="muted">' + escapeHtml(profile.city) + ' · ' + escapeHtml(profile.categories.map(MarketplaceStore.categoryLabel).join(", ")) + '</div></div><div>' + escapeHtml(profile.planId) + '</div><div><span class="badge accent">' + escapeHtml(profile.status) + '</span></div><div>' + (profile.hidden ? 'Скрыт' : (profile.featured ? 'Витрина' : 'Публичный')) + '</div><div class="inline-actions"><button class="primary-btn" type="button" onclick="approveProfile(\'' + profile.id + '\')">Одобрить</button><button class="ghost-btn" type="button" onclick="toggleFeatured(\'' + profile.id + '\')">В витрину</button><button class="ghost-btn" type="button" onclick="toggleHidden(\'' + profile.id + '\')">' + (profile.hidden ? 'Показать' : 'Скрыть') + '</button></div></div>';
       }).join("") : '<div class="empty">Профилей пока нет.</div>';
     }
     function renderLeadsAndQuotes() {
@@ -242,7 +242,7 @@
       const reviews = MarketplaceStore.getDb().reviews;
       byId("reviews-list").innerHTML = reviews.length ? reviews.map(function (review) {
         const profile = MarketplaceStore.getProfileById(review.profileId);
-        return '<div class="table-row"><div><strong>' + escapeHtml(review.authorName) + '</strong><div class="muted">' + escapeHtml(profile ? profile.name : "Исполнитель") + '</div></div><div>' + review.rating + ' / 5</div><div>' + escapeHtml(review.text.slice(0, 70)) + '</div><div>' + (review.featured ? 'Featured' : 'Обычный') + '</div><div><button class="ghost-btn" type="button" onclick="toggleReviewFeature(\'' + review.id + '\')">Переключить</button></div></div>';
+        return '<div class="table-row"><div><strong>' + escapeHtml(review.authorName) + '</strong><div class="muted">' + escapeHtml(profile ? profile.name : "Исполнитель") + '</div></div><div>' + review.rating + ' / 5</div><div>' + escapeHtml(review.text.slice(0, 70)) + '</div><div>' + (review.featured ? 'Выделен' : 'Обычный') + '</div><div><button class="ghost-btn" type="button" onclick="toggleReviewFeature(\'' + review.id + '\')">Переключить</button></div></div>';
       }).join("") : '<div class="empty">Пока нет отзывов.</div>';
     }
     function renderChats() {

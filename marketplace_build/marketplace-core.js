@@ -17,9 +17,9 @@
   ];
 
   const PLAN_OPTIONS = [
-    { id: "basic", label: "Basic", categoriesLimit: 2, featured: false, featuredReviews: 0 },
-    { id: "pro", label: "Pro", categoriesLimit: 6, featured: false, featuredReviews: 2 },
-    { id: "featured", label: "Featured", categoriesLimit: 12, featured: true, featuredReviews: 4 }
+        { id: "basic", label: "Старт", categoriesLimit: 2, featured: false, featuredReviews: 0 },
+        { id: "pro", label: "Про", categoriesLimit: 6, featured: false, featuredReviews: 2 },
+        { id: "featured", label: "Витрина", categoriesLimit: 12, featured: true, featuredReviews: 4 }
   ];
 
   const DEFAULT_FAQ = [
