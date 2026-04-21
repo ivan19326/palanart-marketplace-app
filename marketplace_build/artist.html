@@ -149,7 +149,8 @@
         <div class="cabinet-action-row">
           <button id="artist-edit-card" class="primary-btn" type="button">Редактировать карточку</button>
           <button id="artist-preview-card" class="ghost-btn" type="button">Предпросмотр карточки</button>
-          <a class="ghost-btn" href="index.html#catalog">Открыть витрину</a>
+          <a id="artist-open-storefront" class="ghost-btn" href="index.html#catalog">Открыть витрину</a>
+          <button id="artist-delete-card" class="danger-btn" type="button">Удалить карточку</button>
         </div>
       </div>
 
@@ -727,11 +728,16 @@
     function syncArtistCabinetActions(profile) {
       const editButton = byId("artist-edit-card");
       const previewButton = byId("artist-preview-card");
+      const storefrontLink = byId("artist-open-storefront");
       const deleteButton = byId("artist-delete-card");
       if (editButton) editButton.disabled = false;
       if (previewButton) {
         previewButton.disabled = !profile;
         previewButton.title = profile ? "" : "Сначала сохраните карточку исполнителя.";
+      }
+      if (storefrontLink) {
+        storefrontLink.href = profile ? "index.html#profile-detail" : "index.html#catalog";
+        storefrontLink.title = profile ? "Открыть публичную карточку исполнителя." : "Пока откроется общий каталог, потому что карточка ещё не сохранена.";
       }
       if (deleteButton) {
         deleteButton.disabled = !profile;
@@ -740,15 +746,18 @@
     }
     function ensureArtistDeleteButton() {
       const actionRow = document.querySelector(".cabinet-action-row");
-      if (!actionRow || byId("artist-delete-card")) return;
+      if (!actionRow) return;
+      const existing = byId("artist-delete-card");
+      if (existing) {
+        existing.onclick = openArtistDeletePanel;
+        return;
+      }
       const button = document.createElement("button");
       button.id = "artist-delete-card";
       button.className = "danger-btn";
       button.type = "button";
       button.textContent = "Удалить карточку";
-      button.addEventListener("click", function () {
-        openArtistDeletePanel();
-      });
+      button.addEventListener("click", openArtistDeletePanel);
       actionRow.appendChild(button);
     }
     function closeArtistDeletePanel() {
@@ -760,7 +769,10 @@
       const profile = artist ? MarketplaceStore.getArtistProfile(artist.id) : null;
       if (!profile) return showArtistMessage("Сначала создайте или сохраните карточку, чтобы ей управлять.", "error");
       const panel = byId("artist-delete-panel");
-      if (panel) panel.style.display = "grid";
+      if (panel) {
+        panel.style.display = "grid";
+        panel.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
     }
     function deleteArtistCard() {
       const artist = MarketplaceStore.getCurrentArtist();
@@ -1179,8 +1191,19 @@
     byId("artist-preview-card").addEventListener("click", function () {
       openArtistProfilePreview();
     });
+    byId("artist-open-storefront").addEventListener("click", function (event) {
+      const artist = MarketplaceStore.getCurrentArtist();
+      const profile = artist ? MarketplaceStore.getArtistProfile(artist.id) : null;
+      if (!profile) return;
+      event.preventDefault();
+      localStorage.setItem("palanart_preview_profile_id", profile.id);
+      window.location.href = "index.html#profile-detail";
+    });
     byId("artist-delete-cancel").addEventListener("click", function () {
       closeArtistDeletePanel();
+    });
+    byId("artist-delete-card").addEventListener("click", function () {
+      openArtistDeletePanel();
     });
     byId("artist-delete-confirm").addEventListener("click", function () {
       deleteArtistCard();
@@ -1189,10 +1212,10 @@
       button.addEventListener("click", async function () {
         if (!window.PalanartAuthBridge) return;
         const result = await window.PalanartAuthBridge.signInWithSocial("artist", button.dataset.artistSocial);
-      if (!result.ok) showArtistMessage(result.message, "error");
+        if (!result.ok) showArtistMessage(result.message, "error");
+      });
     });
     renderArtistRegisterPhotoPreview();
-    });
     if (byId("artist-register-form").name) {
       byId("artist-register-form").name.setAttribute("list", "artist-name-options");
     }
