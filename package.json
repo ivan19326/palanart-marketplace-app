@@ -1,8 +1,8 @@
-{
+﻿{
   "name": "palanart-marketplace",
   "version": "1.0.0",
   "private": true,
-  "description": "Паланарт — маркетплейс исполнителей для мероприятий.",
+  "description": "Движарт — маркетплейс исполнителей для мероприятий.",
   "scripts": {
     "cap:sync": "npx cap sync",
     "cap:open:android": "npx cap open android",
@@ -26,3 +26,4 @@
     "supabase": "^2.87.2"
   }
 }
+

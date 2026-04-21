@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   const DB_KEY = "palan_marketplace_db_v7";
   const LEGACY_DB_KEYS = ["palan_marketplace_db_v2"];
   const SESSION_KEY = "palan_marketplace_session_v3";
@@ -33,7 +33,7 @@
 
     return {
       meta: {
-        project: "Паланарт",
+        project: "Движарт",
         updatedAt: now,
         schemaVersion: 6
       },
@@ -1203,3 +1203,4 @@
     resetDb: resetDb
   };
 })();
+

@@ -1,6 +1,6 @@
-{
+﻿{
   "appId": "ru.palanart.app",
-  "appName": "Паланарт",
+  "appName": "Движарт",
   "webDir": "marketplace_build",
   "server": {
     "hostname": "app.palanart.local",
@@ -15,3 +15,4 @@
     }
   }
 }
+

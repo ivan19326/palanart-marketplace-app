@@ -1,16 +1,16 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Кабинет исполнителя | Паланарт</title>
+  <title>Кабинет исполнителя | Движарт</title>
   <link rel="stylesheet" href="marketplace.css">
 </head>
 <body>
   <header class="topbar">
     <div class="shell topbar-inner">
       <div class="brand">
-        <strong>Паланарт</strong>
+        <strong>Движарт</strong>
         <span>Кабинет исполнителя</span>
       </div>
       <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Открыть меню">☰</button>
@@ -29,7 +29,7 @@
 
     <section id="artist-auth-view" class="split auth-onboarding">
       <div class="service-panel auth-welcome-card">
-        <div class="eyebrow">Паланарт для исполнителей</div>
+        <div class="eyebrow">Движарт для исполнителей</div>
         <h1>Быстрый старт без длинной анкеты</h1>
         <p class="muted">Сначала создаём кабинет за минуту, потом уже спокойно заполняем профиль, пакеты, календарь и медиа готовыми вариантами.</p>
         <div class="section-head compact">
@@ -121,7 +121,7 @@
           <button class="ghost-btn mini-chip" type="button" data-fill-register="city" data-fill-value="Чебоксары">Чебоксары</button>
           <button class="ghost-btn mini-chip" type="button" data-fill-register="city" data-fill-value="Казань">Казань</button>
           <button class="ghost-btn mini-chip" type="button" data-fill-register="city" data-fill-value="Москва">Москва</button>
-          <button class="ghost-btn mini-chip" type="button" data-fill-register="telegram" data-fill-value="@palanart">Шаблон Telegram</button>
+          <button class="ghost-btn mini-chip" type="button" data-fill-register="telegram" data-fill-value="@dvizhart">Шаблон Telegram</button>
         </div>
         <p class="muted auth-form-footnote">Пакеты, цены, календарь, медиа и FAQ добавите уже после входа. На старте не нужно тратить полчаса на форму.</p>
       </form>
@@ -323,7 +323,7 @@
     </div>
   </div>
 
-  <datalist id="artist-name-options"><option value="Паланарт Event"></option><option value="Паланарт Show"></option><option value="Паланарт Live"></option></datalist>
+  <datalist id="artist-name-options"><option value="Движарт Event"></option><option value="Движарт Show"></option><option value="Движарт Live"></option></datalist>
   <datalist id="artist-title-options"><option value="Ведущий на свадьбы и корпоративы"></option><option value="DJ и музыкальное сопровождение"></option><option value="Фотограф на события"></option><option value="Кавер-группа для мероприятий"></option></datalist>
   <datalist id="artist-city-options"><option value="Чебоксары"></option><option value="Новочебоксарск"></option><option value="Казань"></option><option value="Москва"></option></datalist>
   <datalist id="artist-region-options"><option value="Чувашия"></option><option value="Татарстан"></option><option value="Москва"></option><option value="Россия"></option></datalist>
@@ -802,6 +802,17 @@
       showArtistMessage("Карточка удалена. При необходимости можно создать новую.", "success");
       scrollArtistProfileForm();
     }
+    function formatCabinetIdentity(email, fallbackLabel) {
+      const raw = String(email || "").trim();
+      if (!raw) return fallbackLabel || "";
+      if (/@auth\.(palanart|dvizhart)\.local$/i.test(raw)) {
+        if (/^telegram_/i.test(raw)) return "Telegram user";
+        if (/^vk_/i.test(raw)) return "VK user";
+        if (/^google_/i.test(raw)) return "Google user";
+        return fallbackLabel || "Соцвход";
+      }
+      return raw;
+    }
     function renderArtistCabinet() {
       const artist = MarketplaceStore.getCurrentArtist();
       byId("artist-auth-view").style.display = artist ? "none" : "grid";
@@ -812,7 +823,7 @@
       const profile = MarketplaceStore.getArtistProfile(artist.id);
       const leads = MarketplaceStore.getLeadsForArtist(artist.id);
       const quotes = MarketplaceStore.getQuotesForArtist(artist.id);
-      byId("artist-summary").textContent = artist.name + " · " + artist.email + " · " + (profile ? ("статус профиля: " + profile.status) : "профиль еще не заполнен");
+      byId("artist-summary").textContent = artist.name + " · " + formatCabinetIdentity(artist.email, "Исполнитель") + " · " + (profile ? ("статус профиля: " + profile.status) : "профиль еще не заполнен");
       renderKpis(profile, leads, quotes);
       fillArtistForm(artist, profile);
       renderLeads(artist);
@@ -1160,10 +1171,10 @@
         if (roleField) roleField.value = button.dataset.registerRole;
         if (form && form.name && !form.name.value) {
           const defaults = {
-            host: "Ведущий Паланарт",
-            dj: "DJ Паланарт",
-            photographer: "Фотограф Паланарт",
-            band: "Группа Паланарт"
+            host: "Ведущий Движарт",
+            dj: "DJ Движарт",
+            photographer: "Фотограф Движарт",
+            band: "Группа Движарт"
           };
           form.name.value = defaults[button.dataset.registerRole] || "";
         }
@@ -1263,3 +1274,4 @@
   </script>
 </body>
 </html>
+

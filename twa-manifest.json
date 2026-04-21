@@ -1,8 +1,8 @@
-{
+﻿{
   "packageId": "ru.palanart.twa",
   "host": "ivan19326.github.io",
-  "name": "Паланарт",
-  "launcherName": "Паланарт",
+  "name": "Движарт",
+  "launcherName": "Движарт",
   "display": "standalone",
   "themeColor": "#f6c453",
   "backgroundColor": "#101626",
@@ -13,3 +13,4 @@
   "appVersionCode": 1,
   "fallbackType": "customtabs"
 }
+

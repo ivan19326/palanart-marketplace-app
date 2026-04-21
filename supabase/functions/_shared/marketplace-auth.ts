@@ -149,7 +149,7 @@ export type ExternalProfile = {
 
 export async function issueMarketplaceSession(profile: ExternalProfile, role: string, returnTo: string): Promise<string> {
   const admin = createServiceClient();
-  const syntheticEmail = `${profile.provider}_${profile.providerUserId}@auth.palanart.local`;
+  const syntheticEmail = `${profile.provider}_${profile.providerUserId}@auth.dvizhart.local`;
   const metadata = {
     provider: profile.provider,
     provider_id: profile.providerUserId,

@@ -1,16 +1,16 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Кабинет клиента | Паланарт</title>
+  <title>Кабинет клиента | Движарт</title>
   <link rel="stylesheet" href="marketplace.css">
 </head>
 <body>
   <header class="topbar">
     <div class="shell topbar-inner">
       <div class="brand">
-        <strong>Паланарт</strong>
+        <strong>Движарт</strong>
         <span>Кабинет клиента маркетплейса</span>
       </div>
       <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Открыть меню">☰</button>
@@ -282,12 +282,23 @@
       const nextUrl = location.pathname + (params.toString() ? "?" + params.toString() : "") + location.hash;
       history.replaceState({}, "", nextUrl);
     }
+    function formatCabinetIdentity(email, fallbackLabel) {
+      const raw = String(email || "").trim();
+      if (!raw) return fallbackLabel || "";
+      if (/@auth\.(palanart|dvizhart)\.local$/i.test(raw)) {
+        if (/^telegram_/i.test(raw)) return "Telegram user";
+        if (/^vk_/i.test(raw)) return "VK user";
+        if (/^google_/i.test(raw)) return "Google user";
+        return fallbackLabel || "Соцвход";
+      }
+      return raw;
+    }
     function renderCabinet() {
       const user = MarketplaceStore.getCurrentUser();
       byId("auth-view").style.display = user ? "none" : "grid";
       byId("cabinet-view").style.display = user ? "grid" : "none";
       if (!user) return;
-      byId("user-summary").textContent = user.name + " · " + user.email + " · " + (user.city || "город не указан");
+      byId("user-summary").textContent = user.name + " · " + formatCabinetIdentity(user.email, "Клиент") + " · " + (user.city || "город не указан");
       renderKpis(user); renderLeads(user); renderQuotes(user); renderFavorites(user); renderDeals(user); renderBoard(user);
       byId("chat-box").innerHTML = '<div class="empty">Выберите сделку слева, чтобы открыть чат и продолжить согласование.</div>';
       maybeOpenDealFromUrl();
@@ -391,3 +402,4 @@
   </script>
 </body>
 </html>
+
