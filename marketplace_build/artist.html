@@ -732,7 +732,7 @@
       const deleteButton = byId("artist-delete-card");
       if (editButton) editButton.disabled = false;
       if (previewButton) {
-        previewButton.disabled = !profile;
+        previewButton.disabled = false;
         previewButton.title = profile ? "" : "Сначала сохраните карточку исполнителя.";
       }
       if (storefrontLink) {
@@ -740,8 +740,8 @@
         storefrontLink.title = profile ? "Открыть публичную карточку исполнителя." : "Пока откроется общий каталог, потому что карточка ещё не сохранена.";
       }
       if (deleteButton) {
-        deleteButton.disabled = !profile;
-        deleteButton.title = profile ? "" : "У вас еще нет карточки для удаления.";
+        deleteButton.disabled = false;
+        deleteButton.title = profile ? "" : "Сначала сохраните карточку исполнителя, чтобы её удалить.";
       }
     }
     function ensureArtistDeleteButton() {
@@ -1194,7 +1194,11 @@
     byId("artist-open-storefront").addEventListener("click", function (event) {
       const artist = MarketplaceStore.getCurrentArtist();
       const profile = artist ? MarketplaceStore.getArtistProfile(artist.id) : null;
-      if (!profile) return;
+      if (!profile) {
+        event.preventDefault();
+        showArtistMessage("Сначала сохраните карточку, чтобы открыть её на витрине.", "error");
+        return;
+      }
       event.preventDefault();
       localStorage.setItem("palanart_preview_profile_id", profile.id);
       window.location.href = "index.html#profile-detail";
