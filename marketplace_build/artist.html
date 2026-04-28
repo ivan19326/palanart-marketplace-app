@@ -147,14 +147,12 @@
         </div>
         <div id="artist-kpis" class="service-kpis"></div>
         <div class="cabinet-action-row">
-          <button id="artist-edit-card" class="primary-btn" type="button">Редактировать карточку</button>
-          <button id="artist-preview-card" class="ghost-btn" type="button">Предпросмотр карточки</button>
-          <a id="artist-open-storefront" class="ghost-btn" href="index.html#catalog">Открыть витрину</a>
-          <button id="artist-delete-card" class="danger-btn" type="button">Удалить карточку</button>
+          <button id="artist-edit-card" class="primary-btn" type="button" onclick="window.artistScrollProfileForm && window.artistScrollProfileForm()">Редактировать карточку</button>
+          <button id="artist-preview-card" class="ghost-btn" type="button" onclick="window.artistPreviewProfile && window.artistPreviewProfile()">Предпросмотр карточки</button>
+          <a id="artist-open-storefront" class="ghost-btn" href="index.html#catalog" onclick="return window.artistOpenStorefront ? window.artistOpenStorefront(event) : true;">Открыть витрину</a>
+          <button id="artist-delete-card" class="danger-btn" type="button" onclick="window.artistOpenDeletePanel && window.artistOpenDeletePanel()">Удалить карточку</button>
         </div>
-      </div>
-
-        <div id="artist-delete-panel" class="inline-confirm-panel" style="display:none;">
+        <div id="artist-delete-panel" class="inline-confirm-panel" hidden>
           <strong id="artist-delete-title">Удаление карточки</strong>
           <p id="artist-delete-text" class="muted">Карточка, лиды, квоты, сделки и чаты будут удалены. Аккаунт исполнителя останется, и новую карточку можно будет создать заново.</p>
           <div class="inline-actions">
@@ -162,6 +160,7 @@
             <button id="artist-delete-cancel" class="ghost-btn" type="button">Отмена</button>
           </div>
         </div>
+      </div>
       <form id="artist-profile-form" class="service-panel">
         <div class="preset-box" style="margin-bottom:16px;">
           <strong>Быстрый старт профиля</strong>
@@ -762,7 +761,10 @@
     }
     function closeArtistDeletePanel() {
       const panel = byId("artist-delete-panel");
-      if (panel) panel.style.display = "none";
+      if (panel) {
+        panel.hidden = true;
+        panel.style.display = "none";
+      }
     }
     function openArtistDeletePanel() {
       const artist = MarketplaceStore.getCurrentArtist();
@@ -784,6 +786,7 @@
       }
       const panel = byId("artist-delete-panel");
       if (panel) {
+        panel.hidden = false;
         panel.style.display = "grid";
         panel.scrollIntoView({ behavior: "smooth", block: "center" });
       }
@@ -1241,6 +1244,22 @@
     byId("artist-delete-confirm").addEventListener("click", function () {
       deleteArtistCard();
     });
+    window.artistOpenDeletePanel = openArtistDeletePanel;
+    window.artistScrollProfileForm = scrollArtistProfileForm;
+    window.artistPreviewProfile = openArtistProfilePreview;
+    window.artistOpenStorefront = function (event) {
+      const artist = MarketplaceStore.getCurrentArtist();
+      const profile = artist ? MarketplaceStore.getArtistProfile(artist.id) : null;
+      if (!profile) {
+        if (event) event.preventDefault();
+        showArtistMessage("Сначала сохраните карточку, чтобы открыть её на витрине.", "error");
+        return false;
+      }
+      if (event) event.preventDefault();
+      localStorage.setItem("palanart_preview_profile_id", profile.id);
+      window.location.href = "index.html#profile-detail";
+      return false;
+    };
     document.querySelectorAll("[data-artist-social]").forEach(function (button) {
       button.addEventListener("click", async function () {
         if (!window.PalanartAuthBridge) return;
