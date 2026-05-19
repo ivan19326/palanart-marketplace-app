@@ -1230,6 +1230,10 @@
     return { ok: true, entry: entry };
   }
 
+  function getLedgerEntriesForArtist(artistId) {
+    return getDb().ledgerEntries.filter(function (entry) { return entry.artistId === artistId; });
+  }
+
   function getBalanceForArtist(artistId) {
     return getDb().ledgerEntries.filter(function (entry) { return entry.artistId === artistId; }).reduce(function (sum, entry) {
       return sum + (entry.type === "debit" ? -numeric(entry.amount, 0) : numeric(entry.amount, 0));
@@ -1255,6 +1259,30 @@
 
   function getPayoutRequestsForArtist(artistId) {
     return getDb().payoutRequests.filter(function (request) { return request.artistId === artistId; });
+  }
+
+  function getPayoutRequestsForPartner(partnerId) {
+    return getDb().payoutRequests.filter(function (request) { return request.partnerId === partnerId; });
+  }
+
+  function updatePayoutRequestStatus(requestId, status) {
+    const db = getDb();
+    const request = db.payoutRequests.find(function (item) { return item.id === requestId; });
+    if (!request) return { ok: false, message: "Заявка на выплату не найдена." };
+    request.status = status || request.status;
+    request.updatedAt = new Date().toISOString();
+    saveDb(db);
+    return { ok: true, request: request };
+  }
+
+  function updateStudioBookingStatus(bookingId, status) {
+    const db = getDb();
+    const booking = db.studioBookings.find(function (item) { return item.id === bookingId; });
+    if (!booking) return { ok: false, message: "Бронирование не найдено." };
+    booking.status = status || booking.status;
+    booking.updatedAt = new Date().toISOString();
+    saveDb(db);
+    return { ok: true, booking: booking };
   }
 
   function createStudioBooking(payload) {
@@ -1424,12 +1452,16 @@
     getRoyaltyReportsForArtist: getRoyaltyReportsForArtist,
     getRoyaltyReportsForPartner: getRoyaltyReportsForPartner,
     createLedgerEntry: createLedgerEntry,
+    getLedgerEntriesForArtist: getLedgerEntriesForArtist,
     getBalanceForArtist: getBalanceForArtist,
     createPayoutRequest: createPayoutRequest,
     getPayoutRequestsForArtist: getPayoutRequestsForArtist,
+    getPayoutRequestsForPartner: getPayoutRequestsForPartner,
+    updatePayoutRequestStatus: updatePayoutRequestStatus,
     createStudioBooking: createStudioBooking,
     getStudioServices: getStudioServices,
     getStudioBookingsForCustomer: getStudioBookingsForCustomer,
+    updateStudioBookingStatus: updateStudioBookingStatus,
     getStats: getStats,
     resetDb: resetDb
   };
