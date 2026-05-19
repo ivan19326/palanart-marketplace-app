@@ -310,8 +310,8 @@
           : "Пока работает локальный режим. Для сервисного входа подключите Supabase в auth-config.js.";
         document.querySelectorAll("[data-user-social]").forEach(function (button) {
           const enabled = mode === "supabase" && window.PalanartAuthBridge && window.PalanartAuthBridge.canUseProvider(button.dataset.userSocial);
-          button.disabled = mode !== "supabase";
-          button.hidden = false;
+          button.disabled = !enabled;
+          button.hidden = !enabled;
           button.classList.toggle("is-unavailable", !enabled);
           button.title = enabled ? "" : "Этот соцвход ещё не подключён полностью. Пока используйте e-mail вход.";
         });

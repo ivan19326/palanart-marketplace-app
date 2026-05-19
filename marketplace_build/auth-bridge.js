@@ -36,9 +36,8 @@
     const listed = Array.isArray(config.socialProviders) && config.socialProviders.some(function (item) {
       return item.id === provider;
     });
-    if (listed) return true;
-    if (getMode() !== "supabase") return false;
-    if (provider === "google") return false;
+    if (getMode() !== "supabase" || !listed) return false;
+    if (provider === "google") return true;
     return Boolean(externalProviderUrl(provider));
   }
 
