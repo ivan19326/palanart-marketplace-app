@@ -5,6 +5,7 @@ const FILES_TO_CACHE = [
   "./admin.html",
   "./user.html",
   "./artist.html",
+  "./partner.html",
   "./telegram-login.html",
   "./vedushie.html",
   "./dj.html",

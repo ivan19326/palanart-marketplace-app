@@ -18,6 +18,7 @@
         <a href="index.html">Витрина</a>
         <a href="user.html">Клиент</a>
         <a href="artist.html">Исполнитель</a>
+        <a href="partner.html">Партнёр</a>
         <button id="theme-toggle" class="ghost-btn theme-toggle" type="button">Светлая тема</button>
       </nav>
     </div>
@@ -190,7 +191,7 @@
     function showMessage(target, text, kind) { byId(target).innerHTML = text ? '<div class="message ' + kind + '">' + text + '</div>' : ""; }
     function renderStats() {
       const stats = MarketplaceStore.getStats();
-      byId("stats-grid").innerHTML = [["Активные профили", stats.approvedProfiles], ["На модерации", stats.pendingProfiles], ["Клиенты", stats.users], ["Исполнители", stats.artists], ["Лиды", stats.leads], ["Квоты", stats.quotes], ["Сделки", stats.bookedDeals], ["Чаты", stats.chats]].map(function (item) {
+      byId("stats-grid").innerHTML = [["Активные профили", stats.approvedProfiles], ["На модерации", stats.pendingProfiles], ["Клиенты", stats.users], ["Исполнители", stats.artists], ["Партнёры", stats.partners], ["Релизы", stats.releases], ["Отчёты", stats.royaltyReports], ["Выплаты", stats.payoutRequests], ["Лиды", stats.leads], ["Квоты", stats.quotes], ["Сделки", stats.bookedDeals], ["Чаты", stats.chats]].map(function (item) {
         return '<article class="stats-card"><h3>' + item[0] + '</h3><strong>' + item[1] + '</strong></article>';
       }).join("");
     }

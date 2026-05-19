@@ -57,6 +57,7 @@
       ],
       users: [],
       artists: [],
+      partners: [],
       profiles: profiles,
       leads: [],
       quotes: [],
@@ -64,7 +65,19 @@
       chats: [],
       boardPosts: [],
       reviews: [],
-      tickets: []
+      tickets: [],
+      releases: [],
+      royaltyReports: [],
+      payoutRequests: [],
+      ledgerEntries: [],
+      studioServices: [
+        { id: "studio-rec", name: "Студийная запись", category: "studio", priceFrom: 2500, duration: "1 час", description: "Запись вокала и инструментов с инженером студии." },
+        { id: "studio-mix", name: "Сведение трека", category: "production", priceFrom: 12000, duration: "за релиз", description: "Сведение и базовая подготовка трека к выпуску." },
+        { id: "studio-master", name: "Мастеринг", category: "production", priceFrom: 5000, duration: "за трек", description: "Финальная подготовка мастер-версии под релиз." }
+      ],
+      studioBookings: [],
+      apiConnections: [],
+      notifications: []
     };
   }
 
@@ -318,6 +331,7 @@
         parsed.settings = Object.assign({}, createSeed().settings, parsed.settings || {});
         parsed.users = Array.isArray(parsed.users) ? parsed.users.map(normalizeUser) : [];
         parsed.artists = Array.isArray(parsed.artists) ? parsed.artists : [];
+        parsed.partners = Array.isArray(parsed.partners) ? parsed.partners : [];
         parsed.profiles = Array.isArray(parsed.profiles) ? parsed.profiles.map(normalizeProfile) : [];
         parsed.leads = Array.isArray(parsed.leads) ? parsed.leads : [];
         parsed.quotes = Array.isArray(parsed.quotes) ? parsed.quotes : [];
@@ -326,6 +340,14 @@
         parsed.boardPosts = Array.isArray(parsed.boardPosts) ? parsed.boardPosts : [];
         parsed.reviews = Array.isArray(parsed.reviews) ? parsed.reviews.map(normalizeReview) : [];
         parsed.tickets = Array.isArray(parsed.tickets) ? parsed.tickets : [];
+        parsed.releases = Array.isArray(parsed.releases) ? parsed.releases : [];
+        parsed.royaltyReports = Array.isArray(parsed.royaltyReports) ? parsed.royaltyReports : [];
+        parsed.payoutRequests = Array.isArray(parsed.payoutRequests) ? parsed.payoutRequests : [];
+        parsed.ledgerEntries = Array.isArray(parsed.ledgerEntries) ? parsed.ledgerEntries : [];
+        parsed.studioServices = Array.isArray(parsed.studioServices) && parsed.studioServices.length ? parsed.studioServices : createSeed().studioServices;
+        parsed.studioBookings = Array.isArray(parsed.studioBookings) ? parsed.studioBookings : [];
+        parsed.apiConnections = Array.isArray(parsed.apiConnections) ? parsed.apiConnections : [];
+        parsed.notifications = Array.isArray(parsed.notifications) ? parsed.notifications : [];
         localStorage.setItem(DB_KEY, JSON.stringify(parsed));
         return parsed;
       } catch (error) {}
@@ -380,6 +402,12 @@
     const session = getSession();
     if (!session || session.type !== "admin") return null;
     return getDb().admins.find(function (admin) { return admin.id === session.id; }) || null;
+  }
+
+  function getCurrentPartner() {
+    const session = getSession();
+    if (!session || session.type !== "partner") return null;
+    return getDb().partners.find(function (partner) { return partner.id === session.id; }) || null;
   }
 
   function registerUser(payload) {
@@ -465,6 +493,45 @@
     if (!admin) return { ok: false, message: "Неверный логин администратора." };
     setSession({ type: "admin", id: admin.id });
     return { ok: true, admin: admin };
+  }
+
+  function registerPartnerAccount(payload) {
+    const db = getDb();
+    const email = (payload.email || "").trim().toLowerCase();
+    if (!email || !payload.password || !(payload.companyName || "").trim()) {
+      return { ok: false, message: "Заполните название компании, e-mail и пароль." };
+    }
+    if (db.partners.some(function (partner) { return partner.email === email; })) {
+      return { ok: false, message: "Партнёр с таким e-mail уже зарегистрирован." };
+    }
+    const partner = {
+      id: newId("partner"),
+      companyName: (payload.companyName || "").trim(),
+      labelName: (payload.labelName || payload.companyName || "").trim(),
+      email: email,
+      phone: (payload.phone || "").trim(),
+      password: payload.password,
+      contactName: (payload.contactName || "").trim(),
+      city: (payload.city || "").trim(),
+      website: (payload.website || "").trim(),
+      telegram: (payload.telegram || "").trim(),
+      artistIds: [],
+      team: [],
+      createdAt: new Date().toISOString()
+    };
+    db.partners.unshift(partner);
+    saveDb(db);
+    setSession({ type: "partner", id: partner.id });
+    return { ok: true, partner: partner };
+  }
+
+  function loginPartner(email, password) {
+    const partner = getDb().partners.find(function (item) {
+      return item.email === (email || "").trim().toLowerCase() && item.password === password;
+    });
+    if (!partner) return { ok: false, message: "Неверный e-mail или пароль партнёра." };
+    setSession({ type: "partner", id: partner.id });
+    return { ok: true, partner: partner };
   }
 
   function logout() {
@@ -1076,6 +1143,148 @@
     return user.compareProfiles.map(getProfileById).filter(Boolean);
   }
 
+  function createRelease(payload) {
+    const db = getDb();
+    const release = {
+      id: newId("release"),
+      artistId: payload.artistId || null,
+      partnerId: payload.partnerId || null,
+      title: (payload.title || "").trim(),
+      type: (payload.type || "single").trim(),
+      status: payload.status || "draft",
+      genre: (payload.genre || "").trim(),
+      releaseDate: payload.releaseDate || "",
+      coverUrl: (payload.coverUrl || "").trim(),
+      description: (payload.description || "").trim(),
+      trackCount: numeric(payload.trackCount, 1),
+      language: (payload.language || "").trim(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    db.releases.unshift(release);
+    saveDb(db);
+    return { ok: true, release: release };
+  }
+
+  function updateReleaseStatus(releaseId, status) {
+    const db = getDb();
+    const release = db.releases.find(function (item) { return item.id === releaseId; });
+    if (!release) return { ok: false, message: "Релиз не найден." };
+    release.status = status;
+    release.updatedAt = new Date().toISOString();
+    saveDb(db);
+    return { ok: true, release: release };
+  }
+
+  function getReleasesForArtist(artistId) {
+    return getDb().releases.filter(function (release) { return release.artistId === artistId; });
+  }
+
+  function getReleasesForPartner(partnerId) {
+    return getDb().releases.filter(function (release) { return release.partnerId === partnerId; });
+  }
+
+  function createRoyaltyReport(payload) {
+    const db = getDb();
+    const report = {
+      id: newId("report"),
+      artistId: payload.artistId || null,
+      partnerId: payload.partnerId || null,
+      releaseId: payload.releaseId || null,
+      periodLabel: (payload.periodLabel || "").trim(),
+      grossAmount: numeric(payload.grossAmount, 0),
+      netAmount: numeric(payload.netAmount, 0),
+      currency: (payload.currency || "RUB").trim(),
+      statementUrl: (payload.statementUrl || "").trim(),
+      status: payload.status || "published",
+      createdAt: new Date().toISOString()
+    };
+    db.royaltyReports.unshift(report);
+    saveDb(db);
+    return { ok: true, report: report };
+  }
+
+  function getRoyaltyReportsForArtist(artistId) {
+    return getDb().royaltyReports.filter(function (report) { return report.artistId === artistId; });
+  }
+
+  function getRoyaltyReportsForPartner(partnerId) {
+    return getDb().royaltyReports.filter(function (report) { return report.partnerId === partnerId; });
+  }
+
+  function createLedgerEntry(payload) {
+    const db = getDb();
+    const entry = {
+      id: newId("ledger"),
+      artistId: payload.artistId || null,
+      partnerId: payload.partnerId || null,
+      type: payload.type || "credit",
+      amount: numeric(payload.amount, 0),
+      currency: (payload.currency || "RUB").trim(),
+      source: (payload.source || "").trim(),
+      note: (payload.note || "").trim(),
+      createdAt: new Date().toISOString()
+    };
+    db.ledgerEntries.unshift(entry);
+    saveDb(db);
+    return { ok: true, entry: entry };
+  }
+
+  function getBalanceForArtist(artistId) {
+    return getDb().ledgerEntries.filter(function (entry) { return entry.artistId === artistId; }).reduce(function (sum, entry) {
+      return sum + (entry.type === "debit" ? -numeric(entry.amount, 0) : numeric(entry.amount, 0));
+    }, 0);
+  }
+
+  function createPayoutRequest(payload) {
+    const db = getDb();
+    const request = {
+      id: newId("payout"),
+      artistId: payload.artistId || null,
+      partnerId: payload.partnerId || null,
+      amount: numeric(payload.amount, 0),
+      currency: (payload.currency || "RUB").trim(),
+      status: payload.status || "pending",
+      note: (payload.note || "").trim(),
+      createdAt: new Date().toISOString()
+    };
+    db.payoutRequests.unshift(request);
+    saveDb(db);
+    return { ok: true, request: request };
+  }
+
+  function getPayoutRequestsForArtist(artistId) {
+    return getDb().payoutRequests.filter(function (request) { return request.artistId === artistId; });
+  }
+
+  function createStudioBooking(payload) {
+    const db = getDb();
+    const booking = {
+      id: newId("booking"),
+      serviceId: payload.serviceId || null,
+      customerType: payload.customerType || "artist",
+      customerId: payload.customerId || null,
+      customerName: (payload.customerName || "").trim(),
+      date: payload.date || "",
+      time: payload.time || "",
+      duration: (payload.duration || "").trim(),
+      status: payload.status || "requested",
+      note: (payload.note || "").trim(),
+      createdAt: new Date().toISOString()
+    };
+    db.studioBookings.unshift(booking);
+    saveDb(db);
+    return { ok: true, booking: booking };
+  }
+
+  function getStudioServices() {
+    return getDb().studioServices || [];
+  }
+
+  function getStudioBookingsForCustomer(customerId) {
+    return getDb().studioBookings.filter(function (booking) { return booking.customerId === customerId; });
+  }
+
   function getStats() {
     const db = getDb();
     return {
@@ -1089,7 +1298,12 @@
       bookedDeals: db.deals.filter(function (deal) { return deal.status === "booked" || deal.status === "done"; }).length,
       chats: db.chats.length,
       reviews: db.reviews.length,
-      featuredProfiles: db.profiles.filter(function (profile) { return profile.featured && profile.status === "approved" && !profile.hidden; }).length
+      featuredProfiles: db.profiles.filter(function (profile) { return profile.featured && profile.status === "approved" && !profile.hidden; }).length,
+      partners: db.partners.length,
+      releases: db.releases.length,
+      royaltyReports: db.royaltyReports.length,
+      payoutRequests: db.payoutRequests.length,
+      studioBookings: db.studioBookings.length
     };
   }
 
@@ -1148,6 +1362,7 @@
     getSession: getSession,
     getCurrentUser: getCurrentUser,
     getCurrentArtist: getCurrentArtist,
+    getCurrentPartner: getCurrentPartner,
     getCurrentAdmin: getCurrentAdmin,
     getSettings: getSettings,
     updateSettings: updateSettings,
@@ -1156,6 +1371,8 @@
     loginUser: loginUser,
     registerArtistAccount: registerArtistAccount,
     loginArtist: loginArtist,
+    registerPartnerAccount: registerPartnerAccount,
+    loginPartner: loginPartner,
     loginAdmin: loginAdmin,
     ensureExternalUserAccount: ensureExternalUserAccount,
     ensureExternalArtistAccount: ensureExternalArtistAccount,
@@ -1199,6 +1416,20 @@
     toggleCompareProfile: toggleCompareProfile,
     getFavoriteProfiles: getFavoriteProfiles,
     getCompareProfiles: getCompareProfiles,
+    createRelease: createRelease,
+    updateReleaseStatus: updateReleaseStatus,
+    getReleasesForArtist: getReleasesForArtist,
+    getReleasesForPartner: getReleasesForPartner,
+    createRoyaltyReport: createRoyaltyReport,
+    getRoyaltyReportsForArtist: getRoyaltyReportsForArtist,
+    getRoyaltyReportsForPartner: getRoyaltyReportsForPartner,
+    createLedgerEntry: createLedgerEntry,
+    getBalanceForArtist: getBalanceForArtist,
+    createPayoutRequest: createPayoutRequest,
+    getPayoutRequestsForArtist: getPayoutRequestsForArtist,
+    createStudioBooking: createStudioBooking,
+    getStudioServices: getStudioServices,
+    getStudioBookingsForCustomer: getStudioBookingsForCustomer,
     getStats: getStats,
     resetDb: resetDb
   };

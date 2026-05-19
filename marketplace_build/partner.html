@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Бизнес-кабинет | Движарт Label</title>
+  <link rel="stylesheet" href="marketplace.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand">
+        <strong>Движарт Label</strong>
+        <span>Кабинет саблейбла и партнёра</span>
+      </div>
+      <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Открыть меню">☰</button>
+      <nav class="nav">
+        <a href="index.html">Витрина</a>
+        <a href="artist.html">Артист</a>
+        <a href="user.html">Клиент</a>
+        <a href="admin.html">Админ</a>
+        <button id="theme-toggle" class="ghost-btn theme-toggle" type="button">Светлая тема</button>
+      </nav>
+    </div>
+    <div class="mobile-nav-backdrop" id="mobile-nav-backdrop"></div>
+  </header>
+
+  <main class="shell auth-wrap">
+    <div class="auth-box">
+      <div id="partner-message"></div>
+
+      <section id="partner-auth-view" class="auth-grid">
+        <div class="service-hero">
+          <article class="service-panel">
+            <div class="highlight">Business Portal</div>
+            <h1>Управляйте артистами, релизами, отчётами и сервисами студии</h1>
+            <p class="muted">Этот кабинет закладывает бизнес-слой платформы лейбла: саблейблы, менеджеры, партнёрские релизы, royalty-отчёты, заявки на вывод и студийные бронирования.</p>
+          </article>
+          <aside class="service-panel">
+            <h3>Что внутри</h3>
+            <div class="info-list">
+              <div class="info-item">Список релизов и их статусы: draft, review, approved, distributed.</div>
+              <div class="info-item">Royalty-отчёты по артистам и периодам.</div>
+              <div class="info-item">Студийные услуги и бронирования для артистов партнёра.</div>
+            </div>
+          </aside>
+        </div>
+
+        <div class="split">
+          <form id="partner-register-form" class="service-panel">
+            <h2>Регистрация партнёра</h2>
+            <div class="form-grid one">
+              <label>Компания / саблейбл<input name="companyName" type="text" required></label>
+              <label>Контактное лицо<input name="contactName" type="text"></label>
+              <label>E-mail<input name="email" type="email" required></label>
+              <label>Телефон<input name="phone" type="tel"></label>
+              <label>Город<input name="city" type="text"></label>
+              <label>Сайт<input name="website" type="url"></label>
+              <label>Telegram<input name="telegram" type="text"></label>
+              <label>Пароль<input name="password" type="password" required></label>
+            </div>
+            <button class="primary-btn" type="submit">Создать бизнес-кабинет</button>
+          </form>
+
+          <form id="partner-login-form" class="service-panel">
+            <h2>Вход</h2>
+            <div class="form-grid one">
+              <label>E-mail<input name="email" type="email" required></label>
+              <label>Пароль<input name="password" type="password" required></label>
+            </div>
+            <button class="ghost-btn" type="submit">Войти</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="partner-cabinet-view" style="display:none;" class="service-shell">
+        <div class="service-hero">
+          <article class="service-panel">
+            <div class="section-head">
+              <div>
+                <h1>Бизнес-кабинет</h1>
+                <p id="partner-summary" class="muted"></p>
+              </div>
+              <button id="partner-logout" class="ghost-btn" type="button">Выйти</button>
+            </div>
+            <div id="partner-kpis" class="service-kpis"></div>
+          </article>
+          <aside class="service-panel">
+            <h3>Роли следующего этапа</h3>
+            <div class="info-list">
+              <div class="info-item">owner, manager, finance manager, support.</div>
+              <div class="info-item">Разделение по артистам, релизам, выплатам и документам.</div>
+            </div>
+          </aside>
+        </div>
+
+        <div class="split">
+          <div class="panel">
+            <div class="section-head">
+              <div>
+                <h2>Релизы</h2>
+                <p class="muted">Черновой модуль релизов для будущего artist/label flow.</p>
+              </div>
+            </div>
+            <form id="release-form" class="form-grid">
+              <label>Название релиза<input name="title" type="text" required></label>
+              <label>Тип
+                <select name="type">
+                  <option value="single">Single</option>
+                  <option value="ep">EP</option>
+                  <option value="album">Album</option>
+                </select>
+              </label>
+              <label>Жанр<input name="genre" type="text"></label>
+              <label>Дата релиза<input name="releaseDate" type="date"></label>
+              <label>Язык<input name="language" type="text" value="Русский"></label>
+              <label>Треков<input name="trackCount" type="number" min="1" value="1"></label>
+              <label style="grid-column:1/-1;">Описание<textarea name="description"></textarea></label>
+              <button class="primary-btn" type="submit">Добавить релиз</button>
+            </form>
+            <div id="partner-releases" class="table-list" style="margin-top:14px;"></div>
+          </div>
+
+          <div class="panel">
+            <div class="section-head">
+              <div>
+                <h2>Royalty и баланс</h2>
+                <p class="muted">Базовые сущности финансового слоя без эквайринга.</p>
+              </div>
+            </div>
+            <div id="partner-reports" class="table-list"></div>
+            <div id="partner-payouts" class="table-list" style="margin-top:14px;"></div>
+          </div>
+        </div>
+
+        <div class="split">
+          <div class="panel">
+            <div class="section-head">
+              <div>
+                <h2>Студийные услуги</h2>
+                <p class="muted">Подготовка к будущей интеграции с Y-Clients.</p>
+              </div>
+            </div>
+            <div id="studio-services" class="table-list"></div>
+          </div>
+          <div class="panel">
+            <div class="section-head">
+              <div>
+                <h2>Бронирования</h2>
+                <p class="muted">Запросы на студию и сервисы.</p>
+              </div>
+            </div>
+            <div id="studio-bookings" class="table-list"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="marketplace-core.js"></script>
+  <script>
+    (function () {
+      const key = "palan_theme_mode";
+      const saved = localStorage.getItem(key) || "dark";
+      document.body.setAttribute("data-theme", saved);
+      const button = document.getElementById("theme-toggle");
+      const menuToggle = document.getElementById("menu-toggle");
+      const backdrop = document.getElementById("mobile-nav-backdrop");
+      const nav = document.querySelector(".nav");
+      function sync() { button.textContent = (document.body.getAttribute("data-theme") || "dark") === "dark" ? "Светлая тема" : "Тёмная тема"; }
+      function closeNav() { document.body.classList.remove("nav-open"); }
+      button.addEventListener("click", function () {
+        const next = (document.body.getAttribute("data-theme") || "dark") === "dark" ? "light" : "dark";
+        document.body.setAttribute("data-theme", next);
+        localStorage.setItem(key, next);
+        sync();
+      });
+      menuToggle.addEventListener("click", function () { document.body.classList.toggle("nav-open"); });
+      backdrop.addEventListener("click", closeNav);
+      nav.querySelectorAll("a, button").forEach(function (node) {
+        node.addEventListener("click", function () {
+          if (window.innerWidth <= 720 && node !== menuToggle) closeNav();
+        });
+      });
+      sync();
+    })();
+
+    function byId(id) { return document.getElementById(id); }
+    function escapeHtml(value) { return String(value || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+    function showPartnerMessage(text, kind) { byId("partner-message").innerHTML = text ? '<div class="message ' + kind + '">' + text + '</div>' : ""; }
+
+    function renderPartnerKpis(partner) {
+      const releases = MarketplaceStore.getReleasesForPartner(partner.id);
+      const reports = MarketplaceStore.getRoyaltyReportsForPartner(partner.id);
+      const db = MarketplaceStore.getDb();
+      const payouts = db.payoutRequests.filter(function (item) { return item.partnerId === partner.id; });
+      byId("partner-kpis").innerHTML = [
+        ["Релизы", releases.length, "в работе и в каталоге"],
+        ["Отчёты", reports.length, "royalty-периоды"],
+        ["Выплаты", payouts.length, "запросы и статусы"]
+      ].map(function (item) {
+        return '<div class="service-kpi"><span>' + item[0] + '</span><strong>' + item[1] + '</strong><span class="muted">' + item[2] + '</span></div>';
+      }).join("");
+    }
+
+    function renderReleases(partner) {
+      const releases = MarketplaceStore.getReleasesForPartner(partner.id);
+      byId("partner-releases").innerHTML = releases.length ? releases.map(function (release) {
+        return '<div class="table-row"><div><strong>' + escapeHtml(release.title) + '</strong><div class="muted">' + escapeHtml(release.type) + ' · ' + escapeHtml(release.genre || "Жанр не указан") + '</div></div><div>' + escapeHtml(release.releaseDate || "Без даты") + '</div><div><span class="badge accent">' + escapeHtml(release.status) + '</span></div><div>' + escapeHtml(release.language || "") + '</div><div><button class="ghost-btn" type="button" onclick="advanceReleaseStatus(\'' + release.id + '\')">След. статус</button></div></div>';
+      }).join("") : '<div class="empty">Пока нет релизов. Добавьте первый релиз партнёра.</div>';
+    }
+
+    function renderReports(partner) {
+      const reports = MarketplaceStore.getRoyaltyReportsForPartner(partner.id);
+      byId("partner-reports").innerHTML = reports.length ? reports.map(function (report) {
+        return '<div class="table-row"><div><strong>' + escapeHtml(report.periodLabel) + '</strong><div class="muted">' + escapeHtml(report.currency) + '</div></div><div>' + Number(report.grossAmount || 0).toLocaleString("ru-RU") + '</div><div>' + Number(report.netAmount || 0).toLocaleString("ru-RU") + '</div><div><span class="badge gold">' + escapeHtml(report.status) + '</span></div><div></div></div>';
+      }).join("") : '<div class="empty">Royalty-отчёты ещё не загружены.</div>';
+
+      const payouts = MarketplaceStore.getDb().payoutRequests.filter(function (item) { return item.partnerId === partner.id; });
+      byId("partner-payouts").innerHTML = payouts.length ? payouts.map(function (item) {
+        return '<div class="table-row"><div><strong>Запрос на вывод</strong><div class="muted">' + escapeHtml(item.createdAt.slice(0, 10)) + '</div></div><div>' + Number(item.amount || 0).toLocaleString("ru-RU") + ' ' + escapeHtml(item.currency) + '</div><div><span class="badge accent">' + escapeHtml(item.status) + '</span></div><div>' + escapeHtml(item.note || "") + '</div><div></div></div>';
+      }).join("") : '<div class="empty">Заявок на вывод пока нет.</div>';
+    }
+
+    function renderStudio(partner) {
+      const services = MarketplaceStore.getStudioServices();
+      const bookings = MarketplaceStore.getStudioBookingsForCustomer(partner.id);
+      byId("studio-services").innerHTML = services.map(function (service) {
+        return '<div class="table-row"><div><strong>' + escapeHtml(service.name) + '</strong><div class="muted">' + escapeHtml(service.description) + '</div></div><div>' + Number(service.priceFrom || 0).toLocaleString("ru-RU") + ' ₽</div><div>' + escapeHtml(service.duration || "") + '</div><div></div><div><button class="ghost-btn" type="button" onclick="bookStudioService(\'' + service.id + '\')">Запросить</button></div></div>';
+      }).join("");
+      byId("studio-bookings").innerHTML = bookings.length ? bookings.map(function (booking) {
+        return '<div class="table-row"><div><strong>' + escapeHtml(booking.customerName) + '</strong><div class="muted">' + escapeHtml(booking.date || "Дата не указана") + ' · ' + escapeHtml(booking.time || "") + '</div></div><div>' + escapeHtml(booking.duration || "") + '</div><div><span class="badge accent">' + escapeHtml(booking.status) + '</span></div><div>' + escapeHtml(booking.note || "") + '</div><div></div></div>';
+      }).join("") : '<div class="empty">Бронирований ещё нет.</div>';
+    }
+
+    function renderPartnerCabinet() {
+      const partner = MarketplaceStore.getCurrentPartner();
+      byId("partner-auth-view").style.display = partner ? "none" : "grid";
+      byId("partner-cabinet-view").style.display = partner ? "grid" : "none";
+      if (!partner) return;
+      byId("partner-summary").textContent = partner.companyName + " · " + partner.email + " · " + (partner.city || "город не указан");
+      renderPartnerKpis(partner);
+      renderReleases(partner);
+      renderReports(partner);
+      renderStudio(partner);
+    }
+
+    byId("partner-register-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const payload = Object.fromEntries(new FormData(event.target).entries());
+      const result = MarketplaceStore.registerPartnerAccount(payload);
+      if (!result.ok) return showPartnerMessage(result.message, "error");
+      MarketplaceStore.createRoyaltyReport({ partnerId: result.partner.id, periodLabel: "Q1 2026", grossAmount: 0, netAmount: 0, status: "draft" });
+      renderPartnerCabinet();
+    });
+
+    byId("partner-login-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const payload = Object.fromEntries(new FormData(event.target).entries());
+      const result = MarketplaceStore.loginPartner(payload.email, payload.password);
+      if (!result.ok) return showPartnerMessage(result.message, "error");
+      renderPartnerCabinet();
+    });
+
+    byId("partner-logout").addEventListener("click", function () {
+      MarketplaceStore.logout();
+      renderPartnerCabinet();
+    });
+
+    byId("release-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const partner = MarketplaceStore.getCurrentPartner();
+      if (!partner) return;
+      const payload = Object.fromEntries(new FormData(event.target).entries());
+      payload.partnerId = partner.id;
+      payload.status = "draft";
+      const result = MarketplaceStore.createRelease(payload);
+      if (!result.ok) return showPartnerMessage(result.message, "error");
+      showPartnerMessage("Релиз добавлен в модуль лейбла.", "success");
+      event.target.reset();
+      renderPartnerCabinet();
+    });
+
+    window.advanceReleaseStatus = function (releaseId) {
+      const chain = ["draft", "review", "approved", "distributed"];
+      const release = MarketplaceStore.getDb().releases.find(function (item) { return item.id === releaseId; });
+      if (!release) return;
+      const index = chain.indexOf(release.status);
+      MarketplaceStore.updateReleaseStatus(releaseId, chain[(index + 1) % chain.length]);
+      renderPartnerCabinet();
+    };
+
+    window.bookStudioService = function (serviceId) {
+      const partner = MarketplaceStore.getCurrentPartner();
+      const service = MarketplaceStore.getStudioServices().find(function (item) { return item.id === serviceId; });
+      if (!partner || !service) return;
+      MarketplaceStore.createStudioBooking({
+        serviceId: service.id,
+        customerType: "partner",
+        customerId: partner.id,
+        customerName: partner.companyName,
+        date: new Date().toISOString().slice(0, 10),
+        time: "12:00",
+        duration: service.duration,
+        note: service.name
+      });
+      showPartnerMessage("Запрос на студийную услугу создан.", "success");
+      renderPartnerCabinet();
+    };
+
+    renderPartnerCabinet();
+  </script>
+</body>
+</html>
