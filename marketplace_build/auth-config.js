@@ -5,7 +5,11 @@
     mode: "local",
     supabaseUrl: "https://jioakguorsfvjuzyclrg.supabase.co",
     supabaseAnonKey: "sb_publishable__wR9JFE18O3i_LyxMXhAfw__zhG1t_P",
-    socialProviders: [],
+    socialProviders: [
+      { id: "google", label: "Google" },
+      { id: "vk", label: "VK ID" },
+      { id: "telegram", label: "Telegram" }
+    ],
     externalProviderUrls: {
       vk: "https://jioakguorsfvjuzyclrg.supabase.co/functions/v1/auth-vk-start",
       telegram: "https://jioakguorsfvjuzyclrg.supabase.co/functions/v1/auth-telegram-start"

@@ -858,18 +858,18 @@
       if (modeNode) {
         modeNode.textContent = mode === "supabase"
           ? "Сервисный вход включён. Рабочий способ входа сейчас: e-mail и пароль через Supabase. Google добивается внешней OAuth-настройкой, VK ID и Telegram подключаются через отдельный auth-слой."
-          : "Пока работает локальный режим. Для сервисного входа подключите Supabase в auth-config.js.";
+          : "Работает локальный режим. E-mail вход доступен сразу, а Google, VK ID и Telegram создают локальный соцаккаунт исполнителя внутри платформы без внешнего редиректа.";
       } else {
         byId("artist-auth-mode").innerHTML = mode === "supabase"
           ? "Сервисный вход включён. Рабочий способ входа сейчас: e-mail и пароль через Supabase. Google добивается внешней OAuth-настройкой, VK ID и Telegram подключаются через отдельный auth-слой."
-          : "Пока работает локальный режим. Для сервисного входа подключите Supabase в auth-config.js.";
+          : "Работает локальный режим. E-mail вход доступен сразу, а Google, VK ID и Telegram создают локальный соцаккаунт исполнителя внутри платформы без внешнего редиректа.";
       }
       document.querySelectorAll("[data-artist-social]").forEach(function (button) {
-        const enabled = mode === "supabase" && window.PalanartAuthBridge && window.PalanartAuthBridge.canUseProvider(button.dataset.artistSocial);
-        button.disabled = !enabled;
-        button.hidden = !enabled;
-        button.classList.toggle("is-unavailable", !enabled);
-        button.title = enabled ? "" : "Этот соцвход ещё не подключён полностью. Пока используйте e-mail вход.";
+        const available = window.PalanartAuthBridge && window.PalanartAuthBridge.canUseProvider(button.dataset.artistSocial);
+        button.disabled = !available;
+        button.hidden = !available;
+        button.classList.toggle("is-unavailable", !available);
+        button.title = available ? "" : "Этот соцвход сейчас недоступен.";
       });
     }
     async function reverseLookupArtistCity(latitude, longitude) {

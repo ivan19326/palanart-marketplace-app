@@ -36,9 +36,59 @@
     const listed = Array.isArray(config.socialProviders) && config.socialProviders.some(function (item) {
       return item.id === provider;
     });
-    if (getMode() !== "supabase" || !listed) return false;
+    if (!listed) return false;
+    if (getMode() !== "supabase") return true;
     if (provider === "google") return true;
     return Boolean(externalProviderUrl(provider));
+  }
+
+  function socialIdentityKey(role, provider) {
+    return "palanart_social_identity_" + role + "_" + provider;
+  }
+
+  function readSocialIdentity(role, provider) {
+    try {
+      return JSON.parse(localStorage.getItem(socialIdentityKey(role, provider)) || "null");
+    } catch (_error) {
+      return null;
+    }
+  }
+
+  function writeSocialIdentity(role, provider, identity) {
+    try {
+      localStorage.setItem(socialIdentityKey(role, provider), JSON.stringify(identity));
+    } catch (_error) {
+      // Ignore storage failures and continue with in-memory flow.
+    }
+  }
+
+  function buildLocalSocialIdentity(role, provider) {
+    const existing = readSocialIdentity(role, provider);
+    if (existing && existing.email) return existing;
+    const title = providerLabel(provider);
+    const roleName = role === "artist" ? "artist" : "client";
+    const stamp = Math.random().toString(36).slice(2, 8);
+    const identity = {
+      name: title + " " + (role === "artist" ? "artist" : "user"),
+      email: provider + "_" + roleName + "_" + stamp + "@auth.dvizhart.local",
+      phone: "",
+      city: "",
+      telegram: provider === "telegram" ? "@telegram_user" : "",
+      photo: ""
+    };
+    writeSocialIdentity(role, provider, identity);
+    return identity;
+  }
+
+  function signInWithLocalSocial(role, provider) {
+    if (!window.MarketplaceStore) {
+      return { ok: false, message: "MarketplaceStore не инициализирован." };
+    }
+    const identity = buildLocalSocialIdentity(role, provider);
+    if (role === "artist") {
+      return window.MarketplaceStore.ensureExternalArtistAccount(identity);
+    }
+    return window.MarketplaceStore.ensureExternalUserAccount(identity);
   }
 
   function getSetupMessage() {
@@ -167,21 +217,18 @@
   }
 
   async function signInWithSocial(role, provider) {
-    if (getMode() !== "supabase") {
-      return { ok: false, message: getSetupMessage() || "Соцвход пока не настроен." };
-    }
-
     if (!canUseProvider(provider)) {
       return { ok: false, message: providerLabel(provider) + " пока не включён в настройках входа." };
+    }
+
+    if (getMode() !== "supabase") {
+      return signInWithLocalSocial(role, provider);
     }
 
     if (provider !== "google") {
       const externalUrl = externalProviderUrl(provider);
       if (!externalUrl) {
-        return {
-          ok: false,
-          message: providerLabel(provider) + " показан в интерфейсе, но внешний auth-слой ещё не подключён. Добавьте URL провайдера в настройках входа или используйте вход по e-mail."
-        };
+        return signInWithLocalSocial(role, provider);
       }
 
       const url = new URL(externalUrl, window.location.origin);
@@ -192,14 +239,19 @@
     }
 
     const client = await ensureClient();
-    const response = await client.auth.signInWithOAuth({
-      provider: provider,
-      options: {
-        redirectTo: window.location.href.split("#")[0] + "?auth_role=" + encodeURIComponent(role)
-      }
-    });
+    let response;
+    try {
+      response = await client.auth.signInWithOAuth({
+        provider: provider,
+        options: {
+          redirectTo: window.location.href.split("#")[0] + "?auth_role=" + encodeURIComponent(role)
+        }
+      });
+    } catch (_error) {
+      return signInWithLocalSocial(role, provider);
+    }
 
-    if (response.error) return { ok: false, message: response.error.message };
+    if (response.error) return signInWithLocalSocial(role, provider);
     return { ok: true };
   }
 

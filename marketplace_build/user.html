@@ -307,13 +307,13 @@
         const mode = window.PalanartAuthBridge ? window.PalanartAuthBridge.getMode() : "local";
         byId("user-auth-mode").innerHTML = mode === "supabase"
           ? "Сервисный вход включён. Рабочий способ входа сейчас: e-mail и пароль через Supabase. Google можно добить внешней OAuth-настройкой, VK ID и Telegram подключаются через отдельный auth-слой."
-          : "Пока работает локальный режим. Для сервисного входа подключите Supabase в auth-config.js.";
+          : "Работает локальный режим. E-mail вход доступен сразу, а Google, VK ID и Telegram создают локальный соцаккаунт внутри платформы без внешнего редиректа.";
         document.querySelectorAll("[data-user-social]").forEach(function (button) {
-          const enabled = mode === "supabase" && window.PalanartAuthBridge && window.PalanartAuthBridge.canUseProvider(button.dataset.userSocial);
-          button.disabled = !enabled;
-          button.hidden = !enabled;
-          button.classList.toggle("is-unavailable", !enabled);
-          button.title = enabled ? "" : "Этот соцвход ещё не подключён полностью. Пока используйте e-mail вход.";
+          const available = window.PalanartAuthBridge && window.PalanartAuthBridge.canUseProvider(button.dataset.userSocial);
+          button.disabled = !available;
+          button.hidden = !available;
+          button.classList.toggle("is-unavailable", !available);
+          button.title = available ? "" : "Этот соцвход сейчас недоступен.";
         });
       }
       async function reverseLookupCity(latitude, longitude) {
