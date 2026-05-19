@@ -534,6 +534,41 @@
     return { ok: true, partner: partner };
   }
 
+  function getArtistsForPartner(partnerId) {
+    const db = getDb();
+    const partner = db.partners.find(function (item) { return item.id === partnerId; });
+    if (!partner) return [];
+    partner.artistIds = normalizeArray(partner.artistIds);
+    return partner.artistIds.map(function (artistId) {
+      return db.artists.find(function (artist) { return artist.id === artistId; }) || null;
+    }).filter(Boolean);
+  }
+
+  function linkArtistToPartner(partnerId, artistId) {
+    const db = getDb();
+    const partner = db.partners.find(function (item) { return item.id === partnerId; });
+    const artist = db.artists.find(function (item) { return item.id === artistId; });
+    if (!partner) return { ok: false, message: "Партнёр не найден." };
+    if (!artist) return { ok: false, message: "Артист не найден." };
+    partner.artistIds = normalizeArray(partner.artistIds);
+    if (partner.artistIds.indexOf(artistId) !== -1) return { ok: false, message: "Артист уже привязан к этому партнёру." };
+    partner.artistIds.push(artistId);
+    artist.partnerId = partnerId;
+    saveDb(db);
+    return { ok: true, partner: partner, artist: artist };
+  }
+
+  function unlinkArtistFromPartner(partnerId, artistId) {
+    const db = getDb();
+    const partner = db.partners.find(function (item) { return item.id === partnerId; });
+    const artist = db.artists.find(function (item) { return item.id === artistId; });
+    if (!partner) return { ok: false, message: "Партнёр не найден." };
+    partner.artistIds = normalizeArray(partner.artistIds).filter(function (id) { return id !== artistId; });
+    if (artist && artist.partnerId === partnerId) artist.partnerId = null;
+    saveDb(db);
+    return { ok: true };
+  }
+
   function logout() {
     clearSession();
   }
@@ -1234,8 +1269,18 @@
     return getDb().ledgerEntries.filter(function (entry) { return entry.artistId === artistId; });
   }
 
+  function getLedgerEntriesForPartner(partnerId) {
+    return getDb().ledgerEntries.filter(function (entry) { return entry.partnerId === partnerId; });
+  }
+
   function getBalanceForArtist(artistId) {
     return getDb().ledgerEntries.filter(function (entry) { return entry.artistId === artistId; }).reduce(function (sum, entry) {
+      return sum + (entry.type === "debit" ? -numeric(entry.amount, 0) : numeric(entry.amount, 0));
+    }, 0);
+  }
+
+  function getBalanceForPartner(partnerId) {
+    return getDb().ledgerEntries.filter(function (entry) { return entry.partnerId === partnerId; }).reduce(function (sum, entry) {
       return sum + (entry.type === "debit" ? -numeric(entry.amount, 0) : numeric(entry.amount, 0));
     }, 0);
   }
@@ -1401,6 +1446,9 @@
     loginArtist: loginArtist,
     registerPartnerAccount: registerPartnerAccount,
     loginPartner: loginPartner,
+    getArtistsForPartner: getArtistsForPartner,
+    linkArtistToPartner: linkArtistToPartner,
+    unlinkArtistFromPartner: unlinkArtistFromPartner,
     loginAdmin: loginAdmin,
     ensureExternalUserAccount: ensureExternalUserAccount,
     ensureExternalArtistAccount: ensureExternalArtistAccount,
@@ -1453,7 +1501,9 @@
     getRoyaltyReportsForPartner: getRoyaltyReportsForPartner,
     createLedgerEntry: createLedgerEntry,
     getLedgerEntriesForArtist: getLedgerEntriesForArtist,
+    getLedgerEntriesForPartner: getLedgerEntriesForPartner,
     getBalanceForArtist: getBalanceForArtist,
+    getBalanceForPartner: getBalanceForPartner,
     createPayoutRequest: createPayoutRequest,
     getPayoutRequestsForArtist: getPayoutRequestsForArtist,
     getPayoutRequestsForPartner: getPayoutRequestsForPartner,
