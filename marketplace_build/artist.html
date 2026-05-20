@@ -147,6 +147,15 @@
           <button id="artist-logout" class="ghost-btn" type="button">Выйти</button>
         </div>
         <div id="artist-kpis" class="service-kpis"></div>
+        <div id="artist-executive-grid" class="portal-summary-grid" style="margin-top:14px;"></div>
+        <div id="artist-status-rail" class="status-rail" style="margin-top:14px;"></div>
+        <nav class="portal-nav" aria-label="Artist portal navigation">
+          <a href="#artist-profile-form">Profile Builder</a>
+          <a href="#artist-ops-hub">Commercial Ops</a>
+          <a href="#artist-release-hub">Release Flow</a>
+          <a href="#artist-finance-hub">Finance</a>
+          <a href="#artist-studio-hub">Studio</a>
+        </nav>
         <div class="cabinet-action-row">
           <button id="artist-edit-card" class="primary-btn" type="button" onclick="window.artistScrollProfileForm && window.artistScrollProfileForm()">Редактировать карточку</button>
           <button id="artist-preview-card" class="ghost-btn" type="button" onclick="window.artistPreviewProfile && window.artistPreviewProfile()">Предпросмотр карточки</button>
@@ -277,7 +286,7 @@
         <button class="primary-btn" type="submit">Сохранить профиль</button>
       </form>
 
-      <div class="split">
+      <div class="split" id="artist-ops-hub">
         <div class="panel"><h2>Лиды</h2><div id="artist-leads" class="table-list"></div></div>
         <div class="panel"><h2>Предложения</h2><div id="artist-quotes" class="table-list"></div></div>
       </div>
@@ -288,13 +297,14 @@
       <div class="panel"><h2>Аналитика</h2><div id="artist-analytics" class="metrics-grid"></div></div>
       <div class="panel"><h2>Мои объявления</h2><div id="artist-board" class="table-list"></div></div>
       <div class="split">
-        <div class="panel">
+        <div class="panel" id="artist-release-hub">
           <div class="section-head">
             <div>
               <h2>Релизы и каталог лейбла</h2>
               <p class="muted">Собирайте релизы в кабинете артиста, переводите их по статусам и готовьте выпуск без отдельной CRM.</p>
             </div>
           </div>
+          <div id="artist-release-timeline" class="timeline-list" style="margin-bottom:14px;"></div>
           <form id="artist-release-form" class="form-grid">
             <label>Название релиза<input name="title" type="text" required></label>
             <label>Формат
@@ -313,7 +323,7 @@
           </form>
           <div id="artist-release-list" class="table-list" style="margin-top:14px;"></div>
         </div>
-        <div class="panel">
+        <div class="panel" id="artist-finance-hub">
           <div class="section-head">
             <div>
               <h2>Royalty и вывод средств</h2>
@@ -321,6 +331,7 @@
             </div>
           </div>
           <div id="artist-royalty-summary" class="metrics-grid"></div>
+          <div id="artist-finance-widgets" class="finance-widget-grid" style="margin-top:14px;"></div>
           <div id="artist-royalty-list" class="table-list" style="margin-top:14px;"></div>
           <div id="artist-ledger-list" class="table-list" style="margin-top:14px;"></div>
           <form id="artist-payout-form" class="form-grid" style="margin-top:14px;">
@@ -338,7 +349,7 @@
           <div id="artist-payouts" class="table-list" style="margin-top:14px;"></div>
         </div>
       </div>
-      <div class="panel">
+      <div class="panel" id="artist-studio-hub">
         <div class="section-head">
           <div>
             <h2>Студийные услуги и бронирования</h2>
@@ -709,6 +720,57 @@
         return '<div class="service-kpi"><span>' + item[0] + '</span><strong>' + item[1] + '</strong></div>';
       }).join("");
     }
+    function renderArtistExecutive(profile, artist, leads, quotes) {
+      const releases = artist ? MarketplaceStore.getReleasesForArtist(artist.id) : [];
+      const payouts = artist ? MarketplaceStore.getPayoutRequestsForArtist(artist.id) : [];
+      const published = releases.filter(function (item) { return item.status === "published"; }).length;
+      const balance = artist ? MarketplaceStore.getBalanceForArtist(artist.id) : 0;
+      byId("artist-executive-grid").innerHTML = [
+        {
+          eyebrow: "Public Profile",
+          title: profile ? "Профиль опубликован и готов к трафику" : "Профиль ещё не завершён",
+          value: profile ? (profile.city || "Без города") : "Draft",
+          text: profile ? "Карточка уже может работать как public entry point для релизов, live и studio tasks." : "Сначала завершите профиль, чтобы открыть публичную витрину и service intake."
+        },
+        {
+          eyebrow: "Commercial Ops",
+          title: "Входящий спрос и предложения",
+          value: String(leads.length + quotes.length),
+          text: "Следите за запросами, быстрыми ответами и персональными scope-пропозалами из одного окна."
+        },
+        {
+          eyebrow: "Release Flow",
+          title: "Статус релизного контура",
+          value: published + "/" + releases.length,
+          text: releases.length ? "Часть релизов уже продвинута по lifecycle. Ниже есть timeline по каждому элементу." : "Добавьте первый релиз, чтобы собрать release timeline прямо в кабинете."
+        },
+        {
+          eyebrow: "Finance Pulse",
+          title: "Баланс и payout readiness",
+          value: Number(balance || 0).toLocaleString("ru-RU") + " ₽",
+          text: payouts.length ? "Есть запросы на вывод и движение по finance-flow." : "Как только появятся начисления royalty, здесь будет виден payout contour."
+        }
+      ].map(function (item) {
+        return '<article class="portal-summary-card"><span class="eyebrow-note">' + escapeHtml(item.eyebrow) + '</span><strong>' + escapeHtml(item.title) + '</strong><div class="portal-stat-line"><span class="muted">Snapshot</span><span class="value">' + escapeHtml(item.value) + '</span></div><p>' + escapeHtml(item.text) + '</p></article>';
+      }).join("");
+    }
+    function renderArtistStatusRail(artist) {
+      const releases = artist ? MarketplaceStore.getReleasesForArtist(artist.id) : [];
+      const latest = releases[0];
+      const current = latest ? latest.status : "draft";
+      const steps = [
+        { key: "draft", title: "Draft", text: "Материалы и базовый scope собраны." },
+        { key: "review", title: "Review", text: "Профиль и релиз проходят редакторскую проверку." },
+        { key: "scheduled", title: "Scheduled", text: "Слот и дедлайн зафиксированы." },
+        { key: "distributed", title: "Distributed", text: "Материалы отправлены в дистрибуционный contour." },
+        { key: "published", title: "Published", text: "Релиз live, дальше работает reporting layer." }
+      ];
+      const currentIndex = Math.max(steps.findIndex(function (item) { return item.key === current; }), 0);
+      byId("artist-status-rail").innerHTML = steps.map(function (step, index) {
+        const state = index < currentIndex ? " is-complete" : (index === currentIndex ? " is-active" : "");
+        return '<article class="status-step' + state + '"><span class="status-index">' + (index + 1) + '</span><strong>' + escapeHtml(step.title) + '</strong><p>' + escapeHtml(step.text) + '</p></article>';
+      }).join("");
+    }
     function renderLeads(artist) {
       const leads = MarketplaceStore.getLeadsForArtist(artist.id);
       byId("artist-leads").innerHTML = leads.length ? leads.map(function (lead) { return '<div class="detail-box"><strong>' + escapeHtml(lead.customerName) + '</strong><div class="muted">' + escapeHtml(lead.eventType) + ' · ' + escapeHtml(lead.city) + '</div><div style="margin-top:8px;">' + escapeHtml(lead.requirements || "") + '</div><div class="inline-actions" style="margin-top:12px;"><button class="primary-btn" type="button" onclick="sendQuote(\'' + lead.id + '\')">Отправить предложение</button><button class="ghost-btn" type="button" onclick="respondLead(\'' + lead.id + '\')">Быстрый ответ</button></div></div>'; }).join("") : '<div class="empty">Пока нет входящих сервисных запросов.</div>';
@@ -736,6 +798,12 @@
         return '<div class="table-row"><div><strong>' + escapeHtml(release.title) + '</strong><div class="muted">' + escapeHtml(release.type) + ' · ' + escapeHtml(release.genre || "Жанр не указан") + '</div></div><div>' + escapeHtml(release.releaseDate || "Без даты") + '</div><div><span class="badge accent">' + escapeHtml(release.status) + '</span></div><div>' + escapeHtml(release.language || "—") + '</div><div><button class="ghost-btn" type="button" onclick="advanceArtistReleaseStatus(\'' + release.id + '\')">След. статус</button></div></div>';
       }).join("") : '<div class="empty">Пока нет релизов. Добавьте первый single, EP или album прямо из кабинета.</div>';
     }
+    function renderArtistReleaseTimeline(artist) {
+      const releases = MarketplaceStore.getReleasesForArtist(artist.id);
+      byId("artist-release-timeline").innerHTML = releases.length ? releases.slice(0, 4).map(function (release) {
+        return '<article class="timeline-item"><div class="timeline-item-head"><div><span class="timeline-meta">' + escapeHtml(release.type || "release") + '</span><strong>' + escapeHtml(release.title) + '</strong></div><span class="summary-pill">' + escapeHtml(release.status) + '</span></div><p>' + escapeHtml(release.description || "Релиз пока без расширенного описания. Здесь удобно показывать next step и readiness.") + '</p><div class="timeline-pills"><span class="timeline-pill">Date: ' + escapeHtml(release.releaseDate || "TBD") + '</span><span class="timeline-pill">Tracks: ' + escapeHtml(String(release.trackCount || 1)) + '</span><span class="timeline-pill">Language: ' + escapeHtml(release.language || "—") + '</span></div></article>';
+      }).join("") : '<div class="empty">Release timeline появится после создания первого релиза.</div>';
+    }
     function renderArtistFinance(artist) {
       const reports = MarketplaceStore.getRoyaltyReportsForArtist(artist.id);
       const ledger = MarketplaceStore.getLedgerEntriesForArtist(artist.id);
@@ -753,6 +821,34 @@
       byId("artist-payouts").innerHTML = payouts.length ? payouts.map(function (request) {
         return '<div class="table-row"><div><strong>' + Number(request.amount || 0).toLocaleString("ru-RU") + ' ' + escapeHtml(request.currency) + '</strong><div class="muted">' + escapeHtml(request.note || "Без комментария") + '</div></div><div><span class="badge gold">' + escapeHtml(request.status) + '</span></div><div>' + escapeHtml(request.createdAt.slice(0, 10)) + '</div><div></div><div></div></div>';
       }).join("") : '<div class="empty">Запросов на вывод пока нет.</div>';
+    }
+    function renderArtistFinanceWidgets(artist) {
+      const reports = MarketplaceStore.getRoyaltyReportsForArtist(artist.id);
+      const payouts = MarketplaceStore.getPayoutRequestsForArtist(artist.id);
+      const balance = MarketplaceStore.getBalanceForArtist(artist.id);
+      const approvedPayouts = payouts.filter(function (item) { return item.status === "approved"; }).reduce(function (sum, item) { return sum + Number(item.amount || 0); }, 0);
+      const gross = reports.reduce(function (sum, item) { return sum + Number(item.grossAmount || 0); }, 0);
+      const net = reports.reduce(function (sum, item) { return sum + Number(item.netAmount || 0); }, 0);
+      const netShare = gross > 0 ? Math.min(100, Math.round((net / gross) * 100)) : 0;
+      const payoutProgress = balance > 0 ? Math.min(100, Math.round((approvedPayouts / Math.max(balance + approvedPayouts, 1)) * 100)) : 0;
+      byId("artist-finance-widgets").innerHTML = [
+        {
+          eyebrow: "Royalty Mix",
+          title: "Net against gross",
+          value: netShare + "%",
+          meter: netShare,
+          rows: [["Gross", Number(gross || 0).toLocaleString("ru-RU") + " ₽"], ["Net", Number(net || 0).toLocaleString("ru-RU") + " ₽"]]
+        },
+        {
+          eyebrow: "Payout Layer",
+          title: "Approved withdrawals",
+          value: Number(approvedPayouts || 0).toLocaleString("ru-RU") + " ₽",
+          meter: payoutProgress,
+          rows: [["Approved", payouts.filter(function (item) { return item.status === "approved"; }).length], ["Pending", payouts.filter(function (item) { return item.status === "pending"; }).length]]
+        }
+      ].map(function (item) {
+        return '<article class="finance-widget"><span class="eyebrow-note">' + escapeHtml(item.eyebrow) + '</span><strong>' + escapeHtml(item.title) + '</strong><div class="portal-stat-line"><span class="muted">Current</span><span class="value">' + escapeHtml(String(item.value)) + '</span></div><div class="finance-meter"><span style="width:' + item.meter + '%;"></span></div><div class="section-stack">' + item.rows.map(function (row) { return '<div class="metric-row"><span>' + escapeHtml(String(row[0])) + '</span><span>' + escapeHtml(String(row[1])) + '</span></div>'; }).join("") + '</div></article>';
+      }).join("");
     }
     function renderArtistStudio(artist) {
       const services = MarketplaceStore.getStudioServices();
@@ -952,6 +1048,8 @@
       const quotes = MarketplaceStore.getQuotesForArtist(artist.id);
       byId("artist-summary").textContent = artist.name + " · " + formatCabinetIdentity(artist.email, "Исполнитель") + " · " + (profile ? ("статус профиля: " + profile.status) : "профиль еще не заполнен");
       renderKpis(profile, leads, quotes, artist);
+      renderArtistExecutive(profile, artist, leads, quotes);
+      renderArtistStatusRail(artist);
       fillArtistForm(artist, profile);
       renderLeads(artist);
       renderQuotes(artist);
@@ -959,7 +1057,9 @@
       renderAnalytics(profile);
       renderBoard(artist);
       renderArtistReleases(artist);
+      renderArtistReleaseTimeline(artist);
       renderArtistFinance(artist);
+      renderArtistFinanceWidgets(artist);
       renderArtistStudio(artist);
       syncArtistCabinetActions(profile);
       if (!profile) closeArtistDeletePanel();

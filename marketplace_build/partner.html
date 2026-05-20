@@ -84,10 +84,19 @@
           <button id="partner-logout" class="ghost-btn" type="button">Выйти</button>
         </div>
         <div id="partner-kpis" class="service-kpis"></div>
+        <div id="partner-executive-grid" class="portal-summary-grid" style="margin-top:14px;"></div>
+        <div id="partner-status-rail" class="status-rail" style="margin-top:14px;"></div>
+        <nav class="portal-nav" aria-label="Business portal navigation">
+          <a href="#partner-roster-hub">Roster</a>
+          <a href="#partner-finance-hub">Finance</a>
+          <a href="#partner-release-hub">Release Flow</a>
+          <a href="#partner-report-hub">Reporting</a>
+          <a href="#partner-studio-hub">Studio</a>
+        </nav>
       </div>
 
       <div class="split">
-        <div class="panel">
+        <div class="panel" id="partner-roster-hub">
           <div class="section-head">
             <div>
               <h2>Roster артистов</h2>
@@ -103,7 +112,7 @@
           <div id="partner-roster" class="table-list" style="margin-top:14px;"></div>
         </div>
 
-        <div class="panel">
+        <div class="panel" id="partner-finance-hub">
           <div class="section-head">
             <div>
               <h2>Финансовый обзор</h2>
@@ -129,13 +138,14 @@
       </div>
 
       <div class="split">
-        <div class="panel">
+        <div class="panel" id="partner-release-hub">
           <div class="section-head">
             <div>
               <h2>Релизы</h2>
               <p class="muted">Создавайте релизы партнёра и сразу привязывайте их к артисту из roster.</p>
             </div>
           </div>
+          <div id="partner-release-timeline" class="timeline-list" style="margin-bottom:14px;"></div>
           <form id="release-form" class="form-grid">
             <label>Артист
               <select name="artistId" id="release-artist-select"></select>
@@ -158,13 +168,14 @@
           <div id="partner-releases" class="table-list" style="margin-top:14px;"></div>
         </div>
 
-        <div class="panel">
+        <div class="panel" id="partner-report-hub">
           <div class="section-head">
             <div>
               <h2>Royalty-отчёты</h2>
               <p class="muted">Черновики и опубликованные периоды по артистам партнёра.</p>
             </div>
           </div>
+          <div id="partner-finance-widgets" class="finance-widget-grid" style="margin-bottom:14px;"></div>
           <form id="partner-royalty-form" class="form-grid">
             <label>Артист
               <select name="artistId" id="partner-royalty-artist-select"></select>
@@ -186,7 +197,7 @@
         </div>
       </div>
 
-      <div class="split">
+      <div class="split" id="partner-studio-hub">
         <div class="panel">
           <div class="section-head">
             <div>
@@ -277,6 +288,59 @@
       }).join("");
     }
 
+    function renderPartnerExecutive(partner) {
+      const artists = roster(partner);
+      const releases = MarketplaceStore.getReleasesForPartner(partner.id);
+      const reports = MarketplaceStore.getRoyaltyReportsForPartner(partner.id);
+      const balance = MarketplaceStore.getBalanceForPartner(partner.id);
+      const published = releases.filter(function (item) { return item.status === "published" || item.status === "distributed"; }).length;
+      byId("partner-executive-grid").innerHTML = [
+        {
+          eyebrow: "Roster Layer",
+          title: "Owner-видимость по артистам и активам",
+          value: String(artists.length),
+          text: "Партнёр видит roster, release ownership и отчетный contour без отдельной CRM."
+        },
+        {
+          eyebrow: "Release Portfolio",
+          title: "Активные и подготовленные релизы",
+          value: published + "/" + releases.length,
+          text: releases.length ? "Часть каталога уже продвинута по lifecycle. Ниже есть timeline по последним релизам." : "Добавьте первый релиз, чтобы открыть release timeline и operational tracking."
+        },
+        {
+          eyebrow: "Reporting",
+          title: "Royalty periods under control",
+          value: String(reports.length),
+          text: "Периоды можно собирать по артистам roster и сразу связывать с finance movement."
+        },
+        {
+          eyebrow: "Partner Balance",
+          title: "Внутренний finance contour",
+          value: Number(balance || 0).toLocaleString("ru-RU") + " ₽",
+          text: "Ledger, reserves и payout requests уже работают как основа business layer."
+        }
+      ].map(function (item) {
+        return '<article class="portal-summary-card"><span class="eyebrow-note">' + escapeHtml(item.eyebrow) + '</span><strong>' + escapeHtml(item.title) + '</strong><div class="portal-stat-line"><span class="muted">Live</span><span class="value">' + escapeHtml(item.value) + '</span></div><p>' + escapeHtml(item.text) + '</p></article>';
+      }).join("");
+    }
+
+    function renderPartnerStatusRail(partner) {
+      const releases = MarketplaceStore.getReleasesForPartner(partner.id);
+      const current = releases[0] ? releases[0].status : "draft";
+      const steps = [
+        { key: "draft", title: "Draft", text: "Материалы и scope собраны." },
+        { key: "review", title: "Review", text: "Команда сверяет пакет и readiness." },
+        { key: "approved", title: "Approved", text: "Release scope согласован." },
+        { key: "distributed", title: "Distributed", text: "Пакет ушёл в external delivery." },
+        { key: "published", title: "Published", text: "Дальше работает reporting and payouts." }
+      ];
+      const currentIndex = Math.max(steps.findIndex(function (item) { return item.key === current; }), 0);
+      byId("partner-status-rail").innerHTML = steps.map(function (step, index) {
+        const state = index < currentIndex ? " is-complete" : (index === currentIndex ? " is-active" : "");
+        return '<article class="status-step' + state + '"><span class="status-index">' + (index + 1) + '</span><strong>' + escapeHtml(step.title) + '</strong><p>' + escapeHtml(step.text) + '</p></article>';
+      }).join("");
+    }
+
     function renderRoster(partner) {
       const artists = roster(partner);
       byId("partner-roster").innerHTML = artists.length ? artists.map(function (artist) {
@@ -316,12 +380,48 @@
       }).join("") : '<div class="empty">Пока нет релизов. Добавьте первый релиз партнёра.</div>';
     }
 
+    function renderPartnerReleaseTimeline(partner) {
+      const releases = MarketplaceStore.getReleasesForPartner(partner.id);
+      byId("partner-release-timeline").innerHTML = releases.length ? releases.slice(0, 4).map(function (release) {
+        return '<article class="timeline-item"><div class="timeline-item-head"><div><span class="timeline-meta">' + escapeHtml(release.type || "release") + '</span><strong>' + escapeHtml(release.title) + '</strong></div><span class="summary-pill">' + escapeHtml(release.status) + '</span></div><p>' + escapeHtml(release.description || "Release card without extended commentary. Use this block to show next action and readiness.") + '</p><div class="timeline-pills"><span class="timeline-pill">Date: ' + escapeHtml(release.releaseDate || "TBD") + '</span><span class="timeline-pill">Genre: ' + escapeHtml(release.genre || "—") + '</span><span class="timeline-pill">Tracks: ' + escapeHtml(String(release.trackCount || 1)) + '</span></div></article>';
+      }).join("") : '<div class="empty">Release timeline appears after the first partner release.</div>';
+    }
+
     function renderReports(partner) {
       const reports = MarketplaceStore.getRoyaltyReportsForPartner(partner.id);
       byId("partner-reports").innerHTML = reports.length ? reports.map(function (report) {
         const artist = MarketplaceStore.getDb().artists.find(function (item) { return item.id === report.artistId; });
         return '<div class="table-row"><div><strong>' + escapeHtml(report.periodLabel) + '</strong><div class="muted">' + escapeHtml(artist ? artist.name : "Артист не выбран") + '</div></div><div>' + Number(report.grossAmount || 0).toLocaleString("ru-RU") + '</div><div>' + Number(report.netAmount || 0).toLocaleString("ru-RU") + ' ' + escapeHtml(report.currency) + '</div><div><span class="badge gold">' + escapeHtml(report.status) + '</span></div><div>' + (report.statementUrl ? '<a class="ghost-btn" href="' + escapeHtml(report.statementUrl) + '" target="_blank" rel="noopener">Файл</a>' : '—') + '</div></div>';
       }).join("") : '<div class="empty">Royalty-отчёты ещё не добавлены.</div>';
+    }
+
+    function renderPartnerFinanceWidgets(partner) {
+      const reports = MarketplaceStore.getRoyaltyReportsForPartner(partner.id);
+      const payouts = MarketplaceStore.getPayoutRequestsForPartner(partner.id);
+      const gross = reports.reduce(function (sum, item) { return sum + Number(item.grossAmount || 0); }, 0);
+      const net = reports.reduce(function (sum, item) { return sum + Number(item.netAmount || 0); }, 0);
+      const approved = payouts.filter(function (item) { return item.status === "approved"; }).reduce(function (sum, item) { return sum + Number(item.amount || 0); }, 0);
+      const pending = payouts.filter(function (item) { return item.status === "pending"; }).reduce(function (sum, item) { return sum + Number(item.amount || 0); }, 0);
+      const netShare = gross > 0 ? Math.min(100, Math.round((net / gross) * 100)) : 0;
+      const payoutShare = (approved + pending) > 0 ? Math.min(100, Math.round((approved / (approved + pending)) * 100)) : 0;
+      byId("partner-finance-widgets").innerHTML = [
+        {
+          eyebrow: "Partner Yield",
+          title: "Net against gross periods",
+          value: netShare + "%",
+          meter: netShare,
+          rows: [["Gross", Number(gross || 0).toLocaleString("ru-RU") + " ₽"], ["Net", Number(net || 0).toLocaleString("ru-RU") + " ₽"]]
+        },
+        {
+          eyebrow: "Withdrawal Queue",
+          title: "Approved against pending",
+          value: Number(pending || 0).toLocaleString("ru-RU") + " ₽",
+          meter: payoutShare,
+          rows: [["Approved", Number(approved || 0).toLocaleString("ru-RU") + " ₽"], ["Pending", Number(pending || 0).toLocaleString("ru-RU") + " ₽"]]
+        }
+      ].map(function (item) {
+        return '<article class="finance-widget"><span class="eyebrow-note">' + escapeHtml(item.eyebrow) + '</span><strong>' + escapeHtml(item.title) + '</strong><div class="portal-stat-line"><span class="muted">Current</span><span class="value">' + escapeHtml(String(item.value)) + '</span></div><div class="finance-meter"><span style="width:' + item.meter + '%;"></span></div><div class="section-stack">' + item.rows.map(function (row) { return '<div class="metric-row"><span>' + escapeHtml(String(row[0])) + '</span><span>' + escapeHtml(String(row[1])) + '</span></div>'; }).join("") + '</div></article>';
+      }).join("");
     }
 
     function renderStudio(partner) {
@@ -343,10 +443,14 @@
       byId("partner-summary").textContent = partner.companyName + " · " + partner.email + " · " + (partner.city || "город не указан");
       fillArtistSelects(partner);
       renderPartnerKpis(partner);
+      renderPartnerExecutive(partner);
+      renderPartnerStatusRail(partner);
       renderRoster(partner);
       renderFinance(partner);
       renderReleases(partner);
+      renderPartnerReleaseTimeline(partner);
       renderReports(partner);
+      renderPartnerFinanceWidgets(partner);
       renderStudio(partner);
     }
 

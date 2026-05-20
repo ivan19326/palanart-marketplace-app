@@ -1017,6 +1017,218 @@ body[data-theme="light"] .metric-card {
   color: var(--accent-2);
 }
 
+.portal-summary-grid,
+.finance-widget-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.portal-summary-card,
+.finance-widget,
+.timeline-item,
+.status-step {
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+body[data-theme="light"] .portal-summary-card,
+body[data-theme="light"] .finance-widget,
+body[data-theme="light"] .timeline-item,
+body[data-theme="light"] .status-step {
+  background: rgba(255, 255, 255, 0.74);
+}
+
+.portal-summary-card,
+.finance-widget {
+  padding: 18px;
+  display: grid;
+  gap: 10px;
+  min-height: 148px;
+}
+
+.portal-summary-card .eyebrow-note,
+.finance-widget .eyebrow-note,
+.timeline-meta {
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.portal-summary-card strong,
+.finance-widget strong {
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+.portal-summary-card p,
+.finance-widget p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.portal-stat-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.portal-stat-line .value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--accent-2);
+}
+
+.portal-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 14px 0 2px;
+}
+
+.portal-nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.portal-nav a:hover {
+  transform: translateY(-1px);
+  color: var(--text);
+  border-color: rgba(255, 138, 91, 0.35);
+  background: rgba(255, 138, 91, 0.1);
+}
+
+.status-rail {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.status-step {
+  position: relative;
+  padding: 16px;
+  min-height: 112px;
+  overflow: hidden;
+}
+
+.status-step::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.status-step.is-active::before,
+.status-step.is-complete::before {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+}
+
+.status-step strong {
+  display: block;
+  margin: 10px 0 8px;
+  font-size: 1rem;
+}
+
+.status-step p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.status-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-weight: 700;
+}
+
+.status-step.is-active .status-index,
+.status-step.is-complete .status-index {
+  border-color: rgba(255, 138, 91, 0.34);
+  background: rgba(255, 138, 91, 0.14);
+}
+
+.timeline-list {
+  display: grid;
+  gap: 12px;
+}
+
+.timeline-item {
+  padding: 16px 18px;
+}
+
+.timeline-item-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.timeline-item p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.timeline-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.timeline-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.finance-meter {
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.finance-meter > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+}
+
+.finance-widget .metric-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
 .media-grid,
 .gallery-grid {
   display: grid;
