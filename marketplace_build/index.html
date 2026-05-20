@@ -21,11 +21,11 @@
       </div>
       <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Открыть меню">☰</button>
       <nav class="nav">
-        <a href="#catalog">Каталог</a>
-        <a href="#workflow">Как это работает</a>
-        <a href="#board">Запросы</a>
-        <a href="user.html">Клиент</a>
-        <a href="artist.html">Исполнитель</a>
+        <a href="#catalog">Артисты</a>
+        <a href="#workflow">Платформа</a>
+        <a href="#board">Сервисы</a>
+        <a href="user.html">Client Services</a>
+        <a href="artist.html">Artist Portal</a>
         <a href="partner.html">Партнёр</a>
         <a href="admin.html">Админ</a>
         <button id="theme-toggle" class="ghost-btn theme-toggle" type="button">Светлая тема</button>
@@ -45,7 +45,7 @@
           <div class="hero-points">
             <div class="hero-point">Для артиста: профиль, медиа, релизы, royalty, баланс, вывод средств и студийные брони.</div>
             <div class="hero-point">Для саблейбла и партнёра: roster артистов, релизный контроль, партнёрский ledger и отчётные периоды.</div>
-            <div class="hero-point">Для заказчика и клиента студии: заявки, чаты, запросы на сервисы и сопровождение через платформу.</div>
+            <div class="hero-point">Для заказчика услуг и клиента студии: заявки, чаты, запросы на сервисы и сопровождение через платформу.</div>
             <div class="hero-point">Для команды лейбла: backoffice, модерация, роли, выплаты, бронирования и операционный контроль.</div>
           </div>
           <div class="hero-actions">
@@ -64,10 +64,25 @@
           <div id="hero-stats" class="stats-row"></div>
           <div class="info-list">
             <div class="info-item">Фокус запуска: Чебоксары, Новочебоксарск, Чувашия и ближайшие регионы.</div>
-            <div class="info-item">Основной рынок: все города России, от Москвы и Казани до Владивостока.</div>
-            <div class="info-item">Расширение: международные заказы, destination events и удаленный подбор подрядчиков.</div>
+            <div class="info-item">Основной рынок: вся Россия, от локальных артистов до федеральных партнёрских roster.</div>
+            <div class="info-item">Расширение: международные релизные сервисы, удалённая работа и студийная инфраструктура для артистов из любой точки мира.</div>
           </div>
         </aside>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Что входит в публичный сайт платформы</h2>
+          <p>Здесь мы продаём не только артистов, а всю экосистему: лейбл, сопровождение, студию, roster и сервисы для релизов.</p>
+        </div>
+      </div>
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+        <div class="summary-card"><strong>Публичная витрина</strong><p class="muted">Артисты, проекты, медиа, отзывы, условия, сервисные пакеты и международное позиционирование.</p></div>
+        <div class="summary-card"><strong>Label Services</strong><p class="muted">Релизный поток, дистрибуция, подготовка материалов, отчётность и работа с партнёрами.</p></div>
+        <div class="summary-card"><strong>Studio Complex</strong><p class="muted">Запись, сведение, мастеринг, бронирования и дальнейшая интеграция с календарями и Y-Clients.</p></div>
+        <div class="summary-card"><strong>Backoffice</strong><p class="muted">Роли, модерация, выплаты, royalty, документы и операционное управление платформой.</p></div>
       </div>
     </section>
 
@@ -106,7 +121,7 @@
       <div class="section-head">
         <div>
           <h2>Публичный каталог артистов</h2>
-          <p>Публичная витрина артистов и проектов лейбла для локального, российского и международного присутствия.</p>
+          <p>Публичная витрина артистов, проектов и сервисных профилей лейбла для локального, российского и международного присутствия.</p>
         </div>
       </div>
       <div class="filters">
@@ -167,7 +182,7 @@
       <div class="section-head">
         <div>
           <h2>Открытые запросы и сервисные предложения</h2>
-          <p>Заказчики, артисты и партнёры могут публиковать запросы на услуги, сотрудничество и студийные задачи.</p>
+          <p>Заказчики, артисты и партнёры могут публиковать запросы на услуги, релизное сопровождение, сотрудничество и студийные задачи.</p>
         </div>
       </div>
       <div class="split">
@@ -176,27 +191,27 @@
           <div class="form-grid">
             <label>Кто публикует
               <select name="authorType" required>
-                <option value="client">Клиент</option>
-                <option value="artist">Исполнитель</option>
+                <option value="client">Заказчик</option>
+                <option value="artist">Артист</option>
               </select>
             </label>
             <label>Тип объявления
               <select name="postType" required>
-                <option value="request">Ищу исполнителя</option>
-                <option value="offer">Предлагаю услугу</option>
+                <option value="request">Нужен сервис или артист</option>
+                <option value="offer">Предлагаю услугу или проект</option>
               </select>
             </label>
             <label>Заголовок
               <input name="title" type="text" required>
             </label>
             <label>Категория
-              <input name="category" type="text" placeholder="DJ, ведущий, фотограф">
+              <input name="category" type="text" placeholder="Артист, студия, релиз, продакшн">
             </label>
             <label>Город
               <input name="city" type="text" placeholder="Чебоксары" required>
             </label>
             <label>Бюджет / цена
-              <input name="budget" type="text" placeholder="до 60 000 ₽">
+              <input name="budget" type="text" placeholder="бюджет или ставка">
             </label>
             <label>Контактное имя
               <input name="contactName" type="text" required>
@@ -210,29 +225,29 @@
               <textarea name="description" required></textarea>
             </label>
           </div>
-          <button class="primary-btn" type="submit">Опубликовать</button>
+          <button class="primary-btn" type="submit">Опубликовать сервисный запрос</button>
         </form>
         <div class="panel">
           <div class="section-head">
             <div>
               <h2>Для чего это нужно</h2>
-              <p>Лид-борд помогает быстрее собирать отклики, особенно когда событие привязано к конкретному городу.</p>
+              <p>Service board помогает быстро собирать отклики на артистов, релизы, студийные услуги и коллаборации.</p>
             </div>
           </div>
           <div class="info-list">
-            <div class="info-item">Клиент может описать запрос под Чебоксары, любой город России или международную площадку.</div>
-            <div class="info-item">Исполнитель может показать свободные даты, выезд по регионам и готовые пакеты.</div>
-            <div class="info-item">Все ответы остаются внутри платформы до перехода к сделке.</div>
+            <div class="info-item">Заказчик может описать задачу под локальный рынок, всю Россию или международный контур.</div>
+            <div class="info-item">Артист или партнёр могут показать готовые сервисные пакеты, релизные сценарии и доступность студии.</div>
+            <div class="info-item">Все ответы и согласования остаются внутри платформы до перехода к сделке или сервисному контракту.</div>
           </div>
         </div>
       </div>
       <div class="split" style="margin-top:18px;">
         <div class="panel">
-          <h3>Запросы клиентов</h3>
+          <h3>Запросы заказчиков</h3>
           <div id="requests-grid" class="table-list"></div>
         </div>
         <div class="panel">
-          <h3>Предложения исполнителей</h3>
+          <h3>Предложения артистов и партнёров</h3>
           <div id="offers-grid" class="table-list"></div>
         </div>
       </div>
@@ -242,7 +257,7 @@
       <div class="section-head">
         <div>
           <h2>Отзывы и доверие</h2>
-          <p>После завершения события клиент может оставить рейтинг и текстовый отзыв по нескольким параметрам.</p>
+          <p>После завершения сервиса, проекта или сделки заказчик может оставить рейтинг и отзыв в публичном профиле артиста.</p>
         </div>
       </div>
       <div id="reviews-grid" class="grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));"></div>
@@ -253,8 +268,8 @@
     <div class="app-modal-card">
       <div class="app-modal-head">
         <div>
-          <h3 id="request-modal-title">Новая заявка</h3>
-          <p id="request-modal-subtitle" class="muted">Быстро заполните несколько полей без всплывающих системных окон.</p>
+          <h3 id="request-modal-title">Новый сервисный запрос</h3>
+          <p id="request-modal-subtitle" class="muted">Быстро заполните несколько полей без лишней бюрократии и системных окон.</p>
         </div>
         <button class="app-modal-close" id="request-modal-close" type="button">×</button>
       </div>
@@ -262,27 +277,27 @@
         <input type="hidden" name="profileId">
         <input type="hidden" name="mode" value="lead">
         <div class="form-grid">
-          <label>Имя организатора<input name="customerName" type="text" required></label>
+          <label>Имя заказчика<input name="customerName" type="text" required></label>
           <label>Телефон<input name="customerPhone" type="tel" required></label>
           <label>E-mail<input name="customerEmail" type="email"></label>
           <label>Город<input name="city" type="text" list="city-options" required></label>
-          <label>Площадка<input name="venue" type="text" list="venue-options"></label>
-          <label>Тип события
+          <label>Проект / площадка<input name="venue" type="text" list="venue-options"></label>
+          <label>Тип задачи
             <select name="eventType">
-              <option value="Свадьба">Свадьба</option>
-              <option value="Корпоратив">Корпоратив</option>
-              <option value="День рождения">День рождения</option>
-              <option value="Частная вечеринка">Частная вечеринка</option>
-              <option value="Премия">Премия</option>
-              <option value="Деловой ужин">Деловой ужин</option>
+              <option value="Артист на событие">Артист на событие</option>
+              <option value="Релизное сопровождение">Релизное сопровождение</option>
+              <option value="Студийная запись">Студийная запись</option>
+              <option value="Сведение и мастеринг">Сведение и мастеринг</option>
+              <option value="Продюсерский пакет">Продюсерский пакет</option>
+              <option value="Партнёрская коллаборация">Партнёрская коллаборация</option>
             </select>
           </label>
-          <label>Гостей
+          <label>Масштаб
             <select name="guestCount">
-              <option value="20">До 20</option>
-              <option value="50" selected>30-50</option>
-              <option value="100">60-100</option>
-              <option value="150">100+</option>
+              <option value="1">Индивидуально</option>
+              <option value="5" selected>Малый проект</option>
+              <option value="20">Команда / серия задач</option>
+              <option value="100">Крупный production</option>
             </select>
           </label>
           <label>Дата<input name="eventDate" type="date"></label>
@@ -303,14 +318,14 @@
             </select>
           </label>
         </div>
-        <label>Что важно<textarea name="requirements" required></textarea></label>
+          <label>Что важно<textarea name="requirements" required></textarea></label>
         <div class="quick-options">
-          <button class="quick-option" type="button" data-fill-target="requirements" data-fill-value="Нужен сильный локальный опыт и уверенная работа с публикой.">Локальный опыт</button>
-          <button class="quick-option" type="button" data-fill-target="requirements" data-fill-value="Хочу спокойную коммуникацию и чёткий тайминг без перегруза программы.">Спокойный формат</button>
-          <button class="quick-option" type="button" data-fill-target="requirements" data-fill-value="Важно наличие своего оборудования и готовность к выезду за город.">Со своим оборудованием</button>
+          <button class="quick-option" type="button" data-fill-target="requirements" data-fill-value="Нужен сильный локальный опыт и понятное сопровождение по этапам.">Локальный опыт</button>
+          <button class="quick-option" type="button" data-fill-target="requirements" data-fill-value="Нужен спокойный сервисный процесс, понятный тайминг и минимум хаоса.">Сервисный формат</button>
+          <button class="quick-option" type="button" data-fill-target="requirements" data-fill-value="Важно наличие собственного production-процесса, студийных возможностей и быстрой коммуникации.">Production-ready</button>
         </div>
         <div class="inline-actions">
-          <button class="primary-btn" type="submit">Отправить</button>
+          <button class="primary-btn" type="submit">Отправить запрос</button>
           <button class="ghost-btn" id="request-modal-cancel" type="button">Отмена</button>
         </div>
       </form>
@@ -321,8 +336,8 @@
     <div class="app-modal-card">
       <div class="app-modal-head">
         <div>
-          <h3>Отклик на объявление</h3>
-          <p class="muted">Оставьте короткий, но внятный ответ без системных окон.</p>
+          <h3>Отклик на сервисный запрос</h3>
+          <p class="muted">Оставьте короткий и внятный ответ без системных окон.</p>
         </div>
         <button class="app-modal-close" id="reply-modal-close" type="button">×</button>
       </div>
@@ -421,7 +436,7 @@
       requestForm.customerEmail.value = user ? user.email : "";
       requestForm.city.value = profile ? (profile.city || "Чебоксары") : "Чебоксары";
       requestForm.venue.value = "";
-      requestForm.eventType.value = mode === "chat" ? "Частная вечеринка" : "Свадьба";
+      requestForm.eventType.value = mode === "chat" ? "Партнёрская коллаборация" : "Артист на событие";
       requestForm.guestCount.value = "50";
       requestForm.eventTime.value = "17:00";
       requestForm.budget.value = profile ? String(Math.max(Number(profile.priceFrom || 0) * 2, 30000)) : "60000";
@@ -429,8 +444,8 @@
       requestForm.requirements.value = mode === "chat"
         ? "Хочу уточнить пакет, свободную дату и как лучше собрать программу."
         : "Нужен сильный локальный опыт и аккуратная коммуникация с гостями.";
-      byId("request-modal-title").textContent = mode === "chat" ? "Открыть чат" : "Запросить предложение";
-      byId("request-modal-subtitle").textContent = profile ? ("Исполнитель: " + profile.name + ". Заполните только главное.") : "Заполните только главное.";
+      byId("request-modal-title").textContent = mode === "chat" ? "Открыть сервисный чат" : "Запросить предложение";
+      byId("request-modal-subtitle").textContent = profile ? ("Профиль: " + profile.name + ". Заполните только главное.") : "Заполните только главное.";
     }
     function profileRating(profileId) {
       const meta = MarketplaceStore.getProfileRating(profileId);
@@ -485,7 +500,7 @@
       const grid = byId("catalog-grid");
       if (!profiles.length) {
         catalogState.selectedProfileId = null;
-        grid.innerHTML = '<div class="empty">Пока нет опубликованных карточек. Зарегистрируйте первого исполнителя и заполните профиль, чтобы начать живой тест каталога.</div>';
+        grid.innerHTML = '<div class="empty">Пока нет опубликованных артистов и проектов. Зарегистрируйте первого артиста и заполните профиль, чтобы запустить публичную витрину платформы.</div>';
         renderProfileDetail(null);
         return;
       }
@@ -517,7 +532,7 @@
     function renderProfileDetail(profile) {
       const host = byId("profile-detail");
       if (!profile) {
-        host.innerHTML = '<div class="empty">Когда в каталоге появится первый исполнитель, здесь откроется его полный профиль с пакетами, условиями, медиа и отзывами.</div>';
+        host.innerHTML = '<div class="empty">Когда в каталоге появится первый артист, здесь откроется его публичный профиль с медиа, условиями, сервисными пакетами и отзывами.</div>';
         return;
       }
       const reviews = MarketplaceStore.getReviewsForProfile(profile.id);
@@ -528,7 +543,7 @@
       const user = currentUser();
       const host = byId("compare-box");
       if (!user) {
-        host.innerHTML = '<div class="empty">Сравнение сохраняется в кабинете клиента. Войдите как клиент, чтобы собирать shortlist и быстро сверять условия.</div>';
+        host.innerHTML = '<div class="empty">Сравнение сохраняется в client services. Войдите как заказчик услуг, чтобы собирать short-list и быстро сверять условия.</div>';
         return;
       }
       const profiles = MarketplaceStore.getCompareProfiles(user.id);
@@ -545,24 +560,24 @@
       function draw(items, targetId, emptyText) {
       byId(targetId).innerHTML = items.length ? items.map(function (post) { return '<div class="table-row"><div><strong>' + escapeHtml(post.title) + '</strong><div class="muted">' + escapeHtml(post.city) + ' · ' + escapeHtml(post.category || "Категория не указана") + '</div></div><div>' + escapeHtml(post.budget || "По договоренности") + '</div><div>' + escapeHtml(post.contactName) + '</div><div>' + (post.replies ? post.replies.length : 0) + ' откликов</div><div><button class="ghost-btn" type="button" onclick="replyToPost(\'' + post.id + '\')">Откликнуться</button></div></div>'; }).join("") : '<div class="empty">' + emptyText + '</div>';
       }
-      draw(requests, "requests-grid", "Пока нет запросов клиентов.");
-      draw(offers, "offers-grid", "Пока нет предложений от исполнителей.");
+      draw(requests, "requests-grid", "Пока нет открытых запросов заказчиков.");
+      draw(offers, "offers-grid", "Пока нет публичных предложений от артистов и партнёров.");
     }
     function renderReviews() {
       const reviews = MarketplaceStore.getDb().reviews || [];
-      byId("reviews-grid").innerHTML = reviews.length ? reviews.slice(0, 8).map(function (review) { const profile = MarketplaceStore.getProfileById(review.profileId); return '<div class="hero-point"><strong>' + escapeHtml(review.authorName) + '</strong><div class="muted">' + escapeHtml(profile ? profile.name : "Исполнитель") + ' · ' + review.rating + ' / 5</div><div>' + escapeHtml(review.text) + '</div></div>'; }).join("") : '<div class="empty">После первых тестовых сделок здесь появятся реальные отзывы клиентов.</div>';
+      byId("reviews-grid").innerHTML = reviews.length ? reviews.slice(0, 8).map(function (review) { const profile = MarketplaceStore.getProfileById(review.profileId); return '<div class="hero-point"><strong>' + escapeHtml(review.authorName) + '</strong><div class="muted">' + escapeHtml(profile ? profile.name : "Артист") + ' · ' + review.rating + ' / 5</div><div>' + escapeHtml(review.text) + '</div></div>'; }).join("") : '<div class="empty">После первых завершённых сервисов и проектов здесь появятся реальные отзывы заказчиков.</div>';
     }
     window.selectProfile = function (profileId) { catalogState.selectedProfileId = profileId; renderCatalog(); byId("profile-detail").scrollIntoView({ behavior: "smooth", block: "start" }); };
     window.toggleFavorite = function (profileId) {
       const user = currentUser();
-      if (!user) return showSiteMessage('Сначала войдите как клиент в <a href="user.html">кабинете клиента</a>, и тогда избранное будет работать нормально.', "error");
+      if (!user) return showSiteMessage('Сначала войдите как заказчик в <a href="user.html">client services</a>, и тогда short-list будет работать нормально.', "error");
       MarketplaceStore.toggleFavoriteProfile(user.id, profileId);
       showSiteMessage("Избранное обновлено.", "success");
       renderCatalog();
     };
     window.toggleCompare = function (profileId) {
       const user = currentUser();
-      if (!user) return showSiteMessage('Сравнение доступно после входа в <a href="user.html">кабинет клиента</a>.', "error");
+      if (!user) return showSiteMessage('Сравнение доступно после входа в <a href="user.html">client services</a>.', "error");
       MarketplaceStore.toggleCompareProfile(user.id, profileId);
       showSiteMessage("Сравнение обновлено.", "success");
       renderCatalog();
@@ -625,11 +640,11 @@
           requirements: payload.requirements
         });
         closeModal(requestModal);
-        showSiteMessage('Чат открыт. Продолжить можно в <a href="user.html">кабинете клиента</a>. Сделка: ' + deal.id, "success");
+        showSiteMessage('Чат открыт. Продолжить можно в <a href="user.html">client services</a>. Сделка: ' + deal.id, "success");
       } else {
         MarketplaceStore.createLead(payload);
         closeModal(requestModal);
-        showSiteMessage("Заявка отправлена исполнителю. Теперь он увидит её в кабинете и сможет прислать квоту.", "success");
+        showSiteMessage("Запрос отправлен в платформу. Артист или команда лейбла увидят его в кабинете и смогут прислать предложение.", "success");
         renderHeroStats();
       }
     });
@@ -642,7 +657,7 @@
         authorType: artist ? "artist" : "client",
         authorId: artist ? artist.id : (user ? user.id : null),
         authorName: payload.authorName,
-        contactInfo: artist ? "Через кабинет исполнителя" : "Через кабинет клиента",
+        contactInfo: artist ? "Через artist portal" : "Через client services",
         message: payload.message
       });
       closeModal(replyModal);
