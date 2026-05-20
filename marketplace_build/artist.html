@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Кабинет исполнителя | Движарт</title>
+  <title>Artist Portal | Движарт</title>
   <link rel="stylesheet" href="marketplace.css">
 </head>
 <body>
@@ -36,7 +36,7 @@
         <div class="section-head compact">
           <div>
             <div class="eyebrow">Регистрация</div>
-            <h2>Создать кабинет исполнителя</h2>
+            <h2>Создать artist account</h2>
           </div>
           <span class="pill-badge">1 минута</span>
         </div>
@@ -56,8 +56,8 @@
         </div>
         <div class="auth-benefits">
           <div class="auth-benefit-card">
-            <strong>Быстрый кабинет</strong>
-            <span>Тип исполнителя, имя, город и контакты.</span>
+            <strong>Быстрый account setup</strong>
+            <span>Роль, имя проекта, город и контакты.</span>
           </div>
           <div class="auth-benefit-card">
             <strong>Профиль по шаблонам</strong>
@@ -70,11 +70,11 @@
         </div>
       </div>
       <form id="artist-register-form" class="service-panel auth-register-card">
-        <h1>Регистрация исполнителя</h1>
+        <h1>Регистрация артиста</h1>
         <div class="section-head compact">
           <div>
             <div class="eyebrow">Регистрация</div>
-            <h2>Создать кабинет исполнителя</h2>
+            <h2>Создать artist account</h2>
           </div>
           <span class="pill-badge">1 минута</span>
         </div>
@@ -88,14 +88,14 @@
           </div>
         </div>
         <div class="form-grid">
-          <label>Тип исполнителя
+          <label>Роль в платформе
             <select name="role" id="artist-register-role">
-              <option value="host">Ведущий</option>
+              <option value="host">Артист / Front Person</option>
               <option value="dj">DJ</option>
-              <option value="photographer">Фотограф</option>
-              <option value="band">Музыканты</option>
-              <option value="videographer">Видеограф</option>
-              <option value="decorator">Декоратор</option>
+              <option value="photographer">Visual Creator</option>
+              <option value="band">Музыкальный проект</option>
+              <option value="videographer">Video Production</option>
+              <option value="decorator">Scenography</option>
             </select>
           </label>
           <label>Город<input name="city" type="text" list="artist-city-options" required></label>
@@ -110,7 +110,7 @@
           <label>Фото профиля из загрузок<input id="artist-register-photo-file" type="file" accept="image/*"></label>
         </div>
         <div id="artist-register-photo-preview" class="register-photo-preview">
-          <div class="empty">Загрузите фото, если хотите сразу создать аккуратную карточку исполнителя.</div>
+          <div class="empty">Загрузите фото, если хотите сразу собрать аккуратный публичный профиль.</div>
         </div>
         <button class="primary-btn" type="submit">Создать кабинет</button>
         <div class="auth-socials">
@@ -155,7 +155,7 @@
         </div>
         <div id="artist-delete-panel" class="inline-confirm-panel" hidden>
           <strong id="artist-delete-title">Удаление карточки</strong>
-          <p id="artist-delete-text" class="muted">Карточка, лиды, квоты, сделки и чаты будут удалены. Аккаунт исполнителя останется, и новую карточку можно будет создать заново.</p>
+          <p id="artist-delete-text" class="muted">Публичный профиль, запросы, предложения, кейсы и чаты будут удалены. Сам artist account останется, и новый профиль можно будет собрать заново.</p>
           <div class="inline-actions">
             <button id="artist-delete-confirm" class="danger-btn" type="button">Подтвердить удаление</button>
             <button id="artist-delete-cancel" class="ghost-btn" type="button">Отмена</button>
@@ -166,10 +166,10 @@
         <div class="preset-box" style="margin-bottom:16px;">
           <strong>Быстрый старт профиля</strong>
           <div class="quick-options">
-            <button class="quick-option" type="button" data-profile-preset="host">Ведущий</button>
+            <button class="quick-option" type="button" data-profile-preset="host">Артист</button>
             <button class="quick-option" type="button" data-profile-preset="dj">DJ</button>
-            <button class="quick-option" type="button" data-profile-preset="photographer">Фотограф</button>
-            <button class="quick-option" type="button" data-profile-preset="band">Музыканты</button>
+            <button class="quick-option" type="button" data-profile-preset="photographer">Visual Creator</button>
+            <button class="quick-option" type="button" data-profile-preset="band">Музыкальный проект</button>
           </div>
         </div>
         <div class="form-grid">
@@ -229,27 +229,27 @@
               <button class="quick-option" type="button" data-chip-value="Английский">Английский</button>
             <button class="quick-option" type="button" data-chip-value="Чувашский">Чувашский</button>
           </div>
-          <label>Форматы мероприятий<input name="eventFormats" type="text" list="artist-format-options"></label>
+          <label>Сценарии работы<input name="eventFormats" type="text" list="artist-format-options"></label>
           <div class="quick-options" data-chip-target="eventFormats">
-            <button class="quick-option" type="button" data-chip-value="Свадьбы">Свадьбы</button>
-            <button class="quick-option" type="button" data-chip-value="Корпоративы">Корпоративы</button>
-            <button class="quick-option" type="button" data-chip-value="Частные вечеринки">Частные вечеринки</button>
-            <button class="quick-option" type="button" data-chip-value="Городские события">Городские события</button>
+            <button class="quick-option" type="button" data-chip-value="Релизные кампании">Релизные кампании</button>
+            <button class="quick-option" type="button" data-chip-value="Live-сеты">Live-сеты</button>
+            <button class="quick-option" type="button" data-chip-value="Студийные сессии">Студийные сессии</button>
+            <button class="quick-option" type="button" data-chip-value="Бренд-контент">Бренд-контент</button>
           </div>
           <label>Особенности сервиса<input name="serviceFeatures" type="text" list="artist-feature-options"></label>
           <div class="quick-options" data-chip-target="serviceFeatures">
-            <button class="quick-option" type="button" data-chip-value="Сценарный созвон">Сценарный созвон</button>
-            <button class="quick-option" type="button" data-chip-value="Тайминг и чек-лист">Тайминг и чек-лист</button>
-            <button class="quick-option" type="button" data-chip-value="Выезд со своим оборудованием">Со своим оборудованием</button>
-            <button class="quick-option" type="button" data-chip-value="Работа с подрядчиками">Работа с подрядчиками</button>
+            <button class="quick-option" type="button" data-chip-value="Creative kickoff">Creative kickoff</button>
+            <button class="quick-option" type="button" data-chip-value="Production roadmap">Production roadmap</button>
+            <button class="quick-option" type="button" data-chip-value="Own technical setup">Own technical setup</button>
+            <button class="quick-option" type="button" data-chip-value="Cross-team coordination">Cross-team coordination</button>
           </div>
-          <label>Пакеты<textarea name="packagesText"></textarea></label>
+          <label>Сервисные пакеты<textarea name="packagesText"></textarea></label>
           <div class="quick-options">
-            <button class="quick-option" type="button" data-fill-textarea="packagesText" data-fill-block="Камерный вечер|4 часа|45000|Ведение, тайминг, коммуникация с площадкой&#10;Большой банкет|6 часов|70000|Полная программа, интерактив, координация подрядчиков">Шаблон пакетов</button>
+            <button class="quick-option" type="button" data-fill-textarea="packagesText" data-fill-block="Profile Launch|14 дней|45000|Позиционирование, упаковка профиля и базовый roadmap&#10;Release Support|30 дней|70000|Контент, координация материалов и сервисное сопровождение">Шаблон пакетов</button>
           </div>
-          <label>Дополнительные опции<textarea name="addOnsText"></textarea></label>
+          <label>Дополнительные сервисы<textarea name="addOnsText"></textarea></label>
           <div class="quick-options">
-            <button class="quick-option" type="button" data-fill-textarea="addOnsText" data-fill-block="Дополнительный час||7000|Продление программы на 1 час&#10;Выезд за город||10000|Трансфер и логистика">Шаблон опций</button>
+            <button class="quick-option" type="button" data-fill-textarea="addOnsText" data-fill-block="Дополнительная итерация||7000|Дополнительный цикл согласований или правок&#10;Выездная сессия||10000|Логистика и выезд на внешнюю площадку">Шаблон опций</button>
           </div>
           <label>Календарь занятости<textarea name="availabilityText"></textarea></label>
           <div class="quick-options">
@@ -282,8 +282,8 @@
         <div class="panel"><h2>Предложения</h2><div id="artist-quotes" class="table-list"></div></div>
       </div>
       <div class="split">
-        <div class="panel"><h2>Чаты и сделки</h2><div id="artist-chats" class="table-list"></div></div>
-        <div id="artist-chat-box" class="panel"><div class="empty">Выберите сделку, чтобы открыть переписку.</div></div>
+        <div class="panel"><h2>Чаты и кейсы</h2><div id="artist-chats" class="table-list"></div></div>
+        <div id="artist-chat-box" class="panel"><div class="empty">Выберите кейс, чтобы открыть переписку.</div></div>
       </div>
       <div class="panel"><h2>Аналитика</h2><div id="artist-analytics" class="metrics-grid"></div></div>
       <div class="panel"><h2>Мои объявления</h2><div id="artist-board" class="table-list"></div></div>
@@ -384,18 +384,18 @@
     </div>
   </div>
 
-  <datalist id="artist-name-options"><option value="Движарт Event"></option><option value="Движарт Show"></option><option value="Движарт Live"></option></datalist>
-  <datalist id="artist-title-options"><option value="Ведущий на свадьбы и корпоративы"></option><option value="DJ и музыкальное сопровождение"></option><option value="Фотограф на события"></option><option value="Кавер-группа для мероприятий"></option></datalist>
+  <datalist id="artist-name-options"><option value="Движарт Artist"></option><option value="Движарт Live"></option><option value="Движарт Studio"></option></datalist>
+  <datalist id="artist-title-options"><option value="Артист с фокусом на live и release support"></option><option value="DJ и музыкальный куратор"></option><option value="Visual creator для артистов и релизов"></option><option value="Музыкальный проект для live и branded content"></option></datalist>
   <datalist id="artist-city-options"><option value="Чебоксары"></option><option value="Новочебоксарск"></option><option value="Казань"></option><option value="Москва"></option></datalist>
   <datalist id="artist-region-options"><option value="Чувашия"></option><option value="Татарстан"></option><option value="Москва"></option><option value="Россия"></option></datalist>
-  <datalist id="artist-tagline-options"><option value="Интеллигентное ведение без кринжа и затяжек"></option><option value="Современный звук и уверенная работа с публикой"></option><option value="Живой репортаж и спокойная коммуникация"></option></datalist>
+  <datalist id="artist-tagline-options"><option value="Артист с аккуратной упаковкой, live-подачей и релизным фокусом"></option><option value="Современный звук, уверенная сцена и production-мышление"></option><option value="Визуальный автор с аккуратной коммуникацией и сильной подачей"></option></datalist>
   <datalist id="artist-language-options"><option value="Русский"></option><option value="Русский, Английский"></option><option value="Русский, Чувашский"></option></datalist>
-  <datalist id="artist-format-options"><option value="Свадьбы, Корпоративы"></option><option value="Частные вечеринки, Дни рождения"></option><option value="Премии, Деловые события"></option></datalist>
-  <datalist id="artist-feature-options"><option value="Сценарный созвон, Тайминг и чек-лист"></option><option value="Работа с подрядчиками, Выезд со своим оборудованием"></option></datalist>
-  <datalist id="artist-deposit-options"><option value="30% для фиксации даты"></option><option value="20% для фиксации даты"></option><option value="Безналичный депозит по договорённости"></option></datalist>
-  <datalist id="artist-cancel-options"><option value="Бесплатная отмена более чем за 21 день"></option><option value="Перенос даты по согласованию"></option><option value="Удержание депозита при поздней отмене"></option></datalist>
-  <datalist id="artist-tech-options"><option value="Нужен комплект звука от площадки или DJ"></option><option value="Нужна гримёрка и питание"></option><option value="Нужна возможность раннего монтажа"></option></datalist>
-  <datalist id="artist-quote-package-options"><option value="Камерный вечер"></option><option value="Большой банкет"></option><option value="Персональный пакет"></option></datalist>
+  <datalist id="artist-format-options"><option value="Релизные кампании, Live-сеты"></option><option value="Студийные сессии, Контент production"></option><option value="Бренд-проекты, Публичные выступления"></option></datalist>
+  <datalist id="artist-feature-options"><option value="Creative kickoff, Production roadmap"></option><option value="Cross-team coordination, Own technical setup"></option></datalist>
+  <datalist id="artist-deposit-options"><option value="30% для фиксации production-слота"></option><option value="20% для старта сервиса"></option><option value="Безналичный депозит по договорённости"></option></datalist>
+  <datalist id="artist-cancel-options"><option value="Бесплатная отмена более чем за 21 день"></option><option value="Перенос слота по согласованию"></option><option value="Удержание депозита при позднем переносе"></option></datalist>
+  <datalist id="artist-tech-options"><option value="Нужен доступ к сцене, звуку или студийному сетапу"></option><option value="Нужна гримёрка, питание и контакт production lead"></option><option value="Нужен ранний монтаж и согласованный call sheet"></option></datalist>
+  <datalist id="artist-quote-package-options"><option value="Profile Launch"></option><option value="Release Support"></option><option value="Custom Scope"></option></datalist>
 
   <script src="auth-config.js"></script>
   <script src="marketplace-core.js"></script>
@@ -557,7 +557,7 @@
       artistMediaState.galleryFiles.forEach(function (src, index) { items.push(mediaCard("gallery", src, index, artistMediaState.galleryFiles.length)); });
       artistMediaState.videoFiles.forEach(function (src, index) { items.push(mediaCard("video", src, index, artistMediaState.videoFiles.length)); });
       artistMediaState.audioFiles.forEach(function (src, index) { items.push(mediaCard("audio", src, index, artistMediaState.audioFiles.length)); });
-      byId("artist-media-preview").innerHTML = items.length ? items.join("") : '<div class="empty">Добавьте фото, изображения, видео или аудио, чтобы собрать карточку исполнителя.</div>';
+      byId("artist-media-preview").innerHTML = items.length ? items.join("") : '<div class="empty">Добавьте фото, изображения, видео или аудио, чтобы собрать сильный публичный профиль.</div>';
       renderPhotoSourcePicker();
     }
     function showArtistMessage(text, kind) { byId("artist-message").innerHTML = text ? '<div class="message ' + kind + '">' + text + '</div>' : ""; }
@@ -568,59 +568,59 @@
     const artistPresets = {
       host: {
         role: "host",
-        title: "Ведущий на свадьбы и корпоративы",
-        tagline: "Интеллигентное ведение без перегруза и кринжа",
+        title: "Артист и front person для live, content и release support",
+        tagline: "Подача без шума, сильная коммуникация и аккуратная упаковка проекта",
         priceFrom: "45000",
         travelRadiusKm: "120",
         languages: "Русский, Английский",
-        eventFormats: "Свадьбы, Корпоративы, Частные вечеринки",
-        serviceFeatures: "Сценарный созвон, Тайминг и чек-лист, Работа с подрядчиками",
-        depositPolicy: "30% для фиксации даты",
+        eventFormats: "Релизные кампании, Live-сеты, Бренд-проекты",
+        serviceFeatures: "Creative kickoff, Production roadmap, Cross-team coordination",
+        depositPolicy: "30% для фиксации production-слота",
         cancellationPolicy: "Бесплатная отмена более чем за 21 день",
-        technicalPolicy: "Нужен комплект звука от площадки или DJ",
-        packagesText: "Камерный вечер|4 часа|45000|Ведение, тайминг, коммуникация с площадкой\nБольшой банкет|6 часов|70000|Полная программа, интерактив, координация подрядчиков"
+        technicalPolicy: "Нужен доступ к сцене, звуку или студийному сетапу",
+        packagesText: "Profile Launch|14 дней|45000|Позиционирование, упаковка профиля и базовый roadmap\nRelease Support|30 дней|70000|Контент, координация материалов и сервисное сопровождение"
       },
       dj: {
         role: "dj",
-        title: "DJ и музыкальное сопровождение",
-        tagline: "Современный звук, плотный танцпол и аккуратный вкус",
+        title: "DJ и музыкальный куратор",
+        tagline: "Современный звук, плотная селекция и уверенный live-поток",
         priceFrom: "25000",
         travelRadiusKm: "250",
         languages: "Русский",
-        eventFormats: "Свадьбы, Корпоративы, Частные вечеринки",
-        serviceFeatures: "Выезд со своим оборудованием, Тайминг и чек-лист",
-        depositPolicy: "20% для фиксации даты",
-        cancellationPolicy: "Перенос даты по согласованию",
-        technicalPolicy: "Нужен доступ к электропитанию и место под стойку",
-        packagesText: "DJ set|4 часа|25000|Сет, базовый свет, коммуникация с ведущим\nВечер под ключ|6 часов|45000|DJ, звук, подбор плейлистов и тайминг"
+        eventFormats: "Live-сеты, Студийные сессии, Бренд-контент",
+        serviceFeatures: "Own technical setup, Production roadmap",
+        depositPolicy: "20% для старта сервиса",
+        cancellationPolicy: "Перенос слота по согласованию",
+        technicalPolicy: "Нужен доступ к электропитанию и месту под сетап",
+        packagesText: "DJ Session|4 часа|25000|Сет, базовый свет и музыкальная драматургия\nMusic Direction|6 часов|45000|DJ, звук, подбор плейлистов и live flow"
       },
       photographer: {
         role: "photographer",
-        title: "Фотограф на события",
-        tagline: "Репортаж, портреты и спокойная работа с гостями",
+        title: "Visual creator для артистов и релизов",
+        tagline: "Репортаж, backstage и контент с аккуратной коммуникацией",
         priceFrom: "25000",
         travelRadiusKm: "120",
         languages: "Русский",
-        eventFormats: "Свадьбы, Корпоративы, Дни рождения",
-        serviceFeatures: "Сценарный созвон, Работа с подрядчиками",
-        depositPolicy: "30% для фиксации даты",
-        cancellationPolicy: "Перенос даты по согласованию",
-        technicalPolicy: "Нужен тайминг съёмки и контакт координатора",
-        packagesText: "Репортаж|4 часа|25000|Съёмка события и базовая цветокоррекция\nПолный день|10 часов|60000|Репортаж, портреты, анонс в день события"
+        eventFormats: "Контент production, Релизные кампании, Studio backstage",
+        serviceFeatures: "Creative kickoff, Cross-team coordination",
+        depositPolicy: "30% для фиксации production-слота",
+        cancellationPolicy: "Перенос слота по согласованию",
+        technicalPolicy: "Нужен тайминг съёмки и контакт production lead",
+        packagesText: "Content Capture|4 часа|25000|Съёмка и базовая цветокоррекция\nFull Production Day|10 часов|60000|Репортаж, портреты, backstage и анонс в день съёмки"
       },
       band: {
         role: "musicians",
-        title: "Кавер-группа для мероприятий",
-        tagline: "Живой звук, сильный вокал и гибкая программа под зал",
+        title: "Музыкальный проект для live и branded content",
+        tagline: "Живой звук, сильный вокал и гибкий live-production формат",
         priceFrom: "70000",
         travelRadiusKm: "250",
         languages: "Русский, Английский",
-        eventFormats: "Корпоративы, Свадьбы, Городские события",
-        serviceFeatures: "Выезд со своим оборудованием, Работа с подрядчиками",
-        depositPolicy: "30% для фиксации даты",
-        cancellationPolicy: "Удержание депозита при поздней отмене",
+        eventFormats: "Live-сеты, Бренд-проекты, Публичные выступления",
+        serviceFeatures: "Own technical setup, Cross-team coordination",
+        depositPolicy: "30% для фиксации production-слота",
+        cancellationPolicy: "Удержание депозита при позднем переносе",
         technicalPolicy: "Нужна сцена или ровная площадка и питание линии",
-        packagesText: "Основной сет|60 минут|70000|Живое выступление, саундчек, согласование программы\nДва сета|90 минут|110000|Два блока, интерактив, финальный танцевальный блок"
+        packagesText: "Core Live Set|60 минут|70000|Живое выступление, саундчек и согласование программы\nExtended Live Show|90 минут|110000|Два блока, интро, финальный live-блок и production sync"
       }
     };
     function openArtistAction(mode, leadId) {
@@ -628,11 +628,11 @@
       actionForm.leadId.value = leadId;
       actionForm.mode.value = mode;
       quoteFields.style.display = mode === "quote" ? "grid" : "none";
-      byId("artist-action-title").textContent = mode === "quote" ? "Отправить квоту" : "Быстрый ответ клиенту";
-      byId("artist-action-subtitle").textContent = mode === "quote" ? "Выберите пакет и сумму без ручных prompt-окон." : "Отправьте короткий ответ прямо из кабинета.";
+      byId("artist-action-title").textContent = mode === "quote" ? "Отправить предложение" : "Быстрый ответ по кейсу";
+      byId("artist-action-subtitle").textContent = mode === "quote" ? "Выберите scope и сумму без ручных prompt-окон." : "Отправьте короткий ответ прямо из artist portal.";
       actionQuick.innerHTML = mode === "quote"
-        ? '<button class="quick-option" type="button" data-fill-action=\"packageName\" data-fill-value=\"Камерный вечер\">Камерный вечер</button><button class="quick-option" type="button" data-fill-action=\"packageName\" data-fill-value=\"Большой банкет\">Большой банкет</button><button class="quick-option" type="button" data-fill-action=\"text\" data-fill-value=\"В стоимость входит подготовка, созвон и работа по согласованному таймингу.\">Описание квоты</button>'
-        : '<button class="quick-option" type="button" data-fill-action=\"text\" data-fill-value=\"Здравствуйте! Посмотрел заявку и готов обсудить детали.\">Приветствие</button><button class="quick-option" type="button" data-fill-action=\"text\" data-fill-value=\"Свободен на вашу дату, могу сегодня прислать предложение и варианты программы.\">Свободная дата</button>';
+        ? '<button class="quick-option" type="button" data-fill-action=\"packageName\" data-fill-value=\"Profile Launch\">Profile Launch</button><button class="quick-option" type="button" data-fill-action=\"packageName\" data-fill-value=\"Release Support\">Release Support</button><button class="quick-option" type="button" data-fill-action=\"text\" data-fill-value=\"В scope входит подготовка, kickoff и работа по согласованному roadmap.\">Описание предложения</button>'
+        : '<button class="quick-option" type="button" data-fill-action=\"text\" data-fill-value=\"Здравствуйте! Посмотрел запрос и готов обсудить детали.\">Приветствие</button><button class="quick-option" type="button" data-fill-action=\"text\" data-fill-value=\"Свободен на ваш слот, могу сегодня прислать предложение и варианты scope.\">Свободный слот</button>';
       actionModal.classList.add("open");
     }
     function closeArtistAction() {
@@ -711,7 +711,7 @@
     }
     function renderLeads(artist) {
       const leads = MarketplaceStore.getLeadsForArtist(artist.id);
-      byId("artist-leads").innerHTML = leads.length ? leads.map(function (lead) { return '<div class="detail-box"><strong>' + escapeHtml(lead.customerName) + '</strong><div class="muted">' + escapeHtml(lead.eventType) + ' · ' + escapeHtml(lead.city) + '</div><div style="margin-top:8px;">' + escapeHtml(lead.requirements || "") + '</div><div class="inline-actions" style="margin-top:12px;"><button class="primary-btn" type="button" onclick="sendQuote(\'' + lead.id + '\')">Отправить квоту</button><button class="ghost-btn" type="button" onclick="respondLead(\'' + lead.id + '\')">Быстрый ответ</button></div></div>'; }).join("") : '<div class="empty">Пока нет входящих заявок.</div>';
+      byId("artist-leads").innerHTML = leads.length ? leads.map(function (lead) { return '<div class="detail-box"><strong>' + escapeHtml(lead.customerName) + '</strong><div class="muted">' + escapeHtml(lead.eventType) + ' · ' + escapeHtml(lead.city) + '</div><div style="margin-top:8px;">' + escapeHtml(lead.requirements || "") + '</div><div class="inline-actions" style="margin-top:12px;"><button class="primary-btn" type="button" onclick="sendQuote(\'' + lead.id + '\')">Отправить предложение</button><button class="ghost-btn" type="button" onclick="respondLead(\'' + lead.id + '\')">Быстрый ответ</button></div></div>'; }).join("") : '<div class="empty">Пока нет входящих сервисных запросов.</div>';
     }
     function renderQuotes(artist) {
       const quotes = MarketplaceStore.getQuotesForArtist(artist.id);
@@ -842,7 +842,7 @@
     }
     function openArtistProfilePreview() {
       const artist = MarketplaceStore.getCurrentArtist();
-      if (!artist) return showArtistMessage("Сначала войдите как исполнитель, чтобы открыть карточку.", "error");
+      if (!artist) return showArtistMessage("Сначала войдите в artist portal, чтобы открыть профиль.", "error");
       const profile = MarketplaceStore.getArtistProfile(artist.id);
       if (!profile) return showArtistMessage("Сначала сохраните карточку, чтобы открыть публичный предпросмотр.", "error");
       localStorage.setItem("palanart_preview_profile_id", profile.id);
@@ -856,15 +856,15 @@
       if (editButton) editButton.disabled = false;
       if (previewButton) {
         previewButton.disabled = false;
-        previewButton.title = profile ? "" : "Сначала сохраните карточку исполнителя.";
+        previewButton.title = profile ? "" : "Сначала сохраните публичный профиль.";
       }
       if (storefrontLink) {
         storefrontLink.href = profile ? "index.html#profile-detail" : "index.html#catalog";
-        storefrontLink.title = profile ? "Открыть публичную карточку исполнителя." : "Пока откроется общий каталог, потому что карточка ещё не сохранена.";
+        storefrontLink.title = profile ? "Открыть публичный профиль." : "Пока откроется общий каталог, потому что профиль ещё не сохранён.";
       }
       if (deleteButton) {
         deleteButton.disabled = false;
-        deleteButton.title = profile ? "" : "Сначала сохраните карточку исполнителя, чтобы её удалить.";
+        deleteButton.title = profile ? "" : "Сначала сохраните публичный профиль, чтобы удалить его.";
       }
     }
     function ensureArtistDeleteButton() {
@@ -901,7 +901,7 @@
       }
       if (textNode) {
         textNode.textContent = profile
-          ? "Карточка, лиды, квоты, сделки и чаты будут удалены. Аккаунт исполнителя останется, и новую карточку можно будет создать заново."
+          ? "Публичный профиль, запросы, предложения, кейсы и чаты будут удалены. Сам artist account останется, и профиль можно будет создать заново."
           : "Сейчас удалять нечего: профиль ещё не сохранён. Сначала заполните и сохраните карточку, если хотите управлять ей дальше.";
       }
       if (confirmButton) {
@@ -963,7 +963,7 @@
       renderArtistStudio(artist);
       syncArtistCabinetActions(profile);
       if (!profile) closeArtistDeletePanel();
-      byId("artist-chat-box").innerHTML = '<div class="empty">Выберите сделку, чтобы открыть переписку.</div>';
+      byId("artist-chat-box").innerHTML = '<div class="empty">Выберите кейс, чтобы открыть переписку.</div>';
     }
     function renderArtistAuthMode() {
       const mode = window.PalanartAuthBridge ? window.PalanartAuthBridge.getMode() : "local";
@@ -985,11 +985,11 @@
       if (modeNode) {
         modeNode.textContent = mode === "supabase"
           ? "Сервисный вход включён. Рабочий способ входа сейчас: e-mail и пароль через Supabase. Google добивается внешней OAuth-настройкой, VK ID и Telegram подключаются через отдельный auth-слой."
-          : "Работает локальный режим. E-mail вход доступен сразу, а Google, VK ID и Telegram создают локальный соцаккаунт исполнителя внутри платформы без внешнего редиректа.";
+          : "Работает локальный режим. E-mail вход доступен сразу, а Google, VK ID и Telegram создают локальный social account артиста внутри платформы без внешнего редиректа.";
       } else {
         byId("artist-auth-mode").innerHTML = mode === "supabase"
           ? "Сервисный вход включён. Рабочий способ входа сейчас: e-mail и пароль через Supabase. Google добивается внешней OAuth-настройкой, VK ID и Telegram подключаются через отдельный auth-слой."
-          : "Работает локальный режим. E-mail вход доступен сразу, а Google, VK ID и Telegram создают локальный соцаккаунт исполнителя внутри платформы без внешнего редиректа.";
+          : "Работает локальный режим. E-mail вход доступен сразу, а Google, VK ID и Telegram создают локальный social account артиста внутри платформы без внешнего редиректа.";
       }
       document.querySelectorAll("[data-artist-social]").forEach(function (button) {
         const available = window.PalanartAuthBridge && window.PalanartAuthBridge.canUseProvider(button.dataset.artistSocial);
@@ -1146,7 +1146,7 @@
       if (!box) return;
       box.innerHTML = artistRegisterPhotoData
         ? '<div class="photo-source-option is-active"><img src="' + escapeHtml(artistRegisterPhotoData) + '" alt="Фото профиля"><span>Фото будет использовано при создании кабинета</span></div>'
-        : '<div class="empty">Загрузите фото, если хотите сразу создать аккуратную карточку исполнителя.</div>';
+        : '<div class="empty">Загрузите фото, если хотите сразу собрать аккуратный публичный профиль.</div>';
     }
     byId("artist-register-photo-file").addEventListener("change", async function (event) {
       const files = await collectFiles(event.target);
@@ -1283,7 +1283,7 @@
         });
         if (!result.ok) return showArtistMessage(result.message, "error");
         closeArtistAction();
-        showArtistMessage("Квота отправлена клиенту.", "success");
+        showArtistMessage("Предложение отправлено в client services.", "success");
         renderArtistCabinet();
         openArtistChat(result.deal.id);
         return;

@@ -11,7 +11,7 @@
     <div class="shell topbar-inner">
       <div class="brand">
         <strong>Движарт</strong>
-        <span>Кабинет заказчика услуг и клиента студии</span>
+        <span>Client Services и студийные запросы</span>
       </div>
       <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Открыть меню">☰</button>
       <nav class="nav">
@@ -34,12 +34,12 @@
           <article class="service-panel">
             <div class="highlight">Client Services</div>
             <h1>Отправляйте запросы артистам, лейблу и студийным сервисам</h1>
-            <p class="muted">После входа заказчику доступны история запросов, персональные предложения, чаты по каждому кейсу и отзывы по завершённым услугам.</p>
+            <p class="muted">После входа доступны история запросов, персональные предложения, чаты по каждому кейсу и отзывы по завершённым сервисам.</p>
           </article>
           <aside class="service-panel">
             <h3>Рабочий режим</h3>
             <div class="info-list">
-              <div class="info-item">Регистрируйте заказчика услуг и сразу тестируйте запросы, предложения и чат.</div>
+              <div class="info-item">Регистрируйте service client и сразу тестируйте запросы, предложения и чат.</div>
               <div class="info-item">Избранное, сравнение и история сделок сохраняются в браузере как рабочая база теста.</div>
             </div>
           </aside>
@@ -81,7 +81,7 @@
           <article class="service-panel">
             <div class="section-head">
               <div>
-                <h1>Кабинет заказчика услуг</h1>
+                <h1>Client Services Cabinet</h1>
                 <p id="user-summary" class="muted"></p>
               </div>
               <button id="logout-user" class="ghost-btn" type="button">Выйти</button>
@@ -134,14 +134,14 @@
           <div class="panel">
             <div class="section-head">
               <div>
-                <h2>Чаты и сделки</h2>
+                <h2>Чаты и кейсы</h2>
                 <p class="muted">Каждый диалог привязан к конкретному запросу или сервисному кейсу.</p>
               </div>
             </div>
             <div id="user-deals" class="table-list"></div>
           </div>
           <div id="chat-box" class="panel">
-            <div class="empty">Выберите сделку слева, чтобы открыть чат и продолжить согласование.</div>
+            <div class="empty">Выберите кейс слева, чтобы открыть чат и продолжить согласование.</div>
           </div>
         </div>
 
@@ -214,7 +214,7 @@
       const leads = MarketplaceStore.getLeadsForUser(user.id);
       byId("user-leads").innerHTML = leads.length ? leads.map(function (lead) {
         return '<div class="table-row"><div><strong>' + escapeHtml(lead.profileName || "Общий запрос") + '</strong><div class="muted">' + escapeHtml(lead.eventType || "Событие") + ' · ' + escapeHtml(lead.city || "Город не указан") + '</div></div><div>' + escapeHtml(lead.eventDate || "Дата не указана") + '</div><div>' + (lead.budget ? Number(lead.budget).toLocaleString("ru-RU") + ' ₽' : 'Бюджет не указан') + '</div><div><span class="badge accent">' + escapeHtml(lead.status) + '</span></div><div><a class="ghost-btn" href="index.html">Каталог</a></div></div>';
-      }).join("") : '<div class="empty">Здесь появятся все ваши event-заявки. Начните с главной витрины и отправьте первый запрос исполнителю.</div>';
+      }).join("") : '<div class="empty">Здесь появятся все ваши сервисные запросы. Начните с главной витрины и отправьте первый запрос артисту или команде платформы.</div>';
     }
     function renderQuotes(user) {
       const quotes = MarketplaceStore.getQuotesForUser(user.id);
@@ -222,21 +222,21 @@
         const lead = MarketplaceStore.getLeadById(quote.leadId);
         const profile = MarketplaceStore.getProfileById(quote.profileId);
         return '<div class="detail-box"><div class="section-head"><div><strong>' + escapeHtml(profile ? profile.name : "Исполнитель") + '</strong><div class="muted">' + escapeHtml(quote.packageName || "Персональный пакет") + '</div></div><span class="badge gold">' + Number(quote.amount || 0).toLocaleString("ru-RU") + ' ₽</span></div><div>' + escapeHtml(quote.includes || "") + '</div><div class="muted" style="margin-top:8px;">' + escapeHtml(quote.comment || "") + '</div><div class="inline-actions" style="margin-top:12px;"><button class="primary-btn" type="button" onclick="acceptQuote(\'' + quote.id + '\')">Подтвердить</button><button class="ghost-btn" type="button" onclick="openLeadChatByLead(\'' + quote.leadId + '\')">Открыть чат</button><span class="summary-pill">Статус заявки: ' + escapeHtml(lead ? lead.status : "") + '</span></div></div>';
-      }).join("") : '<div class="empty">Когда исполнитель ответит на ваш лид, здесь появится персональная квота с ценой, пакетом и условиями.</div>';
+      }).join("") : '<div class="empty">Когда артист или команда платформы ответят на ваш запрос, здесь появится персональное предложение с ценой, scope и условиями.</div>';
     }
     function renderFavorites(user) {
       const favorites = MarketplaceStore.getFavoriteProfiles(user.id);
       byId("user-favorites").innerHTML = favorites.length ? favorites.map(function (profile) {
         return '<div class="table-row"><div><strong>' + escapeHtml(profile.name) + '</strong><div class="muted">' + escapeHtml(profile.city) + ' · ' + escapeHtml(profile.title) + '</div></div><div>' + Number(profile.priceFrom || 0).toLocaleString("ru-RU") + ' ₽</div><div>' + MarketplaceStore.getProfileRating(profile.id).average.toFixed(1) + ' / 5</div><div>' + escapeHtml(profile.categories.map(MarketplaceStore.categoryLabel).join(", ")) + '</div><div><a class="ghost-btn" href="index.html#catalog">Открыть</a></div></div>';
-      }).join("") : '<div class="empty">Избранное пока пусто. Сохраняйте сильные карточки с витрины, чтобы собрать shortlist по событию.</div>';
+      }).join("") : '<div class="empty">Избранное пока пусто. Сохраняйте сильные карточки с витрины, чтобы собрать shortlist по сервисному кейсу.</div>';
       const compare = MarketplaceStore.getCompareProfiles(user.id);
-      byId("user-compare").innerHTML = compare.length ? '<table><thead><tr><th>Параметр</th>' + compare.map(function (profile) { return '<th>' + escapeHtml(profile.name) + '</th>'; }).join("") + '</tr></thead><tbody>' + [["Цена от", function (profile) { return Number(profile.priceFrom || 0).toLocaleString("ru-RU") + " ₽"; }], ["Город", function (profile) { return profile.city; }], ["Языки", function (profile) { return profile.languages.join(", "); }], ["Форматы", function (profile) { return profile.eventFormats.join(", "); }]].map(function (row) { return '<tr><th>' + row[0] + '</th>' + compare.map(function (profile) { return '<td>' + escapeHtml(row[1](profile) || "Не указано") + '</td>'; }).join("") + '</tr>'; }).join("") + '</tbody></table>' : '<div class="empty">Сравнение пока пустое. Добавьте 2-3 профиля и быстро сверьте цену, языки и формат работы.</div>';
+      byId("user-compare").innerHTML = compare.length ? '<table><thead><tr><th>Параметр</th>' + compare.map(function (profile) { return '<th>' + escapeHtml(profile.name) + '</th>'; }).join("") + '</tr></thead><tbody>' + [["Цена от", function (profile) { return Number(profile.priceFrom || 0).toLocaleString("ru-RU") + " ₽"; }], ["Город", function (profile) { return profile.city; }], ["Языки", function (profile) { return profile.languages.join(", "); }], ["Сценарии работы", function (profile) { return profile.eventFormats.join(", "); }]].map(function (row) { return '<tr><th>' + row[0] + '</th>' + compare.map(function (profile) { return '<td>' + escapeHtml(row[1](profile) || "Не указано") + '</td>'; }).join("") + '</tr>'; }).join("") + '</tbody></table>' : '<div class="empty">Сравнение пока пустое. Добавьте 2-3 профиля и быстро сверьте цену, языки и сценарии работы.</div>';
     }
     function renderDeals(user) {
       const deals = MarketplaceStore.getDealsForUser(user);
       byId("user-deals").innerHTML = deals.length ? deals.map(function (deal) {
         return '<div class="table-row"><div><strong>' + escapeHtml(deal.profileName) + '</strong><div class="muted">' + escapeHtml(deal.clientName) + '</div></div><div>' + (deal.agreedAmount ? Number(deal.agreedAmount).toLocaleString("ru-RU") + ' ₽' : 'Сумма не согласована') + '</div><div><span class="badge accent">' + escapeHtml(deal.status) + '</span></div><div>Диалог активен</div><div><button class="primary-btn" type="button" onclick="openClientChat(\'' + deal.id + '\')">Открыть</button></div></div>';
-      }).join("") : '<div class="empty">После первого ответа исполнителя здесь появятся сделка и чат по конкретной заявке.</div>';
+      }).join("") : '<div class="empty">После первого ответа артиста здесь появятся кейс и чат по конкретному запросу.</div>';
     }
     function renderBoard(user) {
       const posts = MarketplaceStore.getBoardPostsForOwner("client", user.id);
@@ -248,7 +248,7 @@
       const chat = MarketplaceStore.getChatByDealId(dealId);
       const deal = MarketplaceStore.getDb().deals.find(function (item) { return item.id === dealId; });
       if (!chat || !deal) return byId("chat-box").innerHTML = '<div class="empty">Чат не найден.</div>';
-      byId("chat-box").innerHTML = '<div class="section-head"><div><h2>Чат по сделке</h2><p class="muted">' + escapeHtml(deal.profileName) + ' · ' + escapeHtml(deal.status) + '</p></div></div><div class="table-list">' + chat.messages.map(function (message) { return '<div class="hero-point"><strong>' + escapeHtml(message.sender) + '</strong><div class="muted">' + escapeHtml(message.createdAt.slice(0, 16).replace("T", " ")) + '</div><div>' + escapeHtml(message.text) + '</div></div>'; }).join("") + '</div><form id="chat-form" class="form-grid one" style="margin-top:12px;"><label>Новое сообщение<textarea name="text" required></textarea></label><button class="primary-btn" type="submit">Отправить</button></form>' + ((deal.status === "done" || deal.status === "booked") ? '<form id="review-form" class="form-grid" style="margin-top:12px;"><label>Коммуникация<input name="communication" type="number" min="1" max="5" value="5"></label><label>Пунктуальность<input name="punctuality" type="number" min="1" max="5" value="5"></label><label>Качество<input name="quality" type="number" min="1" max="5" value="5"></label><label>Цена/ценность<input name="value" type="number" min="1" max="5" value="5"></label><label style="grid-column:1/-1;">Отзыв<textarea name="text" required></textarea></label><button class="ghost-btn" type="submit">Оставить отзыв</button></form>' : '');
+      byId("chat-box").innerHTML = '<div class="section-head"><div><h2>Чат по кейсу</h2><p class="muted">' + escapeHtml(deal.profileName) + ' · ' + escapeHtml(deal.status) + '</p></div></div><div class="table-list">' + chat.messages.map(function (message) { return '<div class="hero-point"><strong>' + escapeHtml(message.sender) + '</strong><div class="muted">' + escapeHtml(message.createdAt.slice(0, 16).replace("T", " ")) + '</div><div>' + escapeHtml(message.text) + '</div></div>'; }).join("") + '</div><form id="chat-form" class="form-grid one" style="margin-top:12px;"><label>Новое сообщение<textarea name="text" required></textarea></label><button class="primary-btn" type="submit">Отправить</button></form>' + ((deal.status === "done" || deal.status === "booked") ? '<form id="review-form" class="form-grid" style="margin-top:12px;"><label>Коммуникация<input name="communication" type="number" min="1" max="5" value="5"></label><label>Пунктуальность<input name="punctuality" type="number" min="1" max="5" value="5"></label><label>Качество<input name="quality" type="number" min="1" max="5" value="5"></label><label>Цена/ценность<input name="value" type="number" min="1" max="5" value="5"></label><label style="grid-column:1/-1;">Отзыв<textarea name="text" required></textarea></label><button class="ghost-btn" type="submit">Оставить отзыв</button></form>' : '');
       byId("chat-form").addEventListener("submit", function (event) {
         event.preventDefault();
         MarketplaceStore.addChatMessage(dealId, "client", new FormData(event.target).get("text"));
@@ -271,7 +271,7 @@
     };
     window.acceptQuote = function (quoteId) {
       MarketplaceStore.updateQuoteStatus(quoteId, "accepted");
-      showMessage("Предложение подтверждено. Сделка переведена в booked.", "success");
+      showMessage("Предложение подтверждено. Кейс переведён в booked.", "success");
       renderCabinet();
     };
     function maybeOpenDealFromUrl() {
@@ -299,9 +299,9 @@
       byId("auth-view").style.display = user ? "none" : "grid";
       byId("cabinet-view").style.display = user ? "grid" : "none";
       if (!user) return;
-      byId("user-summary").textContent = user.name + " · " + formatCabinetIdentity(user.email, "Клиент") + " · " + (user.city || "город не указан");
+      byId("user-summary").textContent = user.name + " · " + formatCabinetIdentity(user.email, "Service Client") + " · " + (user.city || "город не указан");
       renderKpis(user); renderLeads(user); renderQuotes(user); renderFavorites(user); renderDeals(user); renderBoard(user);
-      byId("chat-box").innerHTML = '<div class="empty">Выберите сделку слева, чтобы открыть чат и продолжить согласование.</div>';
+      byId("chat-box").innerHTML = '<div class="empty">Выберите кейс слева, чтобы открыть чат и продолжить согласование.</div>';
       maybeOpenDealFromUrl();
     }
       function renderAuthMode() {

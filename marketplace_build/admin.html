@@ -68,7 +68,7 @@
             <label>Депозит по умолчанию, %
               <input name="defaultDepositPercent" type="number" min="0" max="100">
             </label>
-            <label>Срок ответа на лид, часов
+            <label>SLA ответа на запрос, часов
               <input name="leadResponseHours" type="number" min="1" max="72">
             </label>
             <label>Комиссии
@@ -127,7 +127,7 @@
           </label>
           <button class="primary-btn" type="submit">Сохранить auth</button>
         </form>
-        <p class="muted" style="margin-top:12px;">После сохранения обновите страницу клиента или исполнителя. Google, VK ID и Telegram управляются из этой панели. Полная внешняя OAuth-настройка для каждого провайдера подключается отдельно.</p>
+        <p class="muted" style="margin-top:12px;">После сохранения обновите страницу client services или artist portal. Google, VK ID и Telegram управляются из этой панели. Полная внешняя OAuth-настройка для каждого провайдера подключается отдельно.</p>
       </div>
 
       <div class="panel" style="margin-top:18px;">
@@ -149,11 +149,11 @@
 
       <div class="split" style="margin-top:18px;">
         <div class="panel">
-          <div class="section-head"><div><h2>Чаты и сделки</h2><p class="muted">Обзор активных переговоров между заказчиками, артистами и командой платформы.</p></div></div>
+          <div class="section-head"><div><h2>Чаты и кейсы</h2><p class="muted">Обзор активных переговоров между клиентами, артистами и командой платформы.</p></div></div>
           <div id="chats-list" class="table-list"></div>
         </div>
         <div id="chat-admin-box" class="panel">
-          <div class="empty">Выберите сделку, чтобы посмотреть чат.</div>
+          <div class="empty">Выберите кейс, чтобы посмотреть чат.</div>
         </div>
       </div>
 
@@ -225,7 +225,7 @@
     function showMessage(target, text, kind) { byId(target).innerHTML = text ? '<div class="message ' + kind + '">' + text + '</div>' : ""; }
     function renderStats() {
       const stats = MarketplaceStore.getStats();
-      byId("stats-grid").innerHTML = [["Активные профили", stats.approvedProfiles], ["На модерации", stats.pendingProfiles], ["Клиенты", stats.users], ["Исполнители", stats.artists], ["Партнёры", stats.partners], ["Релизы", stats.releases], ["Отчёты", stats.royaltyReports], ["Выплаты", stats.payoutRequests], ["Лиды", stats.leads], ["Квоты", stats.quotes], ["Сделки", stats.bookedDeals], ["Чаты", stats.chats]].map(function (item) {
+      byId("stats-grid").innerHTML = [["Активные профили", stats.approvedProfiles], ["На модерации", stats.pendingProfiles], ["Клиенты", stats.users], ["Артисты", stats.artists], ["Партнёры", stats.partners], ["Релизы", stats.releases], ["Отчёты", stats.royaltyReports], ["Выплаты", stats.payoutRequests], ["Запросы", stats.leads], ["Предложения", stats.quotes], ["Кейсы", stats.bookedDeals], ["Чаты", stats.chats]].map(function (item) {
         return '<article class="stats-card"><h3>' + item[0] + '</h3><strong>' + item[1] + '</strong></article>';
       }).join("");
     }
@@ -267,11 +267,11 @@
       const leads = MarketplaceStore.getDb().leads;
       const quotes = MarketplaceStore.getDb().quotes;
       byId("leads-list").innerHTML = leads.length ? leads.map(function (lead) {
-        return '<div class="table-row"><div><strong>' + escapeHtml(lead.customerName) + '</strong><div class="muted">' + escapeHtml(lead.profileName || "Без исполнителя") + '</div></div><div>' + escapeHtml(lead.eventDate || "") + '</div><div>' + (lead.budget ? Number(lead.budget).toLocaleString("ru-RU") + ' ₽' : 'без бюджета') + '</div><div><span class="badge gold">' + escapeHtml(lead.status) + '</span></div><div></div></div>';
-      }).join("") : '<div class="empty">Пока нет лидов.</div>';
+        return '<div class="table-row"><div><strong>' + escapeHtml(lead.customerName) + '</strong><div class="muted">' + escapeHtml(lead.profileName || "Без профиля") + '</div></div><div>' + escapeHtml(lead.eventDate || "") + '</div><div>' + (lead.budget ? Number(lead.budget).toLocaleString("ru-RU") + ' ₽' : 'без бюджета') + '</div><div><span class="badge gold">' + escapeHtml(lead.status) + '</span></div><div></div></div>';
+      }).join("") : '<div class="empty">Пока нет входящих запросов.</div>';
       byId("quotes-list").innerHTML = quotes.length ? quotes.map(function (quote) {
-        return '<div class="table-row"><div><strong>' + escapeHtml(quote.packageName || "Квота") + '</strong><div class="muted">' + escapeHtml((MarketplaceStore.getLeadById(quote.leadId) || {}).customerName || "") + '</div></div><div>' + Number(quote.amount || 0).toLocaleString("ru-RU") + ' ₽</div><div>' + quote.depositPercent + '%</div><div><span class="badge accent">' + escapeHtml(quote.status) + '</span></div><div></div></div>';
-      }).join("") : '<div class="empty">Пока нет квот.</div>';
+        return '<div class="table-row"><div><strong>' + escapeHtml(quote.packageName || "Предложение") + '</strong><div class="muted">' + escapeHtml((MarketplaceStore.getLeadById(quote.leadId) || {}).customerName || "") + '</div></div><div>' + Number(quote.amount || 0).toLocaleString("ru-RU") + ' ₽</div><div>' + quote.depositPercent + '%</div><div><span class="badge accent">' + escapeHtml(quote.status) + '</span></div><div></div></div>';
+      }).join("") : '<div class="empty">Пока нет предложений.</div>';
     }
     function renderReviews() {
       const reviews = MarketplaceStore.getDb().reviews;
@@ -284,7 +284,7 @@
       const deals = MarketplaceStore.getDb().deals;
       byId("chats-list").innerHTML = deals.length ? deals.map(function (deal) {
         return '<div class="table-row"><div><strong>' + escapeHtml(deal.profileName) + '</strong><div class="muted">' + escapeHtml(deal.clientName) + '</div></div><div>' + (deal.agreedAmount ? Number(deal.agreedAmount).toLocaleString("ru-RU") + ' ₽' : 'без суммы') + '</div><div><span class="badge accent">' + escapeHtml(deal.status) + '</span></div><div>Чат доступен</div><div><button class="primary-btn" type="button" onclick="openAdminChat(\'' + deal.id + '\')">Открыть</button></div></div>';
-      }).join("") : '<div class="empty">Сделок и чатов пока нет.</div>';
+      }).join("") : '<div class="empty">Кейсов и чатов пока нет.</div>';
     }
     function renderReleaseOps() {
       const releases = MarketplaceStore.getDb().releases;
@@ -322,7 +322,7 @@
       const chat = MarketplaceStore.getChatByDealId(dealId);
       const deal = MarketplaceStore.getDb().deals.find(function (item) { return item.id === dealId; });
       if (!chat || !deal) return byId("chat-admin-box").innerHTML = '<div class="empty">Чат не найден.</div>';
-      byId("chat-admin-box").innerHTML = '<div class="section-head"><div><h2>Чат сделки</h2><p class="muted">' + escapeHtml(deal.profileName) + ' · ' + escapeHtml(deal.clientName) + '</p></div></div><div class="table-list">' + chat.messages.map(function (message) { return '<div class="hero-point"><strong>' + escapeHtml(message.sender) + '</strong><div class="muted">' + escapeHtml(message.createdAt.slice(0, 16).replace("T", " ")) + '</div><div>' + escapeHtml(message.text) + '</div></div>'; }).join("") + '</div>';
+      byId("chat-admin-box").innerHTML = '<div class="section-head"><div><h2>Чат кейса</h2><p class="muted">' + escapeHtml(deal.profileName) + ' · ' + escapeHtml(deal.clientName) + '</p></div></div><div class="table-list">' + chat.messages.map(function (message) { return '<div class="hero-point"><strong>' + escapeHtml(message.sender) + '</strong><div class="muted">' + escapeHtml(message.createdAt.slice(0, 16).replace("T", " ")) + '</div><div>' + escapeHtml(message.text) + '</div></div>'; }).join("") + '</div>';
     };
     window.approveProfile = function (profileId) { MarketplaceStore.updateProfile(profileId, { status: "approved", verified: true, hidden: false }); showMessage("admin-message", "Профиль одобрен.", "success"); renderDashboard(); };
     window.toggleHidden = function (profileId) { const profile = MarketplaceStore.getProfileById(profileId); MarketplaceStore.updateProfile(profileId, { hidden: !profile.hidden }); renderDashboard(); };
@@ -353,7 +353,7 @@
       if (!admin) return;
       byId("admin-name").textContent = "Авторизован: " + admin.name;
       renderStats(); renderSettings(); renderDictionaries(); renderProfiles(); renderLeadsAndQuotes(); renderReviews(); renderChats(); renderReleaseOps(); renderRoyaltyOps(); renderStudioOps();
-      byId("chat-admin-box").innerHTML = '<div class="empty">Выберите сделку, чтобы посмотреть чат.</div>';
+      byId("chat-admin-box").innerHTML = '<div class="empty">Выберите кейс, чтобы посмотреть чат.</div>';
     }
     byId("admin-login").addEventListener("submit", function (event) {
       event.preventDefault();
@@ -389,7 +389,7 @@
           }
         };
       localStorage.setItem("palanart_auth_config", JSON.stringify(config));
-      showMessage("admin-message", "Настройки сервисного входа сохранены. Обновите страницу клиента или исполнителя.", "success");
+      showMessage("admin-message", "Настройки сервисного входа сохранены. Обновите client services или artist portal.", "success");
       renderSettings();
     });
     byId("royalty-form").addEventListener("submit", function (event) {
