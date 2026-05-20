@@ -64,6 +64,26 @@
         <a href="#admin-finance-ops">Finance</a>
         <a href="#admin-studio-ops">Studio</a>
       </nav>
+      <div class="ops-board">
+        <section class="ops-card">
+          <div class="section-head compact">
+            <div>
+              <div class="eyebrow">Operations Control</div>
+              <h2>Priority queue</h2>
+            </div>
+          </div>
+          <div id="admin-command-center" class="ops-card-list"></div>
+        </section>
+        <section class="ops-card">
+          <div class="section-head compact">
+            <div>
+              <div class="eyebrow">Platform Feed</div>
+              <h2>Последние движения</h2>
+            </div>
+          </div>
+          <div id="admin-activity-feed" class="activity-feed"></div>
+        </section>
+      </div>
 
       <div class="split" style="margin-top:18px;" id="admin-platform-settings">
         <div class="panel">
@@ -292,6 +312,60 @@
         return '<article class="status-step' + state + '"><span class="status-index">' + (index + 1) + '</span><strong>' + escapeHtml(step.title) + '</strong><p>' + escapeHtml(step.text) + '</p></article>';
       }).join("");
     }
+    function renderAdminCommandCenter() {
+      const stats = MarketplaceStore.getStats();
+      const releases = MarketplaceStore.getDb().releases || [];
+      const payouts = MarketplaceStore.getDb().payoutRequests || [];
+      const reviews = MarketplaceStore.getDb().reviews || [];
+      const pendingProfiles = stats.pendingProfiles || 0;
+      const scheduled = releases.filter(function (item) { return item.status === "scheduled" || item.status === "review"; }).length;
+      const pendingPayouts = payouts.filter(function (item) { return item.status === "pending"; }).length;
+      const featuredGap = reviews.filter(function (item) { return item.featured; }).length;
+      byId("admin-command-center").innerHTML = [
+        {
+          title: pendingProfiles ? "Очередь модерации требует разбора" : "Moderation queue чистая",
+          chip: pendingProfiles ? pendingProfiles + " pending" : "No blockers",
+          chipClass: pendingProfiles ? " is-hot" : " is-positive",
+          text: pendingProfiles ? "Проверьте profile ops и закройте карточки, которые ждут публикации." : "Можно переключиться на growth-layer и настройку featured visibility."
+        },
+        {
+          title: scheduled ? "Release desk активен" : "Release desk стабилен",
+          chip: scheduled ? scheduled + " in flow" : "Release clear",
+          chipClass: scheduled ? " is-focus" : " is-positive",
+          text: scheduled ? "Есть релизы в review/scheduled стадиях, которым нужна editorial и distribution координация." : "Когда в систему зайдут новые релизы, этот блок покажет pressure на release ops."
+        },
+        {
+          title: pendingPayouts ? "Finance owner attention needed" : "Finance queue under control",
+          chip: pendingPayouts ? pendingPayouts + " payout" : "Stable",
+          chipClass: pendingPayouts ? " is-hot" : " is-positive",
+          text: pendingPayouts ? "Проверьте payout requests и синхронизируйте их с published royalty periods." : "Royalty и payout поток сейчас не требует ручной эскалации."
+        },
+        {
+          title: featuredGap ? "Есть social proof для витрины" : "Пора усиливать featured reviews",
+          chip: featuredGap ? featuredGap + " featured" : "Need curation",
+          chipClass: featuredGap ? " is-positive" : " is-focus",
+          text: featuredGap ? "Отзывы уже можно использовать для усиления публичного brand trust." : "После первых completed flows стоит поднимать curation и reputation layer."
+        }
+      ].map(function (item) {
+        return '<article class="ops-item"><div class="ops-item-head"><strong>' + escapeHtml(item.title) + '</strong><span class="ops-chip' + item.chipClass + '">' + escapeHtml(item.chip) + '</span></div><p>' + escapeHtml(item.text) + '</p></article>';
+      }).join("");
+    }
+    function renderAdminActivityFeed() {
+      const items = [];
+      const profile = (MarketplaceStore.getDb().profiles || [])[0];
+      const release = (MarketplaceStore.getDb().releases || [])[0];
+      const payout = (MarketplaceStore.getDb().payoutRequests || [])[0];
+      const lead = (MarketplaceStore.getDb().leads || [])[0];
+      const booking = (MarketplaceStore.getDb().studioBookings || [])[0];
+      if (profile) items.push({ title: "Profile signal", meta: profile.status, text: profile.name + " · " + (profile.city || "city pending") });
+      if (lead) items.push({ title: "New intake", meta: lead.status, text: (lead.customerName || "Client") + " оставил новый service request." });
+      if (release) items.push({ title: "Release movement", meta: release.status, text: release.title + (release.releaseDate ? " · " + release.releaseDate : "") });
+      if (payout) items.push({ title: "Payout movement", meta: payout.status, text: "Запрос на " + Number(payout.amount || 0).toLocaleString("ru-RU") + " " + payout.currency + "." });
+      if (booking) items.push({ title: "Studio booking", meta: booking.status, text: (booking.customerName || "Customer") + " · " + (booking.date || "TBD") });
+      byId("admin-activity-feed").innerHTML = items.length ? items.slice(0, 5).map(function (item) {
+        return '<article class="activity-item"><div class="activity-meta"><strong>' + escapeHtml(item.title) + '</strong><span class="ops-chip">' + escapeHtml(item.meta || "Update") + '</span></div><p>' + escapeHtml(item.text) + '</p></article>';
+      }).join("") : '<div class="empty">Когда профили, релизы и finance начнут двигаться, здесь появится platform activity feed.</div>';
+    }
     function renderSettings() {
       const settings = MarketplaceStore.getSettings();
       const form = byId("settings-form");
@@ -449,7 +523,7 @@
       byId("dashboard-view").style.display = admin ? "block" : "none";
       if (!admin) return;
       byId("admin-name").textContent = "Авторизован: " + admin.name;
-      renderStats(); renderAdminExecutive(); renderAdminSystemRail(); renderSettings(); renderDictionaries(); renderProfiles(); renderLeadsAndQuotes(); renderReviews(); renderChats(); renderReleaseOps(); renderAdminReleaseTimeline(); renderRoyaltyOps(); renderAdminFinanceWidgets(); renderStudioOps();
+      renderStats(); renderAdminExecutive(); renderAdminSystemRail(); renderAdminCommandCenter(); renderAdminActivityFeed(); renderSettings(); renderDictionaries(); renderProfiles(); renderLeadsAndQuotes(); renderReviews(); renderChats(); renderReleaseOps(); renderAdminReleaseTimeline(); renderRoyaltyOps(); renderAdminFinanceWidgets(); renderStudioOps();
       byId("chat-admin-box").innerHTML = '<div class="empty">Выберите кейс, чтобы посмотреть чат.</div>';
     }
     byId("admin-login").addEventListener("submit", function (event) {

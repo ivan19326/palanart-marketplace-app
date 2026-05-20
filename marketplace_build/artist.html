@@ -156,6 +156,26 @@
           <a href="#artist-finance-hub">Finance</a>
           <a href="#artist-studio-hub">Studio</a>
         </nav>
+        <div class="ops-board">
+          <section class="ops-card">
+            <div class="section-head compact">
+              <div>
+                <div class="eyebrow">Control Center</div>
+                <h2>Priority queue</h2>
+              </div>
+            </div>
+            <div id="artist-command-center" class="ops-card-list"></div>
+          </section>
+          <section class="ops-card">
+            <div class="section-head compact">
+              <div>
+                <div class="eyebrow">Activity Feed</div>
+                <h2>Последние движения</h2>
+              </div>
+            </div>
+            <div id="artist-activity-feed" class="activity-feed"></div>
+          </section>
+        </div>
         <div class="cabinet-action-row">
           <button id="artist-edit-card" class="primary-btn" type="button" onclick="window.artistScrollProfileForm && window.artistScrollProfileForm()">Редактировать карточку</button>
           <button id="artist-preview-card" class="ghost-btn" type="button" onclick="window.artistPreviewProfile && window.artistPreviewProfile()">Предпросмотр карточки</button>
@@ -771,6 +791,60 @@
         return '<article class="status-step' + state + '"><span class="status-index">' + (index + 1) + '</span><strong>' + escapeHtml(step.title) + '</strong><p>' + escapeHtml(step.text) + '</p></article>';
       }).join("");
     }
+    function renderArtistCommandCenter(profile, artist, leads, quotes) {
+      const releases = MarketplaceStore.getReleasesForArtist(artist.id);
+      const payouts = MarketplaceStore.getPayoutRequestsForArtist(artist.id);
+      const studioBookings = MarketplaceStore.getStudioBookingsForCustomer(artist.id);
+      const pendingLeadCount = leads.filter(function (lead) { return lead.status !== "quoted" && lead.status !== "booked"; }).length;
+      const releaseInReview = releases.filter(function (release) { return release.status === "review" || release.status === "scheduled"; }).length;
+      const pendingPayouts = payouts.filter(function (item) { return item.status === "pending"; }).length;
+      byId("artist-command-center").innerHTML = [
+        {
+          title: profile ? "Публичный профиль готов к трафику" : "Сначала соберите публичный профиль",
+          chip: profile ? "Profile live" : "Need setup",
+          chipClass: profile ? " is-positive" : " is-focus",
+          text: profile ? "Следующий шаг: усиливать медиаблок, social links и service packages для intake-конверсии." : "Без профиля витрина, релизный intake и связанный service flow остаются закрыты."
+        },
+        {
+          title: pendingLeadCount ? "Есть входящие запросы, которые ждут ответа" : "Очередь запросов под контролем",
+          chip: pendingLeadCount ? pendingLeadCount + " open" : "No blockers",
+          chipClass: pendingLeadCount ? " is-hot" : " is-positive",
+          text: pendingLeadCount ? "Откройте Commercial Ops и закройте быстрым reply или персональным proposal." : "Новые запросы будут появляться в этом блоке сразу как только сработает intake."
+        },
+        {
+          title: releaseInReview ? "Релизы требуют coordination" : "Release layer пока спокойный",
+          chip: releaseInReview ? releaseInReview + " in flow" : "Release clear",
+          chipClass: releaseInReview ? " is-focus" : " is-positive",
+          text: releaseInReview ? "Проверьте timeline и доведите материалы до distributed/published state." : "Добавьте релиз или подготовьте assets, чтобы открыть release lifecycle."
+        },
+        {
+          title: pendingPayouts ? "Finance queue требует внимания" : "Finance contour стабилен",
+          chip: pendingPayouts ? pendingPayouts + " payout" : Number(MarketplaceStore.getBalanceForArtist(artist.id) || 0).toLocaleString("ru-RU") + " ₽",
+          chipClass: pendingPayouts ? " is-hot" : " is-positive",
+          text: pendingPayouts ? "Есть запросы на вывод, которые ещё проходят approval." : (studioBookings.length ? "Можно соединять royalty, balance и studio usage в один рабочий цикл." : "Когда появятся отчёты и брони, блок покажет их как единый flow.")
+        }
+      ].map(function (item) {
+        return '<article class="ops-item"><div class="ops-item-head"><strong>' + escapeHtml(item.title) + '</strong><span class="ops-chip' + item.chipClass + '">' + escapeHtml(item.chip) + '</span></div><p>' + escapeHtml(item.text) + '</p></article>';
+      }).join("");
+    }
+    function renderArtistActivityFeed(artist, leads, quotes) {
+      const releases = MarketplaceStore.getReleasesForArtist(artist.id).slice(0, 2).map(function (release) {
+        return { title: "Release update: " + release.title, meta: release.status, text: (release.releaseDate ? "Дата " + release.releaseDate + ". " : "") + (release.description || "Релиз движется по lifecycle внутри кабинета.") };
+      });
+      const report = MarketplaceStore.getRoyaltyReportsForArtist(artist.id)[0];
+      const payout = MarketplaceStore.getPayoutRequestsForArtist(artist.id)[0];
+      const deal = MarketplaceStore.getDealsForArtist(artist.id)[0];
+      const items = [];
+      if (leads[0]) items.push({ title: "Новый service request", meta: leads[0].city || "Lead", text: leads[0].requirements || "Клиент отправил запрос и ждёт response layer." });
+      if (quotes[0]) items.push({ title: "Последний proposal", meta: quotes[0].status, text: "Пакет " + (quotes[0].packageName || "custom") + " на сумму " + Number(quotes[0].amount || 0).toLocaleString("ru-RU") + " ₽." });
+      if (deal) items.push({ title: "Case chat in progress", meta: deal.status, text: "Кейс с " + deal.clientName + " уже находится в chat-based progression." });
+      if (report) items.push({ title: "Royalty period published", meta: report.periodLabel, text: "Net: " + Number(report.netAmount || 0).toLocaleString("ru-RU") + " " + report.currency + "." });
+      if (payout) items.push({ title: "Payout request", meta: payout.status, text: "Запрошено " + Number(payout.amount || 0).toLocaleString("ru-RU") + " " + payout.currency + "." });
+      Array.prototype.push.apply(items, releases);
+      byId("artist-activity-feed").innerHTML = items.slice(0, 5).length ? items.slice(0, 5).map(function (item) {
+        return '<article class="activity-item"><div class="activity-meta"><strong>' + escapeHtml(item.title) + '</strong><span class="ops-chip">' + escapeHtml(item.meta || "Update") + '</span></div><p>' + escapeHtml(item.text) + '</p></article>';
+      }).join("") : '<div class="empty">Когда появятся лиды, релизы и выплаты, здесь будет собираться живая лента действий.</div>';
+    }
     function renderLeads(artist) {
       const leads = MarketplaceStore.getLeadsForArtist(artist.id);
       byId("artist-leads").innerHTML = leads.length ? leads.map(function (lead) { return '<div class="detail-box"><strong>' + escapeHtml(lead.customerName) + '</strong><div class="muted">' + escapeHtml(lead.eventType) + ' · ' + escapeHtml(lead.city) + '</div><div style="margin-top:8px;">' + escapeHtml(lead.requirements || "") + '</div><div class="inline-actions" style="margin-top:12px;"><button class="primary-btn" type="button" onclick="sendQuote(\'' + lead.id + '\')">Отправить предложение</button><button class="ghost-btn" type="button" onclick="respondLead(\'' + lead.id + '\')">Быстрый ответ</button></div></div>'; }).join("") : '<div class="empty">Пока нет входящих сервисных запросов.</div>';
@@ -1050,6 +1124,8 @@
       renderKpis(profile, leads, quotes, artist);
       renderArtistExecutive(profile, artist, leads, quotes);
       renderArtistStatusRail(artist);
+      renderArtistCommandCenter(profile, artist, leads, quotes);
+      renderArtistActivityFeed(artist, leads, quotes);
       fillArtistForm(artist, profile);
       renderLeads(artist);
       renderQuotes(artist);

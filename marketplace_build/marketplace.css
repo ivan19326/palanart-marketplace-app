@@ -1206,6 +1206,87 @@ body[data-theme="light"] .status-step {
   font-size: 0.8rem;
 }
 
+.ops-board {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.ops-card {
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.025);
+  padding: 20px;
+}
+
+.ops-card-list,
+.activity-feed {
+  display: grid;
+  gap: 12px;
+}
+
+.ops-item,
+.activity-item {
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 14px 16px;
+}
+
+.ops-item strong,
+.activity-item strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.ops-item p,
+.activity-item p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.ops-item-head,
+.activity-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.ops-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--muted);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.ops-chip.is-hot {
+  background: rgba(248, 113, 113, 0.12);
+  border-color: rgba(248, 113, 113, 0.26);
+  color: #fecaca;
+}
+
+.ops-chip.is-focus {
+  background: rgba(251, 191, 36, 0.12);
+  border-color: rgba(251, 191, 36, 0.26);
+  color: #fde68a;
+}
+
+.ops-chip.is-positive {
+  background: rgba(74, 222, 128, 0.12);
+  border-color: rgba(74, 222, 128, 0.24);
+  color: #bbf7d0;
+}
+
 .finance-meter {
   position: relative;
   height: 10px;
@@ -1440,7 +1521,8 @@ body[data-theme="light"] .summary-pill {
   .table-row,
   .form-grid,
   .service-kpis,
-  .metrics-grid {
+  .metrics-grid,
+  .ops-board {
     grid-template-columns: 1fr;
   }
 

@@ -93,6 +93,26 @@
           <a href="#partner-report-hub">Reporting</a>
           <a href="#partner-studio-hub">Studio</a>
         </nav>
+        <div class="ops-board">
+          <section class="ops-card">
+            <div class="section-head compact">
+              <div>
+                <div class="eyebrow">Business Control</div>
+                <h2>Priority queue</h2>
+              </div>
+            </div>
+            <div id="partner-command-center" class="ops-card-list"></div>
+          </section>
+          <section class="ops-card">
+            <div class="section-head compact">
+              <div>
+                <div class="eyebrow">Activity Feed</div>
+                <h2>Последние движения</h2>
+              </div>
+            </div>
+            <div id="partner-activity-feed" class="activity-feed"></div>
+          </section>
+        </div>
       </div>
 
       <div class="split">
@@ -340,6 +360,59 @@
         return '<article class="status-step' + state + '"><span class="status-index">' + (index + 1) + '</span><strong>' + escapeHtml(step.title) + '</strong><p>' + escapeHtml(step.text) + '</p></article>';
       }).join("");
     }
+    function renderPartnerCommandCenter(partner) {
+      const artists = roster(partner);
+      const releases = MarketplaceStore.getReleasesForPartner(partner.id);
+      const reports = MarketplaceStore.getRoyaltyReportsForPartner(partner.id);
+      const payouts = MarketplaceStore.getPayoutRequestsForPartner(partner.id);
+      const bookings = MarketplaceStore.getStudioBookingsForCustomer(partner.id);
+      const releaseOpen = releases.filter(function (item) { return item.status !== "published" && item.status !== "distributed"; }).length;
+      const pendingPayouts = payouts.filter(function (item) { return item.status === "pending"; }).length;
+      byId("partner-command-center").innerHTML = [
+        {
+          title: artists.length ? "Roster наполнен и подключен к platform flow" : "Сначала соберите roster артистов",
+          chip: artists.length ? artists.length + " artists" : "Need roster",
+          chipClass: artists.length ? " is-positive" : " is-focus",
+          text: artists.length ? "Теперь можно вести релизы, отчеты и royalties уже не поштучно, а как business-portfolio." : "Без roster не откроется нормальный release flow и reporting contour по артистам."
+        },
+        {
+          title: releaseOpen ? "Есть релизы, требующие движения по lifecycle" : "Release queue спокойна",
+          chip: releaseOpen ? releaseOpen + " open" : "No blockers",
+          chipClass: releaseOpen ? " is-hot" : " is-positive",
+          text: releaseOpen ? "Проверьте release timeline и доведите draft/review позиции до distributed layer." : "Следующий релиз можно завести из Business Portal без отдельного релизного модуля."
+        },
+        {
+          title: reports.length ? "Reporting layer уже работает" : "Пора открывать royalty-reporting",
+          chip: reports.length ? reports.length + " periods" : "Need reports",
+          chipClass: reports.length ? " is-positive" : " is-focus",
+          text: reports.length ? "Отчеты уже привязаны к артистам roster и могут двигать finance ledger." : "После первых отчетов здесь появится связь gross/net, reserves и payout queue."
+        },
+        {
+          title: pendingPayouts ? "Есть запросы на вывод в finance queue" : "Finance queue под контролем",
+          chip: pendingPayouts ? pendingPayouts + " payout" : bookings.length + " studio",
+          chipClass: pendingPayouts ? " is-hot" : " is-focus",
+          text: pendingPayouts ? "Согласуйте pending payouts вместе с admin/finance owner." : (bookings.length ? "Studio bookings уже работают как часть общей экосистемы партнера." : "Можно добавлять studio usage, чтобы расширять business contour beyond releases.")
+        }
+      ].map(function (item) {
+        return '<article class="ops-item"><div class="ops-item-head"><strong>' + escapeHtml(item.title) + '</strong><span class="ops-chip' + item.chipClass + '">' + escapeHtml(item.chip) + '</span></div><p>' + escapeHtml(item.text) + '</p></article>';
+      }).join("");
+    }
+    function renderPartnerActivityFeed(partner) {
+      const items = [];
+      const artists = roster(partner);
+      const release = MarketplaceStore.getReleasesForPartner(partner.id)[0];
+      const report = MarketplaceStore.getRoyaltyReportsForPartner(partner.id)[0];
+      const payout = MarketplaceStore.getPayoutRequestsForPartner(partner.id)[0];
+      const booking = MarketplaceStore.getStudioBookingsForCustomer(partner.id)[0];
+      if (artists[0]) items.push({ title: "Roster updated", meta: artists[0].name, text: "Артист уже подключен к business account и может участвовать в release/reporting flow." });
+      if (release) items.push({ title: "Release portfolio move", meta: release.status, text: release.title + (release.releaseDate ? " · " + release.releaseDate : "") });
+      if (report) items.push({ title: "Royalty report drafted", meta: report.periodLabel, text: "Net: " + Number(report.netAmount || 0).toLocaleString("ru-RU") + " " + report.currency + "." });
+      if (payout) items.push({ title: "Partner payout request", meta: payout.status, text: "Сумма " + Number(payout.amount || 0).toLocaleString("ru-RU") + " " + payout.currency + "." });
+      if (booking) items.push({ title: "Studio service request", meta: booking.status, text: booking.note || "Запрос ушел в studio operations layer." });
+      byId("partner-activity-feed").innerHTML = items.length ? items.slice(0, 5).map(function (item) {
+        return '<article class="activity-item"><div class="activity-meta"><strong>' + escapeHtml(item.title) + '</strong><span class="ops-chip">' + escapeHtml(item.meta || "Update") + '</span></div><p>' + escapeHtml(item.text) + '</p></article>';
+      }).join("") : '<div class="empty">Как только появятся roster, релизы и отчеты, здесь будет собираться business activity feed.</div>';
+    }
 
     function renderRoster(partner) {
       const artists = roster(partner);
@@ -445,6 +518,8 @@
       renderPartnerKpis(partner);
       renderPartnerExecutive(partner);
       renderPartnerStatusRail(partner);
+      renderPartnerCommandCenter(partner);
+      renderPartnerActivityFeed(partner);
       renderRoster(partner);
       renderFinance(partner);
       renderReleases(partner);
