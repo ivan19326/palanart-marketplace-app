@@ -778,6 +778,17 @@ body[data-theme="light"] .ghost-btn {
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 30px 90px rgba(0,0,0,0.36);
 }
 
+.anime-stage-people {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.9;
+  filter: saturate(1.05) contrast(1.04) brightness(0.92);
+  transform: scale(1.03);
+}
+
 .anime-stage::before {
   content: "";
   position: absolute;
@@ -843,6 +854,7 @@ body[data-theme="light"] .ghost-btn {
   width: 128px;
   height: 220px;
   transform: translateX(-50%);
+  opacity: 0.16;
 }
 
 .anime-singer .head,
