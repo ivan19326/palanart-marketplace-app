@@ -28,7 +28,7 @@
   <main class="shell section service-shell">
     <div id="partner-message"></div>
 
-    <section id="partner-auth-view" class="split auth-onboarding">
+    <section id="partner-auth-view" class="split auth-onboarding" data-scene="hero">
       <div class="service-panel auth-welcome-card">
         <div class="eyebrow">Business Portal</div>
         <h1>Управляйте артистами, релизами, отчётами и студийными сервисами</h1>
@@ -74,7 +74,7 @@
       </form>
     </section>
 
-    <section id="partner-cabinet-view" style="display:none;" class="service-shell">
+    <section id="partner-cabinet-view" style="display:none;" class="service-shell" data-scene="partner">
       <div class="scene-banner">
         <img src="assets/partner-release-desk-scene.png" alt="Команда партнёров за release desk">
         <div class="scene-banner-copy">
@@ -126,7 +126,7 @@
       </div>
 
       <div class="split">
-        <div class="panel" id="partner-roster-hub">
+        <div class="panel" id="partner-roster-hub" data-scene="partner">
           <div class="section-head">
             <div>
               <h2>Roster артистов</h2>
@@ -142,7 +142,7 @@
           <div id="partner-roster" class="table-list" style="margin-top:14px;"></div>
         </div>
 
-        <div class="panel" id="partner-finance-hub">
+        <div class="panel" id="partner-finance-hub" data-scene="trust">
           <div class="section-head">
             <div>
               <h2>Финансовый обзор</h2>
@@ -168,7 +168,7 @@
       </div>
 
       <div class="split">
-        <div class="panel" id="partner-release-hub">
+        <div class="panel" id="partner-release-hub" data-scene="release">
           <div class="section-head">
             <div>
               <h2>Релизы</h2>
@@ -198,7 +198,7 @@
           <div id="partner-releases" class="table-list" style="margin-top:14px;"></div>
         </div>
 
-        <div class="panel" id="partner-report-hub">
+        <div class="panel" id="partner-report-hub" data-scene="trust">
           <div class="section-head">
             <div>
               <h2>Royalty-отчёты</h2>
@@ -227,7 +227,7 @@
         </div>
       </div>
 
-      <div class="split" id="partner-studio-hub">
+      <div class="split" id="partner-studio-hub" data-scene="studio">
         <div class="panel">
           <div class="section-head">
             <div>
@@ -248,7 +248,7 @@
           <div id="studio-bookings" class="table-list"></div>
         </div>
       </div>
-      <div class="split" id="partner-support-hub">
+      <div class="split" id="partner-support-hub" data-scene="board">
         <div class="panel">
           <div class="section-head">
             <div>
@@ -784,6 +784,27 @@
       showPartnerMessage("Артист убран из roster партнёра.", "success");
       renderPartnerCabinet();
     };
+
+    (function initPortalScenes() {
+      const sections = Array.from(document.querySelectorAll("[data-scene]"));
+      if (!sections.length) return;
+      let activeScene = "partner";
+      function setScene(scene) {
+        if (!scene || activeScene === scene) return;
+        activeScene = scene;
+        document.body.setAttribute("data-scene", scene);
+      }
+      setScene(sections[0].dataset.scene || "partner");
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(function (entries) {
+          const visible = entries.filter(function (entry) { return entry.isIntersecting; })
+            .sort(function (a, b) { return b.intersectionRatio - a.intersectionRatio; });
+          if (!visible.length) return;
+          setScene(visible[0].target.dataset.scene);
+        }, { threshold: [0.2, 0.35, 0.55, 0.75] });
+        sections.forEach(function (section) { observer.observe(section); });
+      }
+    })();
 
     renderPartnerCabinet();
   </script>

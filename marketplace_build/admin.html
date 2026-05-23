@@ -44,7 +44,7 @@
       </div>
     </section>
 
-    <section id="dashboard-view" class="section" style="display:none;">
+    <section id="dashboard-view" class="section" style="display:none;" data-scene="partner">
       <div class="section-head">
         <div>
           <h2>Панель управления</h2>
@@ -87,7 +87,7 @@
       </div>
       <div id="admin-focus-strip" class="signal-strip"></div>
 
-      <div class="split" style="margin-top:18px;" id="admin-platform-settings">
+      <div class="split" style="margin-top:18px;" id="admin-platform-settings" data-scene="hero">
         <div class="panel">
           <div class="section-head"><div><h2>Настройки платформы</h2><p class="muted">Правила модерации и параметры работы без подключения оплаты.</p></div></div>
           <form id="settings-form" class="form-grid">
@@ -162,12 +162,12 @@
         <p class="muted" style="margin-top:12px;">После сохранения обновите страницу client services или artist portal. Google, VK ID и Telegram управляются из этой панели. Полная внешняя OAuth-настройка для каждого провайдера подключается отдельно.</p>
       </div>
 
-      <div class="panel" style="margin-top:18px;" id="admin-profile-ops">
+      <div class="panel" style="margin-top:18px;" id="admin-profile-ops" data-scene="catalog">
         <div class="section-head"><div><h2>Профили и модерация</h2><p class="muted">Одобрение анкет, продвижение в витрине и управление видимостью карточек.</p></div></div>
         <div id="profiles-list" class="table-list"></div>
       </div>
 
-      <div class="split" style="margin-top:18px;" id="admin-commercial-ops">
+      <div class="split" style="margin-top:18px;" id="admin-commercial-ops" data-scene="board">
         <div class="panel">
           <div class="section-head"><div><h2>Запросы и предложения</h2><p class="muted">Сводка по входящим запросам, сервисным кейсам и отправленным предложениям.</p></div></div>
           <div id="leads-list" class="table-list"></div>
@@ -179,7 +179,7 @@
         </div>
       </div>
 
-      <div class="split" style="margin-top:18px;">
+      <div class="split" style="margin-top:18px;" data-scene="board">
         <div class="panel">
           <div class="section-head"><div><h2>Чаты и кейсы</h2><p class="muted">Обзор активных переговоров между клиентами, артистами и командой платформы.</p></div></div>
           <div id="chats-list" class="table-list"></div>
@@ -189,7 +189,7 @@
         </div>
       </div>
 
-      <div class="split" style="margin-top:18px;" id="admin-release-ops">
+      <div class="split" style="margin-top:18px;" id="admin-release-ops" data-scene="release">
         <div class="panel">
           <div class="section-head"><div><h2>Релизы платформы</h2><p class="muted">Контроль статусов релизов артистов и партнёров: draft → review → scheduled → distributed → published.</p></div></div>
           <div id="admin-release-timeline" class="timeline-list" style="margin-bottom:14px;"></div>
@@ -220,12 +220,12 @@
         </div>
       </div>
 
-      <div class="panel" style="margin-top:18px;" id="admin-studio-ops">
+      <div class="panel" style="margin-top:18px;" id="admin-studio-ops" data-scene="studio">
         <div class="section-head"><div><h2>Студийные бронирования</h2><p class="muted">Запросы артистов и партнёров на запись, сведение и мастеринг со статусами обработки.</p></div></div>
         <div id="studio-bookings-list" class="table-list"></div>
       </div>
 
-      <div class="split" style="margin-top:18px;" id="admin-support-ops">
+      <div class="split" style="margin-top:18px;" id="admin-support-ops" data-scene="trust">
         <div class="panel">
           <div class="section-head"><div><h2>Document Center</h2><p class="muted">Royalty statements, payout requests и сервисные документы платформы в одном окне.</p></div></div>
           <div id="admin-documents-list" class="table-list"></div>
@@ -683,6 +683,26 @@
       showMessage("admin-message", "Royalty-отчёт опубликован и баланс артиста пополнен на net-сумму.", "success");
       renderDashboard();
     });
+    (function initPortalScenes() {
+      const sections = Array.from(document.querySelectorAll("[data-scene]"));
+      if (!sections.length) return;
+      let activeScene = "partner";
+      function setScene(scene) {
+        if (!scene || activeScene === scene) return;
+        activeScene = scene;
+        document.body.setAttribute("data-scene", scene);
+      }
+      setScene(sections[0].dataset.scene || "partner");
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(function (entries) {
+          const visible = entries.filter(function (entry) { return entry.isIntersecting; })
+            .sort(function (a, b) { return b.intersectionRatio - a.intersectionRatio; });
+          if (!visible.length) return;
+          setScene(visible[0].target.dataset.scene);
+        }, { threshold: [0.2, 0.35, 0.55, 0.75] });
+        sections.forEach(function (section) { observer.observe(section); });
+      }
+    })();
     renderDashboard();
   </script>
 </body>

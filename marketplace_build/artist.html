@@ -28,7 +28,7 @@
   <main class="shell section service-shell">
     <div id="artist-message"></div>
 
-    <section id="artist-auth-view" class="split auth-onboarding">
+    <section id="artist-auth-view" class="split auth-onboarding" data-scene="hero">
       <div class="service-panel auth-welcome-card">
         <div class="eyebrow">Движарт Artist Portal</div>
         <h1>Быстрый старт артиста без перегруженной анкеты</h1>
@@ -137,7 +137,7 @@
       </form>
     </section>
 
-    <section id="artist-cabinet-view" style="display:none;" class="service-shell">
+    <section id="artist-cabinet-view" style="display:none;" class="service-shell" data-scene="hero">
       <div class="scene-banner">
         <img src="assets/artist-portal-banner.png" alt="Артист в portal banner">
         <div class="scene-banner-copy">
@@ -201,7 +201,7 @@
           </div>
         </div>
       </div>
-      <form id="artist-profile-form" class="service-panel">
+      <form id="artist-profile-form" class="service-panel" data-scene="catalog">
         <div class="preset-box" style="margin-bottom:16px;">
           <strong>Быстрый старт профиля</strong>
           <div class="quick-options">
@@ -316,7 +316,7 @@
         <button class="primary-btn" type="submit">Сохранить профиль</button>
       </form>
 
-      <div class="split" id="artist-ops-hub">
+      <div class="split" id="artist-ops-hub" data-scene="board">
         <div class="panel"><h2>Лиды</h2><div id="artist-leads" class="table-list"></div></div>
         <div class="panel"><h2>Предложения</h2><div id="artist-quotes" class="table-list"></div></div>
       </div>
@@ -327,7 +327,7 @@
       <div class="panel"><h2>Аналитика</h2><div id="artist-analytics" class="metrics-grid"></div></div>
       <div class="panel"><h2>Мои объявления</h2><div id="artist-board" class="table-list"></div></div>
       <div class="split">
-        <div class="panel" id="artist-release-hub">
+        <div class="panel" id="artist-release-hub" data-scene="release">
           <div class="section-head">
             <div>
               <h2>Релизы и каталог лейбла</h2>
@@ -353,7 +353,7 @@
           </form>
           <div id="artist-release-list" class="table-list" style="margin-top:14px;"></div>
         </div>
-        <div class="panel" id="artist-finance-hub">
+        <div class="panel" id="artist-finance-hub" data-scene="trust">
           <div class="section-head">
             <div>
               <h2>Royalty и вывод средств</h2>
@@ -379,7 +379,7 @@
           <div id="artist-payouts" class="table-list" style="margin-top:14px;"></div>
         </div>
       </div>
-      <div class="panel" id="artist-studio-hub">
+      <div class="panel" id="artist-studio-hub" data-scene="studio">
         <div class="section-head">
           <div>
             <h2>Студийные услуги и бронирования</h2>
@@ -389,7 +389,7 @@
         <div id="artist-studio-services" class="table-list"></div>
         <div id="artist-studio-bookings" class="table-list" style="margin-top:14px;"></div>
       </div>
-      <div class="split" id="artist-support-hub">
+      <div class="split" id="artist-support-hub" data-scene="partner">
         <div class="panel">
           <div class="section-head">
             <div>
@@ -1728,6 +1728,26 @@
     if (byId("artist-register-form").telegram) {
       byId("artist-register-form").telegram.setAttribute("placeholder", "@username");
     }
+    (function initPortalScenes() {
+      const sections = Array.from(document.querySelectorAll("[data-scene]"));
+      if (!sections.length) return;
+      let activeScene = "hero";
+      function setScene(scene) {
+        if (!scene || activeScene === scene) return;
+        activeScene = scene;
+        document.body.setAttribute("data-scene", scene);
+      }
+      setScene(sections[0].dataset.scene || "hero");
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(function (entries) {
+          const visible = entries.filter(function (entry) { return entry.isIntersecting; })
+            .sort(function (a, b) { return b.intersectionRatio - a.intersectionRatio; });
+          if (!visible.length) return;
+          setScene(visible[0].target.dataset.scene);
+        }, { threshold: [0.2, 0.35, 0.55, 0.75] });
+        sections.forEach(function (section) { observer.observe(section); });
+      }
+    })();
     setupArtistProfileQuickMode();
     fillSelects();
     renderArtistAuthMode();
