@@ -1,4 +1,4 @@
-const CACHE_NAME = "palan-hype-cache-v6";
+const CACHE_NAME = "palan-hype-cache-v7";
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
@@ -21,7 +21,11 @@ const FILES_TO_CACHE = [
   "./marketplace-core.js",
   "./auth-config.js",
   "./auth-bridge.js",
-  "./category-template.js"
+  "./category-template.js",
+  "./assets/hero-people-anime-stage.png",
+  "./assets/studio-artist-scene.png",
+  "./assets/partner-release-desk-scene.png",
+  "./assets/artist-portal-banner.png"
 ];
 
 self.addEventListener("install", function (event) {
