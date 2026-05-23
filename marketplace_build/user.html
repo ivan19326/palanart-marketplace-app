@@ -6,7 +6,17 @@
   <title>Client Services | Движарт</title>
   <link rel="stylesheet" href="marketplace.css">
 </head>
-<body>
+<body class="page-home">
+  <div class="music-atmosphere" aria-hidden="true">
+    <span class="music-beam music-beam--left"></span>
+    <span class="music-beam music-beam--right"></span>
+    <span class="music-vinyl"></span>
+    <span class="music-wave"></span>
+    <span class="music-piano"></span>
+    <span class="music-note music-note--a">♪</span>
+    <span class="music-note music-note--b">♬</span>
+    <span class="music-note music-note--c">♫</span>
+  </div>
   <header class="topbar">
     <div class="shell topbar-inner">
       <div class="brand">
@@ -161,6 +171,7 @@
   <script src="auth-config.js"></script>
   <script src="marketplace-core.js"></script>
   <script src="auth-bridge.js"></script>
+  <script src="visual-motion.js"></script>
   <script>
     (function () {
       const key = "palan_theme_mode";

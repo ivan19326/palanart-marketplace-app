@@ -1,24 +1,26 @@
 :root {
-  --bg: #09111c;
-  --bg-strong: #101b2d;
-  --scene-bg-1: rgba(255, 138, 91, 0.24);
-  --scene-bg-2: rgba(93, 209, 194, 0.18);
-  --scene-bg-3: rgba(103, 130, 255, 0.18);
-  --scene-glow-1: rgba(255, 138, 91, 0.22);
-  --scene-glow-2: rgba(93, 209, 194, 0.18);
-  --panel: rgba(15, 24, 39, 0.94);
-  --panel-strong: rgba(18, 29, 48, 0.98);
+  --bg: #08141c;
+  --bg-strong: #0f1e29;
+  --scene-bg-1: rgba(242, 160, 107, 0.18);
+  --scene-bg-2: rgba(104, 209, 191, 0.16);
+  --scene-bg-3: rgba(120, 156, 255, 0.14);
+  --scene-glow-1: rgba(242, 160, 107, 0.18);
+  --scene-glow-2: rgba(104, 209, 191, 0.16);
+  --panel: rgba(13, 24, 34, 0.92);
+  --panel-strong: rgba(16, 29, 41, 0.97);
   --text: #ffffff;
-  --muted: #c2d0e6;
+  --muted: #c2d2dc;
   --line: rgba(255, 255, 255, 0.12);
-  --accent: #ff8a5b;
-  --accent-2: #5dd1c2;
-  --accent-3: #f0bb4b;
+  --accent: #f2a06b;
+  --accent-2: #68d1bf;
+  --accent-3: #e9c06a;
   --danger: #ff7676;
   --success: #58cb91;
   --shadow: 0 28px 90px rgba(0, 0, 0, 0.42);
   --radius: 26px;
   --radius-sm: 18px;
+  --mx: 0px;
+  --my: 0px;
 }
 
 body[data-theme="light"] {
@@ -89,6 +91,8 @@ body::after {
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
+  perspective: 1400px;
+  transform-style: preserve-3d;
 }
 
 .music-atmosphere span {
@@ -102,7 +106,7 @@ body::after {
   height: 88vh;
   filter: blur(10px);
   opacity: 0.38;
-  transform: rotate(-16deg);
+  transform: translate3d(calc(var(--mx) * -0.08), calc(var(--my) * -0.08), 0) rotate(-16deg);
   animation: beamDrift 16s ease-in-out infinite;
 }
 
@@ -129,7 +133,7 @@ body::after {
     radial-gradient(circle at center, rgba(8, 14, 24, 0.92) 0 18%, rgba(240, 187, 75, 0.22) 18% 21%, rgba(9, 14, 24, 0.9) 21% 34%, rgba(255,255,255,0.05) 34% 35%, rgba(9,14,24,0.92) 35% 48%, rgba(255,255,255,0.04) 48% 49%, rgba(9,14,24,0.92) 49% 64%, rgba(255,255,255,0.03) 64% 65%, rgba(9,14,24,0.92) 65% 100%);
   box-shadow: 0 26px 80px rgba(0,0,0,0.32);
   opacity: 0.28;
-  transform: rotate(18deg);
+  transform: translate3d(calc(var(--mx) * 0.14), calc(var(--my) * 0.14), 36px) rotate(18deg);
   animation: vinylSpin 28s linear infinite;
 }
 
@@ -152,6 +156,7 @@ body::after {
       transparent 24px 32px);
   clip-path: polygon(0 52%, 6% 46%, 12% 62%, 18% 28%, 24% 72%, 30% 40%, 36% 58%, 42% 20%, 48% 76%, 54% 44%, 60% 60%, 66% 34%, 72% 68%, 78% 42%, 84% 56%, 90% 24%, 96% 62%, 100% 48%, 100% 100%, 0 100%);
   filter: blur(0.2px);
+  transform: translate3d(calc(var(--mx) * -0.12), calc(var(--my) * 0.1), 18px);
   animation: wavePulse 9s ease-in-out infinite;
 }
 
@@ -174,7 +179,7 @@ body::after {
       rgba(8,14,24,0.9) 22px 38px,
       transparent 38px 62px);
   box-shadow: 0 18px 50px rgba(0,0,0,0.28);
-  transform: translateX(-10%) perspective(600px) rotateX(60deg);
+  transform: translate3d(calc(var(--mx) * 0.1 - 10%), calc(var(--my) * 0.08), 48px) perspective(600px) rotateX(60deg);
 }
 
 .music-note {
@@ -183,12 +188,14 @@ body::after {
   line-height: 1;
   text-shadow: 0 20px 50px rgba(0,0,0,0.22);
   animation: noteFloat 12s ease-in-out infinite;
+  will-change: transform;
 }
 
 .music-note--a {
   left: 8vw;
   top: 18vh;
   font-size: 88px;
+  transform: translate3d(calc(var(--mx) * -0.16), calc(var(--my) * -0.16), 14px);
 }
 
 .music-note--b {
@@ -196,6 +203,7 @@ body::after {
   top: 12vh;
   font-size: 128px;
   animation-delay: -4s;
+  transform: translate3d(calc(var(--mx) * 0.2), calc(var(--my) * -0.1), 22px);
 }
 
 .music-note--c {
@@ -203,6 +211,7 @@ body::after {
   bottom: 26vh;
   font-size: 98px;
   animation-delay: -7s;
+  transform: translate3d(calc(var(--mx) * 0.14), calc(var(--my) * 0.18), 12px);
 }
 
 .page-home .music-beam--left {
