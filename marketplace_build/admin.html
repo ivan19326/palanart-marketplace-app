@@ -26,6 +26,34 @@
   </header>
 
   <main class="shell">
+    <section class="page-masthead portal-tone-admin" data-scene="trust">
+      <div class="page-masthead-grid">
+        <div class="page-masthead-copy">
+          <div class="highlight">Backoffice operating layer</div>
+          <h2>Admin Backoffice как control room всей label-platform</h2>
+          <p>Админка должна ощущаться не как список таблиц, а как platform governance center: правила, релизы, профили, выплаты, studio flow, support и auth orchestration в одном control surface.</p>
+          <div class="page-masthead-actions">
+            <a class="primary-btn" href="#admin-release-ops">Release control</a>
+            <a class="ghost-btn" href="#admin-finance-ops">Finance</a>
+            <a class="ghost-btn" href="#admin-support-ops">Support desk</a>
+          </div>
+        </div>
+        <div class="page-masthead-rail">
+          <div class="page-rail-card">
+            <span>Governance Layer</span>
+            <strong>Platform rules, auth settings, moderation and visibility policies.</strong>
+          </div>
+          <div class="page-rail-card">
+            <span>Operations Layer</span>
+            <strong>Profiles, releases, chats, studio queue and cross-role workflow management.</strong>
+          </div>
+          <div class="page-rail-card">
+            <span>Finance Layer</span>
+            <strong>Royalty publishing, payouts, documents, tickets and system discipline.</strong>
+          </div>
+        </div>
+      </div>
+    </section>
     <section id="login-view" class="auth-wrap">
       <div class="auth-box">
         <h1>Вход администратора</h1>
@@ -45,6 +73,8 @@
     </section>
 
     <section id="dashboard-view" class="section" style="display:none;" data-scene="partner">
+      <div class="page-shell-grid">
+      <div class="page-shell-main">
       <div class="section-head">
         <div>
           <h2>Панель управления</h2>
@@ -234,6 +264,24 @@
           <div class="section-head"><div><h2>Support Desk</h2><p class="muted">Тикеты артистов и партнёров с приоритетами, SLA и ручным переводом по статусам.</p></div></div>
           <div id="admin-tickets-list" class="table-list"></div>
         </div>
+      </div>
+      </div>
+      <aside class="page-shell-aside">
+        <div class="floating-panel">
+          <div class="eyebrow">Control Signals</div>
+          <h3>Что должен видеть оператор сразу</h3>
+          <ul>
+            <li>Какие релизы, выплаты и профили требуют внимания прямо сейчас.</li>
+            <li>Где копятся support и finance риски.</li>
+            <li>Как auth, studio и moderation связаны в одной платформенной картине.</li>
+          </ul>
+        </div>
+        <div class="floating-panel">
+          <div class="eyebrow">Backoffice Shape</div>
+          <h3>Новый visual-control слой</h3>
+          <p class="muted">Админка переходит в формат command center: masthead, main shell, sticky rail и более серьёзная enterprise-подача.</p>
+        </div>
+      </aside>
       </div>
     </section>
   </main>
