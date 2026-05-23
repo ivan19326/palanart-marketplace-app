@@ -182,6 +182,54 @@ body::after {
   transform: translate3d(calc(var(--mx) * 0.1 - 10%), calc(var(--my) * 0.08), 48px) perspective(600px) rotateX(60deg);
 }
 
+.music-staff {
+  left: 6vw;
+  top: 30vh;
+  width: 40vw;
+  min-width: 320px;
+  max-width: 640px;
+  height: 120px;
+  opacity: 0.28;
+  transform: translate3d(calc(var(--mx) * -0.1), calc(var(--my) * -0.06), 12px) rotate(-6deg);
+  background:
+    repeating-linear-gradient(180deg,
+      transparent 0 14px,
+      rgba(255,255,255,0.18) 14px 16px,
+      transparent 16px 28px);
+  mask-image: linear-gradient(90deg, transparent 0, rgba(0,0,0,0.95) 10%, rgba(0,0,0,0.95) 90%, transparent 100%);
+  filter: drop-shadow(0 16px 30px rgba(0,0,0,0.18));
+}
+
+.music-eq {
+  right: 10vw;
+  bottom: 18vh;
+  width: 180px;
+  height: 110px;
+  display: flex !important;
+  align-items: end;
+  gap: 8px;
+  opacity: 0.54;
+  transform: translate3d(calc(var(--mx) * 0.12), calc(var(--my) * 0.1), 18px);
+}
+
+.music-eq i {
+  display: block;
+  width: 14px;
+  border-radius: 999px 999px 6px 6px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(90, 226, 200, 0.78) 48%, rgba(255, 158, 102, 0.78));
+  box-shadow: 0 0 18px rgba(90, 226, 200, 0.22);
+  animation: eqPulse 3.4s ease-in-out infinite;
+}
+
+.music-eq i:nth-child(1) { height: 42px; animation-delay: -0.2s; }
+.music-eq i:nth-child(2) { height: 78px; animation-delay: -0.5s; }
+.music-eq i:nth-child(3) { height: 56px; animation-delay: -0.8s; }
+.music-eq i:nth-child(4) { height: 92px; animation-delay: -1.1s; }
+.music-eq i:nth-child(5) { height: 64px; animation-delay: -1.4s; }
+.music-eq i:nth-child(6) { height: 100px; animation-delay: -1.7s; }
+.music-eq i:nth-child(7) { height: 54px; animation-delay: -2s; }
+.music-eq i:nth-child(8) { height: 84px; animation-delay: -2.3s; }
+
 .music-note {
   color: rgba(255,255,255,0.26);
   font-weight: 900;
@@ -223,6 +271,11 @@ body::after {
   opacity: 0.54;
 }
 
+.page-home .music-staff,
+.page-home .music-eq {
+  opacity: 0.42;
+}
+
 .page-artist .music-vinyl {
   left: auto;
   right: 2vw;
@@ -240,6 +293,13 @@ body::after {
   color: rgba(93, 209, 194, 0.2);
 }
 
+.page-artist .music-staff {
+  left: auto;
+  right: 10vw;
+  top: 24vh;
+  opacity: 0.24;
+}
+
 .page-partner .music-wave {
   left: auto;
   right: 8vw;
@@ -253,6 +313,12 @@ body::after {
 
 .page-partner .music-beam--left {
   background: linear-gradient(180deg, rgba(103, 130, 255, 0.26), rgba(103, 130, 255, 0.02));
+}
+
+.page-partner .music-eq {
+  right: 6vw;
+  bottom: 14vh;
+  opacity: 0.42;
 }
 
 .page-admin .music-vinyl {
@@ -269,6 +335,13 @@ body::after {
 
 .page-admin .music-beam--right {
   background: linear-gradient(180deg, rgba(240, 187, 75, 0.24), rgba(240, 187, 75, 0.03));
+}
+
+.page-admin .music-staff {
+  left: auto;
+  right: 12vw;
+  top: 22vh;
+  opacity: 0.22;
 }
 
 .people-showcase {
@@ -3062,6 +3135,24 @@ body[data-theme="light"] .summary-pill {
     left: 4vw;
     bottom: 12vh;
   }
+  .music-staff {
+    width: 62vw;
+    min-width: 0;
+    left: 4vw;
+    top: 24vh;
+    opacity: 0.18;
+  }
+  .music-eq {
+    right: 4vw;
+    bottom: 16vh;
+    width: 132px;
+    height: 92px;
+    gap: 6px;
+    opacity: 0.36;
+  }
+  .music-eq i {
+    width: 10px;
+  }
   .music-piano {
     width: 84vw;
     left: 8vw;
@@ -3103,4 +3194,9 @@ body[data-theme="light"] .summary-pill {
 @keyframes wavePulse {
   0%, 100% { transform: translateY(0) scaleX(1); }
   50% { transform: translateY(-6px) scaleX(1.03); }
+}
+
+@keyframes eqPulse {
+  0%, 100% { transform: scaleY(0.82); opacity: 0.78; }
+  50% { transform: scaleY(1.08); opacity: 1; }
 }
