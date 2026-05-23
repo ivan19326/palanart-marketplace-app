@@ -39,8 +39,10 @@ body {
   color: var(--text);
   font-family: "Aptos", "Segoe UI Variable", "Segoe UI", "Trebuchet MS", Arial, sans-serif;
   background:
-    radial-gradient(circle at top left, rgba(255, 138, 91, 0.16), transparent 28%),
-    radial-gradient(circle at top right, rgba(93, 209, 194, 0.14), transparent 24%),
+    radial-gradient(circle at 12% 8%, rgba(255, 138, 91, 0.24), transparent 24%),
+    radial-gradient(circle at 88% 12%, rgba(93, 209, 194, 0.18), transparent 18%),
+    radial-gradient(circle at 50% 36%, rgba(103, 130, 255, 0.18), transparent 28%),
+    conic-gradient(from 220deg at 50% 50%, rgba(255, 138, 91, 0.08), rgba(93, 209, 194, 0.04), rgba(240, 187, 75, 0.05), rgba(255, 138, 91, 0.08)),
     linear-gradient(180deg, var(--bg) 0%, var(--bg-strong) 100%);
   min-height: 100vh;
   text-rendering: optimizeLegibility;
@@ -754,6 +756,227 @@ body[data-theme="light"] .ghost-btn {
   max-width: 14ch;
   letter-spacing: -0.04em;
   text-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+}
+
+.hero-visual-panel {
+  min-height: 100%;
+  display: grid;
+  gap: 18px;
+  align-content: start;
+}
+
+.anime-stage {
+  position: relative;
+  min-height: 360px;
+  border-radius: 28px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255,255,255,0.18), transparent 18%),
+    radial-gradient(circle at 50% 34%, rgba(255, 138, 91, 0.18), transparent 28%),
+    linear-gradient(180deg, rgba(31, 46, 86, 0.86) 0%, rgba(10, 16, 29, 0.92) 58%, rgba(6, 10, 20, 1) 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 30px 90px rgba(0,0,0,0.36);
+}
+
+.anime-stage::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 44%;
+  background:
+    linear-gradient(180deg, rgba(18, 28, 52, 0.1), rgba(3, 5, 10, 0.66)),
+    radial-gradient(circle at 50% 0%, rgba(93, 209, 194, 0.22), transparent 46%);
+}
+
+.anime-stage::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 30px;
+  width: 220px;
+  height: 220px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(93, 209, 194, 0.2), rgba(255, 138, 91, 0.08) 48%, transparent 68%);
+  filter: blur(8px);
+}
+
+.stage-grid {
+  position: absolute;
+  inset: auto 0 0;
+  height: 44%;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: linear-gradient(180deg, transparent, rgba(0,0,0,0.85) 24%);
+  transform: perspective(520px) rotateX(78deg) scale(1.4);
+  transform-origin: bottom;
+}
+
+.stage-glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(255, 138, 91, 0.16), transparent 20%),
+    radial-gradient(circle at 80% 22%, rgba(93, 209, 194, 0.18), transparent 20%),
+    radial-gradient(circle at 50% 14%, rgba(255,255,255,0.24), transparent 12%);
+}
+
+.stage-spotlight {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  width: 280px;
+  height: 260px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.26), transparent 72%);
+  clip-path: polygon(48% 0, 62% 0, 100% 100%, 0 100%);
+  opacity: 0.55;
+  filter: blur(10px);
+}
+
+.anime-singer {
+  position: absolute;
+  left: 50%;
+  bottom: 60px;
+  width: 128px;
+  height: 220px;
+  transform: translateX(-50%);
+}
+
+.anime-singer .head,
+.anime-singer .hair,
+.anime-singer .body,
+.anime-singer .arm,
+.anime-singer .leg,
+.anime-singer .mic-stand,
+.anime-singer .mic-head {
+  position: absolute;
+}
+
+.anime-singer .head {
+  top: 20px;
+  left: 42px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #ffd8c8, #f0b49a);
+  z-index: 3;
+}
+
+.anime-singer .hair {
+  top: 8px;
+  left: 32px;
+  width: 62px;
+  height: 58px;
+  border-radius: 38px 38px 26px 26px;
+  background: linear-gradient(180deg, #78a4ff, #4365d9 72%);
+  box-shadow: inset 0 -8px 18px rgba(25, 34, 67, 0.4);
+}
+
+.anime-singer .body {
+  top: 58px;
+  left: 34px;
+  width: 62px;
+  height: 86px;
+  border-radius: 26px 26px 18px 18px;
+  background: linear-gradient(180deg, #ff8a5b, #b54871);
+  box-shadow: inset 0 -16px 20px rgba(27, 14, 29, 0.25);
+}
+
+.anime-singer .arm.left {
+  top: 74px;
+  left: 18px;
+  width: 34px;
+  height: 16px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #f7c4aa, #ffd9c5);
+  transform: rotate(18deg);
+}
+
+.anime-singer .arm.right {
+  top: 78px;
+  right: 8px;
+  width: 38px;
+  height: 16px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #ffd9c5, #f7c4aa);
+  transform: rotate(-26deg);
+}
+
+.anime-singer .leg.left,
+.anime-singer .leg.right {
+  top: 138px;
+  width: 18px;
+  height: 60px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #1f2846, #0c1224);
+}
+
+.anime-singer .leg.left { left: 46px; }
+.anime-singer .leg.right { left: 68px; }
+
+.anime-singer .mic-stand {
+  top: 60px;
+  right: 18px;
+  width: 6px;
+  height: 140px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(126,142,176,0.8));
+  transform: rotate(10deg);
+}
+
+.anime-singer .mic-head {
+  top: 52px;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #f7fbff, #9cb0d6);
+  box-shadow: 0 0 20px rgba(255,255,255,0.28);
+}
+
+.orbit-chip {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(8, 14, 24, 0.54);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 16px 34px rgba(0,0,0,0.2);
+  animation: orbitFloat 8s ease-in-out infinite;
+}
+
+.orbit-chip svg {
+  width: 18px;
+  height: 18px;
+  color: var(--accent);
+}
+
+.orbit-chip strong {
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+
+.orbit-chip small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.orbit-chip--guitar { top: 24px; left: 18px; }
+.orbit-chip--mic { top: 58px; right: 18px; animation-delay: -2s; }
+.orbit-chip--drums { bottom: 112px; left: 10px; animation-delay: -4s; }
+.orbit-chip--piano { bottom: 34px; right: 18px; animation-delay: -1s; }
+
+.visual-meta-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .hero-card p {
@@ -1828,6 +2051,11 @@ body[data-theme="light"] .empty {
 @keyframes pulseGlow {
   0%, 100% { box-shadow: 0 0 0 rgba(255, 138, 91, 0); }
   50% { box-shadow: 0 0 0 8px rgba(255, 138, 91, 0.08); }
+}
+
+@keyframes orbitFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(0.5deg); }
 }
 
 @media (prefers-reduced-motion: reduce) {
