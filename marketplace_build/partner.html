@@ -92,6 +92,7 @@
           <a href="#partner-release-hub">Release Flow</a>
           <a href="#partner-report-hub">Reporting</a>
           <a href="#partner-studio-hub">Studio</a>
+          <a href="#partner-support-hub">Docs & Support</a>
         </nav>
         <div class="ops-board">
           <section class="ops-card">
@@ -237,6 +238,46 @@
             </div>
           </div>
           <div id="studio-bookings" class="table-list"></div>
+        </div>
+      </div>
+      <div class="split" id="partner-support-hub">
+        <div class="panel">
+          <div class="section-head">
+            <div>
+              <h2>Document Center</h2>
+              <p class="muted">Здесь собираются partner-documents: royalty periods, payout requests и finance-related материалы.</p>
+            </div>
+          </div>
+          <div id="partner-documents" class="table-list"></div>
+        </div>
+        <div class="panel">
+          <div class="section-head">
+            <div>
+              <h2>Support Tickets</h2>
+              <p class="muted">Тикеты по roster, release flow, finance и studio operations.</p>
+            </div>
+          </div>
+          <form id="partner-ticket-form" class="form-grid">
+            <label>Тема<input name="subject" type="text" required></label>
+            <label>Категория
+              <select name="category">
+                <option value="roster">Roster</option>
+                <option value="release">Release</option>
+                <option value="finance">Finance</option>
+                <option value="studio">Studio</option>
+              </select>
+            </label>
+            <label>Приоритет
+              <select name="priority">
+                <option value="normal">Normal</option>
+                <option value="high">High</option>
+                <option value="critical">Critical</option>
+              </select>
+            </label>
+            <label style="grid-column:1/-1;">Сообщение<textarea name="message" required></textarea></label>
+            <button class="primary-btn" type="submit">Создать тикет</button>
+          </form>
+          <div id="partner-tickets" class="table-list" style="margin-top:14px;"></div>
         </div>
       </div>
     </section>
@@ -542,6 +583,16 @@
         return '<div class="table-row"><div><strong>' + escapeHtml(booking.customerName) + '</strong><div class="muted">' + escapeHtml(booking.date || "Дата не указана") + ' · ' + escapeHtml(booking.time || "") + '</div></div><div>' + escapeHtml(booking.duration || "") + '</div><div><span class="badge accent">' + escapeHtml(booking.status) + '</span></div><div>' + escapeHtml(booking.note || "") + '</div><div></div></div>';
       }).join("") : '<div class="empty">Бронирований ещё нет.</div>';
     }
+    function renderPartnerSupportHub(partner) {
+      const documents = MarketplaceStore.getDocumentsForOwner("partner", partner.id);
+      const tickets = MarketplaceStore.getTicketsForOwner("partner", partner.id);
+      byId("partner-documents").innerHTML = documents.length ? documents.map(function (item) {
+        return '<div class="table-row"><div><strong>' + escapeHtml(item.title) + '</strong><div class="muted">' + escapeHtml(item.kind) + ' · ' + escapeHtml(item.status || "ready") + '</div></div><div>' + escapeHtml(item.summary || "Без описания") + '</div><div>' + escapeHtml((item.createdAt || "").slice(0, 10)) + '</div><div>' + (item.url ? '<a class="ghost-btn" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener">Открыть</a>' : '—') + '</div></div>';
+      }).join("") : '<div class="empty">Документы появятся после royalty periods и finance действий.</div>';
+      byId("partner-tickets").innerHTML = tickets.length ? tickets.map(function (ticket) {
+        return '<div class="table-row"><div><strong>' + escapeHtml(ticket.subject) + '</strong><div class="muted">' + escapeHtml(ticket.category) + ' · ' + escapeHtml(ticket.priority) + '</div></div><div>' + escapeHtml(ticket.message) + '</div><div><span class="badge gold">' + escapeHtml(ticket.status) + '</span></div><div>' + escapeHtml((ticket.updatedAt || ticket.createdAt || "").slice(0, 10)) + '</div></div>';
+      }).join("") : '<div class="empty">Тикетов пока нет.</div>';
+    }
 
     function renderPartnerCabinet() {
       const partner = getPartner();
@@ -563,6 +614,7 @@
       renderReports(partner);
       renderPartnerFinanceWidgets(partner);
       renderStudio(partner);
+      renderPartnerSupportHub(partner);
     }
 
     byId("partner-register-form").addEventListener("submit", function (event) {
@@ -670,6 +722,23 @@
       });
       event.target.reset();
       showPartnerMessage("Отчёт создан, артисту начислен net, а у партнёра отражён резерв в ledger.", "success");
+      renderPartnerCabinet();
+    });
+    byId("partner-ticket-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const partner = getPartner();
+      if (!partner) return;
+      const payload = Object.fromEntries(new FormData(event.target).entries());
+      MarketplaceStore.createTicket({
+        ownerType: "partner",
+        ownerId: partner.id,
+        subject: payload.subject,
+        category: payload.category,
+        priority: payload.priority,
+        message: payload.message
+      });
+      event.target.reset();
+      showPartnerMessage("Support ticket создан и отправлен в ops-команду.", "success");
       renderPartnerCabinet();
     });
 

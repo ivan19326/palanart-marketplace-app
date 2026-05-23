@@ -66,6 +66,7 @@
       boardPosts: [],
       reviews: [],
       tickets: [],
+      documents: [],
       releases: [],
       royaltyReports: [],
       payoutRequests: [],
@@ -340,6 +341,7 @@
         parsed.boardPosts = Array.isArray(parsed.boardPosts) ? parsed.boardPosts : [];
         parsed.reviews = Array.isArray(parsed.reviews) ? parsed.reviews.map(normalizeReview) : [];
         parsed.tickets = Array.isArray(parsed.tickets) ? parsed.tickets : [];
+        parsed.documents = Array.isArray(parsed.documents) ? parsed.documents : [];
         parsed.releases = Array.isArray(parsed.releases) ? parsed.releases : [];
         parsed.royaltyReports = Array.isArray(parsed.royaltyReports) ? parsed.royaltyReports : [];
         parsed.payoutRequests = Array.isArray(parsed.payoutRequests) ? parsed.payoutRequests : [];
@@ -1235,6 +1237,17 @@
       createdAt: new Date().toISOString()
     };
     db.royaltyReports.unshift(report);
+    db.documents.unshift({
+      id: newId("doc"),
+      ownerType: payload.artistId ? "artist" : (payload.partnerId ? "partner" : "shared"),
+      ownerId: payload.artistId || payload.partnerId || null,
+      kind: "royalty_report",
+      title: "Royalty report · " + ((payload.periodLabel || "").trim() || "Period"),
+      status: report.status || "published",
+      summary: "Gross " + numeric(payload.grossAmount, 0) + " / Net " + numeric(payload.netAmount, 0) + " " + (payload.currency || "RUB"),
+      url: (payload.statementUrl || "").trim(),
+      createdAt: report.createdAt
+    });
     saveDb(db);
     return { ok: true, report: report };
   }
@@ -1298,8 +1311,60 @@
       createdAt: new Date().toISOString()
     };
     db.payoutRequests.unshift(request);
+    db.documents.unshift({
+      id: newId("doc"),
+      ownerType: payload.artistId ? "artist" : (payload.partnerId ? "partner" : "shared"),
+      ownerId: payload.artistId || payload.partnerId || null,
+      kind: "payout_request",
+      title: "Payout request · " + numeric(payload.amount, 0) + " " + ((payload.currency || "RUB").trim()),
+      status: request.status,
+      summary: (payload.note || "").trim() || "Withdrawal request created in finance layer.",
+      url: "",
+      createdAt: request.createdAt
+    });
     saveDb(db);
     return { ok: true, request: request };
+  }
+
+  function createTicket(payload) {
+    const db = getDb();
+    const ticket = {
+      id: newId("ticket"),
+      ownerType: payload.ownerType || "artist",
+      ownerId: payload.ownerId || null,
+      subject: (payload.subject || "").trim(),
+      category: (payload.category || "support").trim(),
+      priority: (payload.priority || "normal").trim(),
+      status: payload.status || "open",
+      message: (payload.message || "").trim(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    db.tickets.unshift(ticket);
+    saveDb(db);
+    return { ok: true, ticket: ticket };
+  }
+
+  function updateTicketStatus(ticketId, status) {
+    const db = getDb();
+    const ticket = db.tickets.find(function (item) { return item.id === ticketId; });
+    if (!ticket) return { ok: false, message: "Тикет не найден." };
+    ticket.status = status || ticket.status;
+    ticket.updatedAt = new Date().toISOString();
+    saveDb(db);
+    return { ok: true, ticket: ticket };
+  }
+
+  function getTicketsForOwner(ownerType, ownerId) {
+    return getDb().tickets.filter(function (ticket) {
+      return ticket.ownerType === ownerType && ticket.ownerId === ownerId;
+    });
+  }
+
+  function getDocumentsForOwner(ownerType, ownerId) {
+    return getDb().documents.filter(function (documentItem) {
+      return (documentItem.ownerType === ownerType && documentItem.ownerId === ownerId) || documentItem.ownerType === "shared";
+    });
   }
 
   function getPayoutRequestsForArtist(artistId) {
@@ -1376,7 +1441,9 @@
       releases: db.releases.length,
       royaltyReports: db.royaltyReports.length,
       payoutRequests: db.payoutRequests.length,
-      studioBookings: db.studioBookings.length
+      studioBookings: db.studioBookings.length,
+      tickets: db.tickets.length,
+      documents: db.documents.length
     };
   }
 
@@ -1508,6 +1575,10 @@
     getPayoutRequestsForArtist: getPayoutRequestsForArtist,
     getPayoutRequestsForPartner: getPayoutRequestsForPartner,
     updatePayoutRequestStatus: updatePayoutRequestStatus,
+    createTicket: createTicket,
+    updateTicketStatus: updateTicketStatus,
+    getTicketsForOwner: getTicketsForOwner,
+    getDocumentsForOwner: getDocumentsForOwner,
     createStudioBooking: createStudioBooking,
     getStudioServices: getStudioServices,
     getStudioBookingsForCustomer: getStudioBookingsForCustomer,

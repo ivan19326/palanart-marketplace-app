@@ -63,6 +63,7 @@
         <a href="#admin-release-ops">Release Control</a>
         <a href="#admin-finance-ops">Finance</a>
         <a href="#admin-studio-ops">Studio</a>
+        <a href="#admin-support-ops">Docs & Support</a>
       </nav>
       <div class="ops-board">
         <section class="ops-card">
@@ -223,6 +224,17 @@
         <div class="section-head"><div><h2>Студийные бронирования</h2><p class="muted">Запросы артистов и партнёров на запись, сведение и мастеринг со статусами обработки.</p></div></div>
         <div id="studio-bookings-list" class="table-list"></div>
       </div>
+
+      <div class="split" style="margin-top:18px;" id="admin-support-ops">
+        <div class="panel">
+          <div class="section-head"><div><h2>Document Center</h2><p class="muted">Royalty statements, payout requests и сервисные документы платформы в одном окне.</p></div></div>
+          <div id="admin-documents-list" class="table-list"></div>
+        </div>
+        <div class="panel">
+          <div class="section-head"><div><h2>Support Desk</h2><p class="muted">Тикеты артистов и партнёров с приоритетами, SLA и ручным переводом по статусам.</p></div></div>
+          <div id="admin-tickets-list" class="table-list"></div>
+        </div>
+      </div>
     </section>
   </main>
 
@@ -258,7 +270,7 @@
     function showMessage(target, text, kind) { byId(target).innerHTML = text ? '<div class="message ' + kind + '">' + text + '</div>' : ""; }
     function renderStats() {
       const stats = MarketplaceStore.getStats();
-      byId("stats-grid").innerHTML = [["Активные профили", stats.approvedProfiles], ["На модерации", stats.pendingProfiles], ["Клиенты", stats.users], ["Артисты", stats.artists], ["Партнёры", stats.partners], ["Релизы", stats.releases], ["Отчёты", stats.royaltyReports], ["Выплаты", stats.payoutRequests], ["Запросы", stats.leads], ["Предложения", stats.quotes], ["Кейсы", stats.bookedDeals], ["Чаты", stats.chats]].map(function (item) {
+      byId("stats-grid").innerHTML = [["Активные профили", stats.approvedProfiles], ["На модерации", stats.pendingProfiles], ["Клиенты", stats.users], ["Артисты", stats.artists], ["Партнёры", stats.partners], ["Релизы", stats.releases], ["Отчёты", stats.royaltyReports], ["Документы", stats.documents], ["Тикеты", stats.tickets], ["Выплаты", stats.payoutRequests], ["Запросы", stats.leads], ["Предложения", stats.quotes], ["Кейсы", stats.bookedDeals], ["Чаты", stats.chats]].map(function (item) {
         return '<article class="stats-card"><h3>' + item[0] + '</h3><strong>' + item[1] + '</strong></article>';
       }).join("");
     }
@@ -266,8 +278,10 @@
       const stats = MarketplaceStore.getStats();
       const payouts = MarketplaceStore.getDb().payoutRequests || [];
       const releases = MarketplaceStore.getDb().releases || [];
+      const tickets = MarketplaceStore.getDb().tickets || [];
       const pendingPayouts = payouts.filter(function (item) { return item.status === "pending"; }).length;
       const scheduledReleases = releases.filter(function (item) { return item.status === "scheduled"; }).length;
+      const openTickets = tickets.filter(function (item) { return item.status !== "resolved" && item.status !== "closed"; }).length;
       byId("admin-executive-grid").innerHTML = [
         {
           eyebrow: "Platform Pulse",
@@ -292,6 +306,12 @@
           title: "Payout requests pending approval",
           value: String(pendingPayouts),
           text: pendingPayouts ? "Есть выплаты, требующие решения finance owner." : "Сейчас finance queue чистая и не требует ручного вмешательства."
+        },
+        {
+          eyebrow: "Support Desk",
+          title: "Open tickets across artist and partner portals",
+          value: String(openTickets),
+          text: openTickets ? "Support queue уже живая. Важно держать SLA и не терять finance/doc issues." : "Сервисный desk пока чистый, можно усиливать knowledge base и document flow."
         }
       ].map(function (item) {
         return '<article class="portal-summary-card"><span class="eyebrow-note">' + escapeHtml(item.eyebrow) + '</span><strong>' + escapeHtml(item.title) + '</strong><div class="portal-stat-line"><span class="muted">Live</span><span class="value">' + escapeHtml(item.value) + '</span></div><p>' + escapeHtml(item.text) + '</p></article>';
@@ -318,9 +338,11 @@
       const releases = MarketplaceStore.getDb().releases || [];
       const payouts = MarketplaceStore.getDb().payoutRequests || [];
       const reviews = MarketplaceStore.getDb().reviews || [];
+      const tickets = MarketplaceStore.getDb().tickets || [];
       const pendingProfiles = stats.pendingProfiles || 0;
       const scheduled = releases.filter(function (item) { return item.status === "scheduled" || item.status === "review"; }).length;
       const pendingPayouts = payouts.filter(function (item) { return item.status === "pending"; }).length;
+      const openTickets = tickets.filter(function (item) { return item.status !== "resolved" && item.status !== "closed"; }).length;
       const featuredGap = reviews.filter(function (item) { return item.featured; }).length;
       byId("admin-command-center").innerHTML = [
         {
@@ -354,6 +376,14 @@
           text: featuredGap ? "Отзывы уже можно использовать для усиления публичного brand trust." : "После первых completed flows стоит поднимать curation и reputation layer.",
           actionHref: "#admin-commercial-ops",
           actionLabel: "Открыть Commercial Ops"
+        },
+        {
+          title: openTickets ? "Support desk ждёт ответа" : "Support desk стабилен",
+          chip: openTickets ? openTickets + " open" : "Desk clear",
+          chipClass: openTickets ? " is-hot" : " is-positive",
+          text: openTickets ? "Есть открытые тикеты по документам, финансам или studio flow. Лучше закрывать их в общем SLA." : "Сервисный контур чистый. Можно фокусироваться на proactive support и automation.",
+          actionHref: "#admin-support-ops",
+          actionLabel: "Открыть Docs & Support"
         }
       ].map(function (item) {
         return '<article class="ops-item"><div class="ops-item-head"><strong>' + escapeHtml(item.title) + '</strong><span class="ops-chip' + item.chipClass + '">' + escapeHtml(item.chip) + '</span></div><p>' + escapeHtml(item.text) + '</p><div class="ops-actions"><a class="ops-link" href="' + escapeHtml(item.actionHref || "#") + '">' + escapeHtml(item.actionLabel || "Открыть") + '</a></div></article>';
@@ -363,6 +393,7 @@
       const stats = MarketplaceStore.getStats();
       const releases = MarketplaceStore.getDb().releases || [];
       const payouts = MarketplaceStore.getDb().payoutRequests || [];
+      const tickets = MarketplaceStore.getDb().tickets || [];
       const cards = [
         {
           state: stats.pendingProfiles ? "is-hot" : "is-positive",
@@ -378,6 +409,11 @@
           state: payouts.filter(function (item) { return item.status === "pending"; }).length ? "is-hot" : "is-positive",
           title: "Finance risk",
           text: payouts.filter(function (item) { return item.status === "pending"; }).length ? "Есть pending payouts. Их лучше держать в одном SLA с royalty-publishing." : "Finance queue сейчас чистая, можно усиливать platform rules и growth mechanics."
+        },
+        {
+          state: tickets.filter(function (item) { return item.status !== "resolved" && item.status !== "closed"; }).length ? "is-focus" : "is-positive",
+          title: "Support SLA",
+          text: tickets.filter(function (item) { return item.status !== "resolved" && item.status !== "closed"; }).length ? "Открытые тикеты уже формируют отдельный operational contour. Ему нужен owner и понятный SLA." : "Support desk спокойный. Можно готовить canned replies и knowledge layer."
         }
       ];
       byId("admin-focus-strip").innerHTML = cards.map(function (card) {
@@ -391,11 +427,13 @@
       const payout = (MarketplaceStore.getDb().payoutRequests || [])[0];
       const lead = (MarketplaceStore.getDb().leads || [])[0];
       const booking = (MarketplaceStore.getDb().studioBookings || [])[0];
+      const ticket = (MarketplaceStore.getDb().tickets || [])[0];
       if (profile) items.push({ title: "Profile signal", meta: profile.status, text: profile.name + " · " + (profile.city || "city pending") });
       if (lead) items.push({ title: "New intake", meta: lead.status, text: (lead.customerName || "Client") + " оставил новый service request." });
       if (release) items.push({ title: "Release movement", meta: release.status, text: release.title + (release.releaseDate ? " · " + release.releaseDate : "") });
       if (payout) items.push({ title: "Payout movement", meta: payout.status, text: "Запрос на " + Number(payout.amount || 0).toLocaleString("ru-RU") + " " + payout.currency + "." });
       if (booking) items.push({ title: "Studio booking", meta: booking.status, text: (booking.customerName || "Customer") + " · " + (booking.date || "TBD") });
+      if (ticket) items.push({ title: "Support ticket", meta: ticket.status, text: ticket.subject + " · " + ticket.priority });
       byId("admin-activity-feed").innerHTML = items.length ? items.slice(0, 5).map(function (item) {
         return '<article class="activity-item"><div class="activity-meta"><strong>' + escapeHtml(item.title) + '</strong><span class="ops-chip">' + escapeHtml(item.meta || "Update") + '</span></div><p>' + escapeHtml(item.text) + '</p></article>';
       }).join("") : '<div class="empty">Когда профили, релизы и finance начнут двигаться, здесь появится platform activity feed.</div>';
@@ -523,6 +561,24 @@
         return '<div class="table-row"><div><strong>' + escapeHtml(service ? service.name : "Услуга") + '</strong><div class="muted">' + escapeHtml(booking.customerName || "") + '</div></div><div>' + escapeHtml(booking.date || "Без даты") + ' ' + escapeHtml(booking.time || "") + '</div><div>' + escapeHtml(booking.duration || "—") + '</div><div><span class="badge gold">' + escapeHtml(booking.status) + '</span></div><div><button class="ghost-btn" type="button" onclick="setStudioStatus(\'' + booking.id + '\', \'confirmed\')">Подтвердить</button></div></div>';
       }).join("") : '<div class="empty">Студийных бронирований пока нет.</div>';
     }
+    function renderAdminSupportDesk() {
+      const documents = (MarketplaceStore.getDb().documents || []).slice().sort(function (a, b) {
+        return String(b.createdAt || "").localeCompare(String(a.createdAt || ""));
+      });
+      byId("admin-documents-list").innerHTML = documents.length ? documents.map(function (document) {
+        const ownerLabel = document.ownerType === "artist" ? "Artist" : (document.ownerType === "partner" ? "Partner" : "Shared");
+        const action = document.url ? '<a class="ops-link" href="' + escapeHtml(document.url) + '" target="_blank" rel="noopener">Открыть</a>' : '<span class="muted">Без файла</span>';
+        return '<div class="table-row"><div><strong>' + escapeHtml(document.title) + '</strong><div class="muted">' + escapeHtml(ownerLabel) + ' · ' + escapeHtml(document.kind || "document") + '</div></div><div>' + escapeHtml(document.summary || "Без описания") + '</div><div><span class="badge accent">' + escapeHtml(document.status || "published") + '</span></div><div>' + action + '</div></div>';
+      }).join("") : '<div class="empty">Документы появятся после первых royalty periods и payout flows.</div>';
+
+      const tickets = (MarketplaceStore.getDb().tickets || []).slice().sort(function (a, b) {
+        return String(b.updatedAt || b.createdAt || "").localeCompare(String(a.updatedAt || a.createdAt || ""));
+      });
+      byId("admin-tickets-list").innerHTML = tickets.length ? tickets.map(function (ticket) {
+        const ownerLabel = ticket.ownerType === "artist" ? "Artist" : "Partner";
+        return '<div class="table-row"><div><strong>' + escapeHtml(ticket.subject) + '</strong><div class="muted">' + escapeHtml(ownerLabel) + ' · ' + escapeHtml(ticket.category || "general") + ' · ' + escapeHtml(ticket.priority || "normal") + '</div></div><div>' + escapeHtml(ticket.message || "Без комментария") + '</div><div><span class="badge gold">' + escapeHtml(ticket.status || "open") + '</span></div><div class="inline-actions"><button class="ghost-btn" type="button" onclick="setTicketStatus(\'' + ticket.id + '\', \'in_progress\')">В работу</button><button class="ghost-btn" type="button" onclick="setTicketStatus(\'' + ticket.id + '\', \'resolved\')">Решён</button><button class="ghost-btn" type="button" onclick="setTicketStatus(\'' + ticket.id + '\', \'closed\')">Закрыть</button></div></div>';
+      }).join("") : '<div class="empty">Открытых тикетов пока нет.</div>';
+    }
     window.openAdminChat = function (dealId) {
       const chat = MarketplaceStore.getChatByDealId(dealId);
       const deal = MarketplaceStore.getDb().deals.find(function (item) { return item.id === dealId; });
@@ -551,13 +607,18 @@
       showMessage("admin-message", "Статус бронирования обновлён.", "success");
       renderDashboard();
     };
+    window.setTicketStatus = function (ticketId, status) {
+      MarketplaceStore.updateTicketStatus(ticketId, status);
+      showMessage("admin-message", "Статус тикета обновлён.", "success");
+      renderDashboard();
+    };
     function renderDashboard() {
       const admin = MarketplaceStore.getCurrentAdmin();
       byId("login-view").style.display = admin ? "none" : "grid";
       byId("dashboard-view").style.display = admin ? "block" : "none";
       if (!admin) return;
       byId("admin-name").textContent = "Авторизован: " + admin.name;
-      renderStats(); renderAdminExecutive(); renderAdminSystemRail(); renderAdminCommandCenter(); renderAdminActivityFeed(); renderAdminFocusStrip(); renderSettings(); renderDictionaries(); renderProfiles(); renderLeadsAndQuotes(); renderReviews(); renderChats(); renderReleaseOps(); renderAdminReleaseTimeline(); renderRoyaltyOps(); renderAdminFinanceWidgets(); renderStudioOps();
+      renderStats(); renderAdminExecutive(); renderAdminSystemRail(); renderAdminCommandCenter(); renderAdminActivityFeed(); renderAdminFocusStrip(); renderSettings(); renderDictionaries(); renderProfiles(); renderLeadsAndQuotes(); renderReviews(); renderChats(); renderReleaseOps(); renderAdminReleaseTimeline(); renderRoyaltyOps(); renderAdminFinanceWidgets(); renderStudioOps(); renderAdminSupportDesk();
       byId("chat-admin-box").innerHTML = '<div class="empty">Выберите кейс, чтобы посмотреть чат.</div>';
     }
     byId("admin-login").addEventListener("submit", function (event) {
