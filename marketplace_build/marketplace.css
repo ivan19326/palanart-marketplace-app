@@ -1,6 +1,11 @@
 :root {
   --bg: #09111c;
   --bg-strong: #101b2d;
+  --scene-bg-1: rgba(255, 138, 91, 0.24);
+  --scene-bg-2: rgba(93, 209, 194, 0.18);
+  --scene-bg-3: rgba(103, 130, 255, 0.18);
+  --scene-glow-1: rgba(255, 138, 91, 0.22);
+  --scene-glow-2: rgba(93, 209, 194, 0.18);
   --panel: rgba(15, 24, 39, 0.94);
   --panel-strong: rgba(18, 29, 48, 0.98);
   --text: #ffffff;
@@ -39,15 +44,16 @@ body {
   color: var(--text);
   font-family: "Aptos", "Segoe UI Variable", "Segoe UI", "Trebuchet MS", Arial, sans-serif;
   background:
-    radial-gradient(circle at 12% 8%, rgba(255, 138, 91, 0.24), transparent 24%),
-    radial-gradient(circle at 88% 12%, rgba(93, 209, 194, 0.18), transparent 18%),
-    radial-gradient(circle at 50% 36%, rgba(103, 130, 255, 0.18), transparent 28%),
+    radial-gradient(circle at 12% 8%, var(--scene-bg-1), transparent 24%),
+    radial-gradient(circle at 88% 12%, var(--scene-bg-2), transparent 18%),
+    radial-gradient(circle at 50% 36%, var(--scene-bg-3), transparent 28%),
     conic-gradient(from 220deg at 50% 50%, rgba(255, 138, 91, 0.08), rgba(93, 209, 194, 0.04), rgba(240, 187, 75, 0.05), rgba(255, 138, 91, 0.08)),
     linear-gradient(180deg, var(--bg) 0%, var(--bg-strong) 100%);
   min-height: 100vh;
   text-rendering: optimizeLegibility;
   position: relative;
   overflow-x: hidden;
+  transition: background 0.85s ease, color 0.35s ease;
 }
 body::before,
 body::after {
@@ -66,15 +72,79 @@ body::before {
   left: -120px;
   width: 300px;
   height: 300px;
-  background: radial-gradient(circle, rgba(255, 138, 91, 0.22), transparent 68%);
+  background: radial-gradient(circle, var(--scene-glow-1), transparent 68%);
 }
 body::after {
   right: -120px;
   bottom: 12vh;
   width: 340px;
   height: 340px;
-  background: radial-gradient(circle, rgba(93, 209, 194, 0.18), transparent 68%);
+  background: radial-gradient(circle, var(--scene-glow-2), transparent 68%);
   animation-delay: -8s;
+}
+
+body[data-scene="hero"] {
+  --scene-bg-1: rgba(255, 138, 91, 0.24);
+  --scene-bg-2: rgba(93, 209, 194, 0.18);
+  --scene-bg-3: rgba(103, 130, 255, 0.18);
+  --scene-glow-1: rgba(255, 138, 91, 0.22);
+  --scene-glow-2: rgba(93, 209, 194, 0.18);
+}
+
+body[data-scene="label"] {
+  --scene-bg-1: rgba(255, 173, 92, 0.22);
+  --scene-bg-2: rgba(118, 211, 255, 0.18);
+  --scene-bg-3: rgba(214, 134, 255, 0.14);
+  --scene-glow-1: rgba(255, 173, 92, 0.24);
+  --scene-glow-2: rgba(118, 211, 255, 0.18);
+}
+
+body[data-scene="studio"] {
+  --scene-bg-1: rgba(255, 97, 140, 0.2);
+  --scene-bg-2: rgba(93, 209, 194, 0.2);
+  --scene-bg-3: rgba(103, 130, 255, 0.22);
+  --scene-glow-1: rgba(255, 97, 140, 0.22);
+  --scene-glow-2: rgba(93, 209, 194, 0.22);
+}
+
+body[data-scene="release"] {
+  --scene-bg-1: rgba(255, 138, 91, 0.18);
+  --scene-bg-2: rgba(240, 187, 75, 0.18);
+  --scene-bg-3: rgba(103, 130, 255, 0.22);
+  --scene-glow-1: rgba(240, 187, 75, 0.22);
+  --scene-glow-2: rgba(103, 130, 255, 0.2);
+}
+
+body[data-scene="partner"] {
+  --scene-bg-1: rgba(93, 209, 194, 0.16);
+  --scene-bg-2: rgba(103, 130, 255, 0.22);
+  --scene-bg-3: rgba(255, 138, 91, 0.14);
+  --scene-glow-1: rgba(103, 130, 255, 0.22);
+  --scene-glow-2: rgba(93, 209, 194, 0.18);
+}
+
+body[data-scene="catalog"] {
+  --scene-bg-1: rgba(255, 138, 91, 0.2);
+  --scene-bg-2: rgba(93, 209, 194, 0.14);
+  --scene-bg-3: rgba(255, 255, 255, 0.12);
+  --scene-glow-1: rgba(255, 138, 91, 0.2);
+  --scene-glow-2: rgba(255, 255, 255, 0.14);
+}
+
+body[data-scene="board"] {
+  --scene-bg-1: rgba(255, 138, 91, 0.16);
+  --scene-bg-2: rgba(93, 209, 194, 0.18);
+  --scene-bg-3: rgba(214, 134, 255, 0.18);
+  --scene-glow-1: rgba(214, 134, 255, 0.2);
+  --scene-glow-2: rgba(93, 209, 194, 0.18);
+}
+
+body[data-scene="trust"] {
+  --scene-bg-1: rgba(240, 187, 75, 0.18);
+  --scene-bg-2: rgba(255, 138, 91, 0.16);
+  --scene-bg-3: rgba(93, 209, 194, 0.14);
+  --scene-glow-1: rgba(240, 187, 75, 0.22);
+  --scene-glow-2: rgba(255, 138, 91, 0.18);
 }
 a { color: inherit; }
 p, li { line-height: 1.65; }

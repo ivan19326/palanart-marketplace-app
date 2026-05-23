@@ -36,7 +36,7 @@
 
   <main class="shell">
     <div id="site-message"></div>
-    <section class="hero">
+    <section class="hero" data-scene="hero">
       <div class="hero-grid">
         <article class="hero-card">
           <div class="highlight">Публичный сайт лейбла + artist portal + business portal + студийные сервисы</div>
@@ -126,7 +126,7 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" data-scene="label">
       <div class="section-head">
         <div>
           <h2>Что входит в публичный сайт платформы</h2>
@@ -141,7 +141,7 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" data-scene="label">
       <div class="section-head">
         <div>
           <h2>Услуги лейбла</h2>
@@ -156,7 +156,7 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" data-scene="studio">
       <div class="section-head">
         <div>
           <h2>Студийный комплекс</h2>
@@ -179,7 +179,7 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" data-scene="release">
       <div class="section-head">
         <div>
           <h2>Релизный процесс</h2>
@@ -195,7 +195,7 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" data-scene="partner">
       <div class="section-head">
         <div>
           <h2>Для партнёров</h2>
@@ -218,7 +218,7 @@
       </div>
     </section>
 
-    <section class="section" id="label-platform">
+    <section class="section" id="label-platform" data-scene="label">
       <div class="section-head">
         <div>
           <h2>Платформа лейбла и студийного комплекса</h2>
@@ -233,7 +233,7 @@
       </div>
     </section>
 
-    <section class="section" id="workflow">
+    <section class="section" id="workflow" data-scene="release">
       <div class="section-head">
         <div>
           <h2>Как работает платформа</h2>
@@ -249,7 +249,7 @@
       </div>
     </section>
 
-    <section class="section" id="catalog">
+    <section class="section" id="catalog" data-scene="catalog">
       <div class="section-head">
         <div>
           <h2>Публичный каталог артистов</h2>
@@ -290,7 +290,7 @@
       <div id="catalog-grid" class="cards-grid"></div>
     </section>
 
-    <section class="section">
+    <section class="section" data-scene="catalog">
       <div class="section-head">
         <div>
           <h2>Выбранный профиль</h2>
@@ -300,7 +300,7 @@
       <div id="profile-detail" class="panel"></div>
     </section>
 
-    <section class="section">
+    <section class="section" data-scene="catalog">
       <div class="section-head">
         <div>
           <h2>Сравнение артистов и проектов</h2>
@@ -310,7 +310,7 @@
       <div id="compare-box" class="comparison-table"></div>
     </section>
 
-    <section class="section" id="board">
+    <section class="section" id="board" data-scene="board">
       <div class="section-head">
         <div>
           <h2>Открытые запросы и сервисные предложения</h2>
@@ -385,7 +385,7 @@
       </div>
     </section>
 
-    <section class="section" id="reviews">
+    <section class="section" id="reviews" data-scene="trust">
       <div class="section-head">
         <div>
           <h2>Отзывы и доверие</h2>
@@ -395,7 +395,7 @@
       <div id="reviews-grid" class="grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));"></div>
     </section>
 
-    <section class="section">
+    <section class="section" data-scene="partner">
       <div class="panel">
         <div class="section-head">
           <div>
@@ -418,7 +418,7 @@
     </section>
   </main>
 
-  <section class="shell section">
+  <section class="shell section" data-scene="hero">
     <div class="cta-band">
       <div class="section-head">
         <div>
@@ -929,6 +929,35 @@
       byId(id).addEventListener("input", renderCatalog);
       byId(id).addEventListener("change", renderCatalog);
     });
+    (function initScrollScenes() {
+      const sections = Array.from(document.querySelectorAll("[data-scene]"));
+      if (!sections.length) return;
+      let activeScene = "hero";
+      function setScene(scene) {
+        if (!scene || activeScene === scene) return;
+        activeScene = scene;
+        document.body.setAttribute("data-scene", scene);
+      }
+      setScene(sections[0].dataset.scene || "hero");
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(function (entries) {
+          const visible = entries.filter(function (entry) { return entry.isIntersecting; })
+            .sort(function (a, b) { return b.intersectionRatio - a.intersectionRatio; });
+          if (!visible.length) return;
+          setScene(visible[0].target.dataset.scene);
+        }, { threshold: [0.2, 0.35, 0.55, 0.75] });
+        sections.forEach(function (section) { observer.observe(section); });
+      } else {
+        window.addEventListener("scroll", function () {
+          let candidate = sections[0];
+          const pivot = window.scrollY + window.innerHeight * 0.35;
+          sections.forEach(function (section) {
+            if (section.offsetTop <= pivot) candidate = section;
+          });
+          setScene(candidate.dataset.scene);
+        }, { passive: true });
+      }
+    })();
     renderCategoryFilter();
     renderHeroStats();
     renderCatalog();
