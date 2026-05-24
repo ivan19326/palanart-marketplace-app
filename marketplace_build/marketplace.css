@@ -1083,6 +1083,59 @@ main { position: relative; z-index: 1; }
   gap: 12px;
 }
 
+.masthead-people-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 220px;
+  border-radius: 26px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  box-shadow: var(--shadow);
+}
+
+.masthead-people-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transform: scale(1.04);
+  filter: saturate(1.14) contrast(1.04) brightness(0.96);
+}
+
+.masthead-people-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(8, 14, 24, 0.08), rgba(8, 14, 24, 0.76)),
+    radial-gradient(circle at 78% 18%, rgba(255, 158, 102, 0.24), transparent 30%),
+    linear-gradient(120deg, rgba(168, 85, 247, 0.08), transparent 36%, rgba(0, 212, 255, 0.08) 82%, transparent 100%);
+}
+
+.masthead-people-copy {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  z-index: 2;
+  display: grid;
+  gap: 8px;
+}
+
+.masthead-people-copy h3,
+.masthead-people-copy p {
+  margin: 0;
+}
+
+.masthead-people-copy h3 {
+  font-size: 1.16rem;
+  line-height: 1.2;
+}
+
+.masthead-people-copy p {
+  color: rgba(255,255,255,0.84);
+}
+
 .page-rail-card {
   padding: 16px 18px;
   border-radius: 22px;
