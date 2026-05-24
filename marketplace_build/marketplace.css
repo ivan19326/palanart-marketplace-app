@@ -3697,6 +3697,83 @@ body[data-theme="light"] .summary-pill {
   .stats-card {
     padding: 18px;
   }
+  .auth-box {
+    border-radius: 22px;
+    padding: 14px;
+  }
+  .service-hero {
+    gap: 12px;
+  }
+  .service-panel,
+  .service-section,
+  .page-rail-card {
+    border-radius: 20px;
+  }
+  .service-panel {
+    padding: 16px;
+  }
+  .service-panel h1 {
+    font-size: clamp(1.5rem, 7vw, 2.2rem);
+    line-height: 1.02;
+    max-width: 12ch;
+  }
+  .service-panel h2 {
+    font-size: clamp(1.3rem, 6vw, 1.8rem);
+  }
+  .service-panel h3 {
+    font-size: 1rem;
+  }
+  .service-panel p,
+  .service-panel .muted,
+  .info-item {
+    font-size: 0.94rem;
+    line-height: 1.48;
+  }
+  .page-masthead,
+  .floating-panel {
+    padding: 16px;
+    border-radius: 24px;
+  }
+  .page-masthead {
+    margin: 10px 0 14px;
+  }
+  .page-masthead-copy {
+    gap: 10px;
+  }
+  .page-masthead-copy h1,
+  .page-masthead-copy h2 {
+    font-size: clamp(1.9rem, 8.4vw, 3rem);
+    line-height: 1;
+    max-width: 10ch;
+  }
+  .page-masthead-copy p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .page-masthead-actions {
+    gap: 8px;
+  }
+  .page-masthead-actions .primary-btn,
+  .page-masthead-actions .ghost-btn {
+    min-height: 44px;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+  }
+  .page-masthead-rail {
+    gap: 10px;
+  }
+  .masthead-people-card {
+    min-height: 200px;
+    border-radius: 22px;
+  }
+  .page-rail-card {
+    padding: 14px 15px;
+  }
+  .highlight,
+  .eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+  }
   .hero-card h1 {
     max-width: none;
     font-size: clamp(1.8rem, 9vw, 3rem);
@@ -3706,7 +3783,7 @@ body[data-theme="light"] .summary-pill {
   }
   .page-masthead,
   .floating-panel {
-    padding: 20px;
+    padding: 16px;
   }
   .matrix-card,
   .matrix-card--wide {
