@@ -912,6 +912,10 @@ body::after {
   filter: saturate(1.16) contrast(1.03) brightness(0.98);
 }
 
+.people-image {
+  object-position: center center;
+}
+
 .people-card::after {
   content: "";
   position: absolute;
@@ -3711,7 +3715,71 @@ body[data-theme="light"] .summary-pill {
   }
   .people-card,
   .people-card--tall {
-    min-height: 220px;
+    min-height: 210px;
+    border-radius: 24px;
+  }
+  .people-card--tall {
+    min-height: 280px;
+  }
+  .people-card img,
+  .masthead-people-card img {
+    transform: scale(1.12);
+  }
+  .people-card-copy,
+  .masthead-people-copy {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    gap: 6px;
+  }
+  .people-card-copy h3,
+  .masthead-people-copy h3 {
+    font-size: 1.05rem;
+    line-height: 1.16;
+  }
+  .people-card-copy p,
+  .masthead-people-copy p {
+    font-size: 0.94rem;
+    line-height: 1.45;
+  }
+  .people-image--client-main {
+    object-position: 52% 38%;
+  }
+  .people-image--live-energy,
+  .people-image--home-main,
+  .people-image--artist-live {
+    object-position: 52% 26%;
+  }
+  .people-image--platform-team,
+  .people-image--home-team,
+  .people-image--partner-main,
+  .people-image--partner-hero,
+  .people-card--partner-main img,
+  .masthead-people-card--partner img {
+    object-position: 54% 34%;
+  }
+  .people-image--artist-hero,
+  .people-image--artist-main {
+    object-position: 58% 22%;
+  }
+  .people-image--artist-studio,
+  .people-image--home-studio,
+  .people-image--partner-studio,
+  .people-image--admin-studio,
+  .people-card--partner-studio img {
+    object-position: 56% 24%;
+  }
+  .people-image--admin-hero,
+  .people-image--admin-main {
+    object-position: 58% 30%;
+  }
+  .people-image--admin-artist,
+  .people-image--partner-artist,
+  .people-card--partner-artist img {
+    object-position: 56% 22%;
+  }
+  .people-image--admin-support {
+    object-position: 52% 28%;
   }
   .ops-showcase,
   .portal-spotlight {
