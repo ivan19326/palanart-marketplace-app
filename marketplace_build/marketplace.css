@@ -57,6 +57,12 @@ body {
   overflow-x: hidden;
   transition: background 0.85s ease, color 0.35s ease;
 }
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
 body::before,
 body::after {
   content: "";
@@ -2598,10 +2604,13 @@ body[data-theme="light"] .table-row:hover {
   display: grid;
   place-items: center;
   padding: 28px 0;
+  width: 100%;
 }
 
 .auth-box {
   width: min(1180px, calc(100% - 18px));
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 .auth-grid,
@@ -3605,10 +3614,28 @@ body[data-theme="light"] .summary-pill {
 }
 
 @media (max-width: 720px) {
-  .shell { width: min(100% - 20px, 1240px); }
+  .shell {
+    width: calc(100% - 20px);
+    max-width: 1240px;
+  }
   .topbar-inner {
     align-items: center;
     justify-content: space-between;
+  }
+  .auth-wrap {
+    display: block;
+    min-height: auto;
+    padding: 16px 0 26px;
+  }
+  .auth-box,
+  .people-showcase,
+  .auth-grid,
+  .split,
+  .service-hero {
+    width: 100%;
+    min-width: 0;
+    margin-left: 0;
+    margin-right: 0;
   }
   .menu-toggle {
     display: inline-flex;
