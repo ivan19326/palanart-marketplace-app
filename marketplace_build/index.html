@@ -841,7 +841,7 @@
         if (!href) return;
         items.push('<a class="social-icon-link" href="' + escapeHtml(href) + '" target="_blank" rel="noopener">' + socialIcon(item[0]) + '<span><strong>' + escapeHtml(item[2]) + '</strong>' + (compact ? '' : '<small>Открыть канал или страницу</small>') + '</span></a>');
       });
-      if (phone) items.push('<a class="social-icon-link" href="tel:' + escapeHtml(phone) + '">' + socialIcon("phone") + '<span><strong>' + escapeHtml(phone) + '</strong>' + (compact ? '' : '<small>Позвонить</small>') + '</span></a>');
+      if (phone) items.push('<a class="social-icon-link" href="tel:+' + escapeHtml(String(phone).replace(/\D/g, "")) + '">' + socialIcon("phone") + '<span><strong>' + escapeHtml(phone) + '</strong>' + (compact ? '' : '<small>Позвонить</small>') + '</span></a>');
       if (email) items.push('<a class="social-icon-link" href="mailto:' + escapeHtml(email) + '">' + socialIcon("email") + '<span><strong>' + escapeHtml(email) + '</strong>' + (compact ? '' : '<small>Написать на почту</small>') + '</span></a>');
       if (!items.length) return compact ? "" : '<div class="muted">Пока нет публичных ссылок на соцсети и сайт.</div>';
       return '<div class="' + (compact ? "card-social-row" : "detail-socials") + '">' + items.join("") + '</div>';
