@@ -29,7 +29,69 @@
 
   function createSeed() {
     const now = new Date().toISOString();
-    const profiles = [];
+    const profiles = [
+      {
+        id: "profile-olga-osipova",
+        role: "musician",
+        categories: ["musician"],
+        planId: "basic",
+        featured: true,
+        verified: false,
+        hidden: false,
+        status: "approved",
+        name: "Ольга Осипова",
+        title: "Чувашская эстрадная певица • выступления на мероприятиях",
+        city: "Чебоксары",
+        region: "Чувашская Республика",
+        travelRadiusKm: 0,
+        tagline: "Живой вокал для праздников, концертов и событий",
+        description: "Чувашская эстрадная певица Ольга Осипова — исполнительница и автор песен. В 2025 году песня «Пӗлӗт, пӗлӗт» заняла 1-е место в хит-параде «Музыка караване» среди 500 песен. По данным Chuvash.org, Ольга пишет песни, поёт на шести языках и снималась в фильме «Юха». Фото: Chuvash.org, CC BY-SA 3.0.",
+        workStyle: "Вокальная программа и сценическое выступление. Формат и продолжительность программы согласуются под конкретное мероприятие.",
+        eventFormats: ["Концерты", "Праздники", "Корпоративы", "Частные мероприятия"],
+        serviceFeatures: ["Живой вокал", "Авторский репертуар", "Чувашская эстрада", "Индивидуальная программа"],
+        languages: ["Чувашский", "Русский"],
+        priceFrom: 2000,
+        packages: [
+          {
+            name: "Вокальное выступление",
+            duration: "1 час",
+            price: 2000,
+            description: "Стоимость от 2 000 ₽ за час по действующему объявлению. Итоговая цена зависит от формата события."
+          }
+        ],
+        addOns: [],
+        availability: [],
+        faq: [
+          { q: "Как узнать, свободна ли дата?", a: "Отправьте заявку через Palanart — дату и формат мероприятия можно согласовать отдельно." },
+          { q: "Можно ли заказать выступление на частное мероприятие?", a: "Да, программа подбирается под формат конкретного события." }
+        ],
+        policies: {
+          deposit: "По договорённости.",
+          cancellation: "Условия отмены согласуются при подтверждении заказа.",
+          technical: "Технические условия зависят от площадки и формата программы."
+        },
+        media: {
+          photo: "assets/olga-osipova.jpg",
+          gallery: [],
+          video: [],
+          audio: []
+        },
+        socials: {},
+        contact: {
+          phone: "",
+          email: "",
+          telegram: ""
+        },
+        stats: {
+          profileViews: 0,
+          leadCount: 0,
+          quoteCount: 0,
+          bookingCount: 0,
+          responseRate: 0,
+          avgTicket: 0
+        }
+      }
+    ];
 
     return {
       meta: {
@@ -334,6 +396,11 @@
         parsed.artists = Array.isArray(parsed.artists) ? parsed.artists : [];
         parsed.partners = Array.isArray(parsed.partners) ? parsed.partners : [];
         parsed.profiles = Array.isArray(parsed.profiles) ? parsed.profiles.map(normalizeProfile) : [];
+        createSeed().profiles.forEach(function (seedProfile) {
+          if (!parsed.profiles.some(function (profile) { return profile.id === seedProfile.id; })) {
+            parsed.profiles.push(normalizeProfile(seedProfile));
+          }
+        });
         parsed.leads = Array.isArray(parsed.leads) ? parsed.leads : [];
         parsed.quotes = Array.isArray(parsed.quotes) ? parsed.quotes : [];
         parsed.deals = Array.isArray(parsed.deals) ? parsed.deals : [];
@@ -797,7 +864,7 @@
 
   function getProfileRating(profileId) {
     const reviews = getReviewsForProfile(profileId);
-    if (!reviews.length) return { average: 5, count: 0 };
+    if (!reviews.length) return { average: 0, count: 0 };
     const total = reviews.reduce(function (sum, review) { return sum + Number(review.rating || 0); }, 0);
     return { average: Number((total / reviews.length).toFixed(1)), count: reviews.length };
   }
