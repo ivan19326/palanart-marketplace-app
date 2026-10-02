@@ -1,4 +1,4 @@
-const CACHE_NAME = "palan-hype-cache-v7";
+const CACHE_NAME = "palanart-cache-v8";
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
@@ -25,7 +25,8 @@ const FILES_TO_CACHE = [
   "./assets/hero-people-anime-stage.png",
   "./assets/studio-artist-scene.png",
   "./assets/partner-release-desk-scene.png",
-  "./assets/artist-portal-banner.png"
+  "./assets/artist-portal-banner.png",
+  "./assets/olga-osipova.jpg"
 ];
 
 self.addEventListener("install", function (event) {
