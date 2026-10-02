@@ -33,7 +33,7 @@
 
     return {
       meta: {
-        project: "Движарт",
+        project: "Palanart",
         updatedAt: now,
         schemaVersion: 6
       },

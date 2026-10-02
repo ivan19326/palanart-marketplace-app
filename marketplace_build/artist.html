@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Artist Portal | Движарт</title>
+  <title>Artist Portal | Palanart</title>
   <link rel="stylesheet" href="marketplace.css">
 </head>
 <body class="page-artist">
@@ -31,15 +31,14 @@
   <header class="topbar">
     <div class="shell topbar-inner">
       <div class="brand">
-        <strong>Движарт</strong>
-        <span>Artist Portal</span>
+        <strong>Palanart</strong>
+        <span>Кабинет исполнителя</span>
       </div>
       <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Открыть меню">☰</button>
       <nav class="nav">
         <a href="index.html">Витрина</a>
         <a href="user.html">Клиент</a>
         <a href="partner.html">Партнёр</a>
-        <a href="admin.html">Админ</a>
         <button id="theme-toggle" class="ghost-btn theme-toggle" type="button">Светлая тема</button>
       </nav>
     </div>
@@ -52,13 +51,13 @@
     <section class="page-masthead portal-tone-artist" data-scene="hero">
       <div class="page-masthead-grid">
         <div class="page-masthead-copy">
-          <div class="highlight">Artist-facing product layer</div>
-          <h2>Artist Portal нового уровня: не анкета, а рабочая музыкальная система</h2>
-          <p>Здесь артист управляет identity, пакетами, медиа, релизами, royalty, payout-заявками, студийными услугами и support-задачами. Мы уводим интерфейс от простого кабинета к ощущению зрелого label SaaS.</p>
+          <div class="highlight">Кабинет исполнителя</div>
+          <h2>Ваш профиль, портфолио и новые заявки в одном месте</h2>
+          <p>Добавляйте услуги, город, цену, фото и видео, редактируйте условия работы и отвечайте на запросы заказчиков.</p>
           <div class="page-masthead-actions">
-            <a class="primary-btn" href="#artist-profile-form">Profile builder</a>
-            <a class="ghost-btn" href="#artist-release-hub">Release flow</a>
-            <a class="ghost-btn" href="#artist-finance-hub">Finance desk</a>
+            <a class="primary-btn" href="#artist-profile-form">Редактировать профиль</a>
+            <a class="ghost-btn" href="index.html#catalog">Открыть каталог</a>
+            <a class="ghost-btn" href="#artist-deals">Мои заявки</a>
           </div>
         </div>
         <div class="page-masthead-rail">
@@ -116,7 +115,7 @@
 
     <section id="artist-auth-view" class="split auth-onboarding" data-scene="hero">
       <div class="service-panel auth-welcome-card">
-        <div class="eyebrow">Движарт Artist Portal</div>
+        <div class="eyebrow">Palanart Artist Portal</div>
         <h1>Быстрый старт артиста без перегруженной анкеты</h1>
         <p class="muted">Сначала создаём кабинет артиста за минуту, потом уже спокойно заполняем профиль, релизы, медиа, условия работы и сервисные блоки.</p>
         <div class="section-head compact">
@@ -588,7 +587,7 @@
     </div>
   </div>
 
-  <datalist id="artist-name-options"><option value="Движарт Artist"></option><option value="Движарт Live"></option><option value="Движарт Studio"></option></datalist>
+  <datalist id="artist-name-options"><option value="Palanart Artist"></option><option value="Palanart Live"></option><option value="Palanart Studio"></option></datalist>
   <datalist id="artist-title-options"><option value="Артист с фокусом на live и release support"></option><option value="DJ и музыкальный куратор"></option><option value="Visual creator для артистов и релизов"></option><option value="Музыкальный проект для live и branded content"></option></datalist>
   <datalist id="artist-city-options"><option value="Чебоксары"></option><option value="Новочебоксарск"></option><option value="Казань"></option><option value="Москва"></option></datalist>
   <datalist id="artist-region-options"><option value="Чувашия"></option><option value="Татарстан"></option><option value="Москва"></option><option value="Россия"></option></datalist>
@@ -1752,10 +1751,10 @@
         if (roleField) roleField.value = button.dataset.registerRole;
         if (form && form.name && !form.name.value) {
           const defaults = {
-            host: "Ведущий Движарт",
-            dj: "DJ Движарт",
-            photographer: "Фотограф Движарт",
-            band: "Группа Движарт"
+            host: "Ведущий Palanart",
+            dj: "DJ Palanart",
+            photographer: "Фотограф Palanart",
+            band: "Группа Palanart"
           };
           form.name.value = defaults[button.dataset.registerRole] || "";
         }

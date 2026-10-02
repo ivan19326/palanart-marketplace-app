@@ -1,7 +1,7 @@
 ﻿{
   "id": "./",
-  "name": "Движарт",
-  "short_name": "Движарт",
+  "name": "Palanart",
+  "short_name": "Palanart",
   "description": "Маркетплейс исполнителей и услуг для мероприятий.",
   "start_url": "./index.html",
   "scope": "./",

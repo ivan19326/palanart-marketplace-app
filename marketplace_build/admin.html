@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Админка | Движарт</title>
+  <title>Админка | Palanart</title>
+  <script>if (location.hostname.endsWith("github.io")) location.replace("index.html");</script>
   <link rel="stylesheet" href="marketplace.css">
 </head>
 <body class="page-admin">
@@ -31,8 +32,8 @@
   <header class="topbar">
     <div class="shell topbar-inner">
       <div class="brand">
-        <strong>Движарт</strong>
-        <span>Операционный backoffice платформы лейбла</span>
+        <strong>Palanart</strong>
+        <span>Администрирование маркетплейса</span>
       </div>
       <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Открыть меню">☰</button>
       <nav class="nav">
@@ -50,13 +51,13 @@
     <section class="page-masthead portal-tone-admin" data-scene="trust">
       <div class="page-masthead-grid">
         <div class="page-masthead-copy">
-          <div class="highlight">Backoffice operating layer</div>
-          <h2>Admin Backoffice как control room всей label-platform</h2>
-          <p>Админка должна ощущаться не как список таблиц, а как platform governance center: правила, релизы, профили, выплаты, studio flow, support и auth orchestration в одном control surface.</p>
+          <div class="highlight">Админка Palanart</div>
+          <h2>Управление профилями, заявками и качеством каталога</h2>
+          <p>Модерация исполнителей, категории, отзывы, заявки, настройки доступа и основные показатели маркетплейса в одном месте.</p>
           <div class="page-masthead-actions">
-            <a class="primary-btn" href="#admin-release-ops">Release control</a>
-            <a class="ghost-btn" href="#admin-finance-ops">Finance</a>
-            <a class="ghost-btn" href="#admin-support-ops">Support desk</a>
+            <a class="primary-btn" href="#admin-commercial-ops">Профили и заявки</a>
+            <a class="ghost-btn" href="#admin-platform-settings">Настройки</a>
+            <a class="ghost-btn" href="#admin-support-ops">Поддержка</a>
           </div>
         </div>
         <div class="page-masthead-rail">
@@ -114,12 +115,12 @@
     <section id="login-view" class="auth-wrap">
       <div class="auth-box">
         <h1>Вход администратора</h1>
-        <p class="muted">Здесь вы управляете профилями артистов, партнёрами, релизами, выплатами, студийными бронями и общими настройками платформы. Вход администратора: <strong>admin@palan.market</strong> / <strong>admin12345</strong></p>
+        <p class="muted">Служебный кабинет Palanart для управления профилями, заявками, отзывами и настройками.</p>
         <div id="login-message"></div>
         <form id="admin-login" class="panel">
           <div class="form-grid one">
-            <label>E-mail<input name="email" type="email" value="admin@palan.market" required></label>
-            <label>Пароль<input name="password" type="password" value="admin12345" required></label>
+            <label>E-mail<input name="email" type="email" autocomplete="username" required></label>
+            <label>Пароль<input name="password" type="password" autocomplete="current-password" required></label>
           </div>
           <div class="inline-actions">
             <button class="primary-btn" type="submit">Войти</button>
