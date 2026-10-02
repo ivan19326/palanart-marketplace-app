@@ -36,6 +36,7 @@
         categories: ["musician"],
         planId: "basic",
         featured: true,
+        vip: true,
         verified: false,
         hidden: false,
         status: "approved",
@@ -45,7 +46,7 @@
         region: "Чувашская Республика",
         travelRadiusKm: 0,
         tagline: "Живой вокал для праздников, концертов и событий",
-        description: "Чувашская эстрадная певица Ольга Осипова — исполнительница и автор песен. В 2025 году песня «Пӗлӗт, пӗлӗт» заняла 1-е место в хит-параде «Музыка караване» среди 500 песен. По данным Chuvash.org, Ольга пишет песни, поёт на шести языках и снималась в фильме «Юха». Фото: Chuvash.org, CC BY-SA 3.0.",
+        description: "Чувашская эстрадная певица Ольга Осипова — исполнительница и автор песен. В 2025 году песня «Пӗлӗт, пӗлӗт» заняла 1-е место в хит-параде «Музыка караване» среди 500 песен. По данным Chuvash.org, Ольга пишет песни, поёт на шести языках и снималась в фильме «Юха».",
         workStyle: "Вокальная программа и сценическое выступление. Формат и продолжительность программы согласуются под конкретное мероприятие.",
         eventFormats: ["Концерты", "Праздники", "Корпоративы", "Частные мероприятия"],
         serviceFeatures: ["Живой вокал", "Авторский репертуар", "Чувашская эстрада", "Индивидуальная программа"],
@@ -71,15 +72,22 @@
           technical: "Технические условия зависят от площадки и формата программы."
         },
         media: {
-          photo: "assets/olga-osipova.jpg",
-          gallery: [],
+          photo: "assets/olga-osipova-portrait.jpg",
+          gallery: [
+            { id: "olga-red", src: "assets/olga-osipova-red.jpg", caption: "Сценическое выступление в красном образе" },
+            { id: "olga-green", src: "assets/olga-osipova-green.jpg", caption: "Концертное выступление" },
+            { id: "olga-white", src: "assets/olga-osipova-white.jpg", caption: "Выступление в национальном образе" }
+          ],
           video: [],
           audio: []
         },
-        socials: {},
+        socials: {
+          rutube: "https://rutube.ru/channel/62515471/",
+          appleMusic: "https://music.apple.com/us/artist/%D0%BE%D0%BB%D1%8C%D0%B3%D0%B0-%D0%BE%D1%81%D0%B8%D0%BF%D0%BE%D0%B2%D0%B0/1756093267"
+        },
         contact: {
-          phone: "",
-          email: "",
+          phone: "+79093049440",
+          email: "olga.fire@bk.ru",
           telegram: ""
         },
         stats: {
@@ -224,6 +232,7 @@
     if (!result.categories.length) result.categories = [result.role];
     result.planId = result.planId || "basic";
     result.featured = Boolean(result.featured || getPlan(result.planId).featured);
+    result.vip = Boolean(result.vip);
     result.verified = Boolean(result.verified);
     result.hidden = Boolean(result.hidden);
     result.status = result.status || "pending";
@@ -397,9 +406,9 @@
         parsed.partners = Array.isArray(parsed.partners) ? parsed.partners : [];
         parsed.profiles = Array.isArray(parsed.profiles) ? parsed.profiles.map(normalizeProfile) : [];
         createSeed().profiles.forEach(function (seedProfile) {
-          if (!parsed.profiles.some(function (profile) { return profile.id === seedProfile.id; })) {
-            parsed.profiles.push(normalizeProfile(seedProfile));
-          }
+          const seedIndex = parsed.profiles.findIndex(function (profile) { return profile.id === seedProfile.id; });
+          if (seedIndex === -1) parsed.profiles.push(normalizeProfile(seedProfile));
+          else parsed.profiles[seedIndex] = normalizeProfile(seedProfile);
         });
         parsed.leads = Array.isArray(parsed.leads) ? parsed.leads : [];
         parsed.quotes = Array.isArray(parsed.quotes) ? parsed.quotes : [];
@@ -852,6 +861,7 @@
 
   function scoreProfile(profile, options) {
     let score = 0;
+    if (profile.vip) score += 1000;
     if (profile.featured) score += 30;
     if (profile.verified) score += 20;
     score += getProfileRating(profile.id).average * 10;
