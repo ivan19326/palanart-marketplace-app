@@ -88,7 +88,7 @@
         contact: {
           phone: "+7 909 304-94-40",
           email: "olga.fire@bk.ru",
-          telegram: ""
+          telegram: "https://t.me/olga_palan_official"
         },
         stats: {
           profileViews: 0,
