@@ -27,21 +27,25 @@
     <div id="lead-message"></div>
     <form id="lead-form" class="panel">
       <input name="mode" type="hidden" value="lead">
+      <p class="muted" style="margin-top:0">Всего 4 обязательных поля. Остальные детали можно обсудить с исполнителем после заявки.</p>
       <div class="form-grid">
-        <label>Имя организатора<input name="customerName" type="text" required></label>
-        <label>Телефон<input name="customerPhone" type="tel" required></label>
-        <label>E-mail<input name="customerEmail" type="email"></label>
-        <label>Город события<input name="city" type="text" required></label>
-        <label>Площадка<input name="venue" type="text"></label>
-        <label>Тип мероприятия<input name="eventType" type="text" placeholder="Свадьба, корпоратив"></label>
-        <label>Дата<input name="eventDate" type="date"></label>
-        <label>Время<input name="eventTime" type="time"></label>
-        <label>Количество гостей<input name="guestCount" type="number" min="0"></label>
-        <label>Бюджет<input name="budget" type="number" min="0" placeholder="60000"></label>
-        <label>Язык<input name="language" type="text" placeholder="Русский"></label>
-      </div>
-      <div class="form-grid one">
-        <label>Требования<textarea name="requirements" required></textarea></label>
+        <label>Ваше имя<input name="customerName" type="text" autocomplete="name" required></label>
+        <label>Телефон или Telegram<input name="customerPhone" type="text" autocomplete="tel" placeholder="+7… или @username" required></label>
+        <label>Тип мероприятия
+          <select name="eventType" required>
+            <option value="">Выберите</option>
+            <option value="Свадьба">Свадьба</option>
+            <option value="Юбилей">Юбилей</option>
+            <option value="Корпоратив">Корпоратив</option>
+            <option value="День рождения">День рождения</option>
+            <option value="Концерт / мероприятие">Концерт / мероприятие</option>
+            <option value="Другое">Другое</option>
+            <option value="Обсуждение услуги">Обсуждение услуги</option>
+          </select>
+        </label>
+        <label>Город<input name="city" type="text" placeholder="Например, Чебоксары" required></label>
+        <label>Дата <span class="muted">(если известна)</span><input name="eventDate" type="date"></label>
+        <label>Комментарий <span class="muted">(необязательно)</span><textarea name="requirements" placeholder="Например: свадьба на 40 гостей, нужен ведущий на вечер"></textarea></label>
       </div>
       <button id="lead-submit" class="primary-btn" type="submit">Отправить заявку</button>
     </form>
@@ -88,7 +92,7 @@
     if (user) {
       document.querySelector('[name="customerName"]').value = user.name || "";
       document.querySelector('[name="customerPhone"]').value = user.phone || "";
-      document.querySelector('[name="customerEmail"]').value = user.email || "";
+
       document.querySelector('[name="city"]').value = user.city || "";
     }
 
@@ -106,7 +110,7 @@
           profileName: payload.profileName,
           customerName: payload.customerName,
           customerPhone: payload.customerPhone,
-          customerEmail: payload.customerEmail,
+          customerEmail: "",
           city: payload.city,
           eventType: payload.eventType,
           requirements: payload.requirements
