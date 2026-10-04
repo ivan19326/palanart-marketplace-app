@@ -1,4 +1,4 @@
-const CACHE_NAME = "palanart-cache-v12";
+const CACHE_NAME = "palanart-cache-v13";
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
@@ -30,7 +30,11 @@ const FILES_TO_CACHE = [
   "./assets/olga-osipova-portrait.jpg",
   "./assets/olga-osipova-red.jpg",
   "./assets/olga-osipova-green.jpg",
-  "./assets/olga-osipova-white.jpg"
+  "./assets/olga-osipova-white.jpg",
+  "./assets/alexander-yashkov.jpg",
+  "./assets/alexander-yashkov-1.jpg",
+  "./assets/alexander-yashkov-2.jpg",
+  "./assets/alexander-yashkov-3.jpg"
 ];
 
 self.addEventListener("install", function (event) {

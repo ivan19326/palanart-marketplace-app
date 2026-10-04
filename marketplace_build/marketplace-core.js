@@ -98,6 +98,75 @@
           responseRate: 0,
           avgTicket: 0
         }
+      },
+      {
+        id: "profile-alexander-yashkov",
+        role: "host",
+        categories: ["host"],
+        planId: "basic",
+        featured: false,
+        vip: false,
+        verified: true,
+        hidden: false,
+        status: "approved",
+        name: "Александр Яшков",
+        title: "Ведущий • шоумен • свадьбы, юбилеи, корпоративы",
+        city: "Чебоксары",
+        region: "Чувашская Республика",
+        travelRadiusKm: 0,
+        tagline: "Современное ведение с лёгкой импровизацией",
+        description: "Александр Яшков — ведущий и шоумен из Чебоксар. Работает на свадьбах, юбилеях, корпоративах и днях рождения. В свадебной сфере с 2020 года; делает акцент на живом общении с гостями, импровизации и комфортной атмосфере.",
+        workStyle: "Подготовка программы под конкретное событие, работа с гостями и лёгкая импровизация по ходу праздника.",
+        eventFormats: ["Свадьбы", "Юбилеи", "Корпоративы", "Дни рождения", "Выездные церемонии"],
+        serviceFeatures: ["Ведение мероприятий", "Импровизация", "Подготовка программы", "Выездная церемония"],
+        languages: ["Русский"],
+        priceFrom: 5000,
+        packages: [
+          {
+            name: "Ведение мероприятия",
+            duration: "1 час",
+            price: 5000,
+            description: "Стоимость от 5 000 ₽ за час. Итоговая цена зависит от формата, даты и продолжительности мероприятия."
+          }
+        ],
+        addOns: [],
+        availability: [],
+        faq: [
+          { q: "Какие мероприятия проводит Александр?", a: "Свадьбы, юбилеи, корпоративы, дни рождения и выездные церемонии." },
+          { q: "Как уточнить свободную дату?", a: "Отправьте заявку через Palanart или напишите Александру в Telegram." }
+        ],
+        policies: {
+          deposit: "По договорённости.",
+          cancellation: "Условия согласуются при подтверждении даты.",
+          technical: "Технические условия зависят от площадки и формата мероприятия."
+        },
+        media: {
+          photo: "assets/alexander-yashkov.jpg",
+          gallery: [
+            { id: "alex-yashkov-event-1", src: "assets/alexander-yashkov-1.jpg", caption: "Работа ведущего на мероприятии" },
+            { id: "alex-yashkov-event-2", src: "assets/alexander-yashkov-2.jpg", caption: "Свадебное мероприятие" },
+            { id: "alex-yashkov-event-3", src: "assets/alexander-yashkov-3.jpg", caption: "Свадебная программа" }
+          ],
+          video: [],
+          audio: []
+        },
+        socials: {
+          website: "https://bogatyr21-wedding.ru/",
+          rutube: "https://rutube.ru/channel/5760878/"
+        },
+        contact: {
+          phone: "",
+          email: "",
+          telegram: "https://t.me/bogatyr_21"
+        },
+        stats: {
+          profileViews: 0,
+          leadCount: 0,
+          quoteCount: 0,
+          bookingCount: 0,
+          responseRate: 0,
+          avgTicket: 0
+        }
       }
     ];
 
