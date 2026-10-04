@@ -1,9 +1,18 @@
 function renderCategoryPage(categoryId, title, description, targetId) {
   const box = document.getElementById(targetId);
-  const profiles = MarketplaceStore.getProfiles({ category: categoryId });
+  const params = new URLSearchParams(location.search);
+  const city = (params.get("city") || "").trim();
+  let profiles = MarketplaceStore.getProfiles({ category: categoryId });
+  if (city) {
+    profiles = profiles.filter(function (profile) {
+      return String(profile.city || "").toLowerCase() === city.toLowerCase();
+    });
+  }
 
-  document.getElementById("page-title").textContent = title;
-  document.getElementById("page-description").textContent = description;
+  document.getElementById("page-title").textContent = city ? (title + " — " + city) : title;
+  document.getElementById("page-description").textContent = city
+    ? ("Исполнители категории «" + title.toLowerCase() + "» в городе " + city + ".")
+    : description;
 
   if (!profiles.length) {
     box.innerHTML = '<div class="empty">В этой категории пока нет опубликованных профилей. Исполнители могут заполнить анкету и отправить ее на модерацию.</div>';
