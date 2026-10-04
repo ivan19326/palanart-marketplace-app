@@ -1,4 +1,4 @@
-const CACHE_NAME = "palanart-cache-v15";
+const CACHE_NAME = "palanart-cache-v16";
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
