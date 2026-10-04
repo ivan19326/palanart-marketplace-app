@@ -2572,6 +2572,11 @@ body[data-theme="light"] textarea {
   background: rgba(255, 255, 255, 0.85);
 }
 
+select option {
+  color: #111;
+  background: #fff;
+}
+
 textarea {
   min-height: 110px;
   resize: vertical;
