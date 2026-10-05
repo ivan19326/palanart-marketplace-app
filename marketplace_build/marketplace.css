@@ -3277,8 +3277,11 @@ body[data-theme="light"] .mini-btn {
 }
 
 .detail-hero img {
-  height: 320px;
+  height: clamp(320px, 42vw, 520px);
   border-radius: 26px;
+  object-fit: contain;
+  object-position: center center;
+  background: rgba(8, 14, 24, 0.72);
 }
 
 .detail-grid {
