@@ -1,18 +1,21 @@
 (function () {
-  const CONFIG_VERSION = 3;
+  const CONFIG_VERSION = 4;
   const base = {
     configVersion: CONFIG_VERSION,
     mode: "local",
     supabaseUrl: "https://jioakguorsfvjuzyclrg.supabase.co",
     supabaseAnonKey: "sb_publishable__wR9JFE18O3i_LyxMXhAfw__zhG1t_P",
     socialProviders: [
-      { id: "google", label: "Google" },
+      { id: "telegram", label: "Telegram" },
       { id: "vk", label: "VK ID" },
-      { id: "telegram", label: "Telegram" }
+      { id: "max", label: "MAX" },
+      { id: "yandex", label: "Яндекс" }
     ],
     externalProviderUrls: {
+      telegram: "https://jioakguorsfvjuzyclrg.supabase.co/functions/v1/auth-telegram-start",
       vk: "https://jioakguorsfvjuzyclrg.supabase.co/functions/v1/auth-vk-start",
-      telegram: "https://jioakguorsfvjuzyclrg.supabase.co/functions/v1/auth-telegram-start"
+      max: "https://jioakguorsfvjuzyclrg.supabase.co/functions/v1/auth-max-start",
+      yandex: "https://jioakguorsfvjuzyclrg.supabase.co/functions/v1/auth-yandex-start"
     }
   };
 

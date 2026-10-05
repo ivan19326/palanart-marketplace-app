@@ -16,7 +16,7 @@
   }
 
   function providerLabel(provider) {
-    const labels = { google: "Google", vk: "VK ID", telegram: "Telegram" };
+    const labels = { telegram: "Telegram", vk: "VK ID", max: "MAX", yandex: "Яндекс" };
     return labels[provider] || provider;
   }
 
@@ -38,7 +38,6 @@
     });
     if (!listed) return false;
     if (getMode() !== "supabase") return true;
-    if (provider === "google") return true;
     return Boolean(externalProviderUrl(provider));
   }
 
@@ -225,33 +224,15 @@
       return signInWithLocalSocial(role, provider);
     }
 
-    if (provider !== "google") {
-      const externalUrl = externalProviderUrl(provider);
-      if (!externalUrl) {
-        return signInWithLocalSocial(role, provider);
-      }
-
-      const url = new URL(externalUrl, window.location.origin);
-      url.searchParams.set("role", role);
-      url.searchParams.set("returnTo", window.location.href.split("#")[0]);
-      window.location.href = url.toString();
-      return { ok: true };
-    }
-
-    const client = await ensureClient();
-    let response;
-    try {
-      response = await client.auth.signInWithOAuth({
-        provider: provider,
-        options: {
-          redirectTo: window.location.href.split("#")[0] + "?auth_role=" + encodeURIComponent(role)
-        }
-      });
-    } catch (_error) {
+    const externalUrl = externalProviderUrl(provider);
+    if (!externalUrl) {
       return signInWithLocalSocial(role, provider);
     }
 
-    if (response.error) return signInWithLocalSocial(role, provider);
+    const url = new URL(externalUrl, window.location.origin);
+    url.searchParams.set("role", role);
+    url.searchParams.set("returnTo", window.location.href.split("#")[0]);
+    window.location.href = url.toString();
     return { ok: true };
   }
 

@@ -109,9 +109,10 @@
               </div>
             <button class="primary-btn" type="submit">Создать аккаунт</button>
             <div class="auth-socials">
-              <button class="ghost-btn auth-social-btn" type="button" data-user-social="google">Войти через Google</button>
-              <button class="ghost-btn auth-social-btn" type="button" data-user-social="vk">Войти через VK ID</button>
               <button class="ghost-btn auth-social-btn" type="button" data-user-social="telegram">Войти через Telegram</button>
+              <button class="ghost-btn auth-social-btn" type="button" data-user-social="vk">Войти через VK ID</button>
+              <button class="ghost-btn auth-social-btn" type="button" data-user-social="max">Войти через MAX</button>
+              <button class="ghost-btn auth-social-btn" type="button" data-user-social="yandex">Войти через Яндекс</button>
             </div>
           </form>
           <form id="login-form" class="service-panel">
@@ -339,7 +340,8 @@
       if (/@auth\.(palanart|dvizhart)\.local$/i.test(raw)) {
         if (/^telegram_/i.test(raw)) return "Telegram user";
         if (/^vk_/i.test(raw)) return "VK user";
-        if (/^google_/i.test(raw)) return "Google user";
+        if (/^max_/i.test(raw)) return "MAX user";
+        if (/^yandex_/i.test(raw)) return "Яндекс user";
         return fallbackLabel || "Соцвход";
       }
       return raw;
@@ -357,8 +359,8 @@
       function renderAuthMode() {
         const mode = window.PalanartAuthBridge ? window.PalanartAuthBridge.getMode() : "local";
         byId("user-auth-mode").innerHTML = mode === "supabase"
-          ? "Сервисный вход включён. Рабочий способ входа сейчас: e-mail и пароль через Supabase. Google можно добить внешней OAuth-настройкой, VK ID и Telegram подключаются через отдельный auth-слой."
-          : "Работает локальный режим. E-mail вход доступен сразу, а Google, VK ID и Telegram создают локальный соцаккаунт внутри платформы без внешнего редиректа.";
+          ? "Сервисный вход включён. Доступны e-mail и пароль, а также Telegram, VK ID, MAX и Яндекс через внешний auth-слой."
+          : "Работает локальный режим. E-mail доступен сразу; Telegram, VK ID, MAX и Яндекс создают локальный соцаккаунт для тестирования.";
         document.querySelectorAll("[data-user-social]").forEach(function (button) {
           const available = window.PalanartAuthBridge && window.PalanartAuthBridge.canUseProvider(button.dataset.userSocial);
           button.disabled = !available;

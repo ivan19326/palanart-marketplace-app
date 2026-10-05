@@ -207,7 +207,7 @@
       </div>
 
       <div class="panel" style="margin-top:18px;">
-        <div class="section-head"><div><h2>Сервисный вход и соцсети</h2><p class="muted">Включение Google-входа через Supabase без правки файлов проекта.</p></div></div>
+        <div class="section-head"><div><h2>Сервисный вход и соцсети</h2><p class="muted">Управление входом через Telegram, VK ID, MAX и Яндекс.</p></div></div>
         <form id="auth-settings-form" class="form-grid">
           <label>Режим авторизации
             <select name="mode">
@@ -221,8 +221,8 @@
           <label>Supabase anon key
             <input name="supabaseAnonKey" type="text" placeholder="eyJ...">
           </label>
-          <label>Google вход
-            <select name="googleEnabled">
+          <label>Telegram
+            <select name="telegramEnabled">
               <option value="true">Включён</option>
               <option value="false">Выключен</option>
             </select>
@@ -233,21 +233,33 @@
               <option value="false">Выключен</option>
             </select>
           </label>
-          <label>Telegram
-            <select name="telegramEnabled">
+          <label>MAX
+            <select name="maxEnabled">
               <option value="true">Включён</option>
               <option value="false">Выключен</option>
             </select>
           </label>
-          <label style="grid-column:1/-1;">Внешний URL для VK ID
-            <input name="vkAuthUrl" type="url" placeholder="https://jioakguorsfvjuzyclrg.supabase.co/functions/v1/auth-vk-start">
+          <label>Яндекс
+            <select name="yandexEnabled">
+              <option value="true">Включён</option>
+              <option value="false">Выключен</option>
+            </select>
           </label>
           <label style="grid-column:1/-1;">Внешний URL для Telegram
             <input name="telegramAuthUrl" type="url" placeholder="https://jioakguorsfvjuzyclrg.supabase.co/functions/v1/auth-telegram-start">
           </label>
+          <label style="grid-column:1/-1;">Внешний URL для VK ID
+            <input name="vkAuthUrl" type="url" placeholder="https://jioakguorsfvjuzyclrg.supabase.co/functions/v1/auth-vk-start">
+          </label>
+          <label style="grid-column:1/-1;">Внешний URL для MAX
+            <input name="maxAuthUrl" type="url" placeholder="https://jioakguorsfvjuzyclrg.supabase.co/functions/v1/auth-max-start">
+          </label>
+          <label style="grid-column:1/-1;">Внешний URL для Яндекс
+            <input name="yandexAuthUrl" type="url" placeholder="https://jioakguorsfvjuzyclrg.supabase.co/functions/v1/auth-yandex-start">
+          </label>
           <button class="primary-btn" type="submit">Сохранить auth</button>
         </form>
-        <p class="muted" style="margin-top:12px;">После сохранения обновите страницу client services или artist portal. Google, VK ID и Telegram управляются из этой панели. Полная внешняя OAuth-настройка для каждого провайдера подключается отдельно.</p>
+        <p class="muted" style="margin-top:12px;">Telegram, VK ID, MAX и Яндекс управляются из этой панели. В локальном режиме они работают как тестовый соцвход, в Supabase-режиме — через внешние auth-обработчики.</p>
       </div>
 
       <div class="panel" style="margin-top:18px;" id="admin-profile-ops" data-scene="catalog">
@@ -563,11 +575,14 @@
       authForm.supabaseUrl.value = authConfig.supabaseUrl || "";
         authForm.supabaseAnonKey.value = authConfig.supabaseAnonKey || "";
         const providers = Array.isArray(authConfig.socialProviders) ? authConfig.socialProviders : [];
-        authForm.googleEnabled.value = String(providers.some(function (item) { return item.id === "google"; }));
-        authForm.vkEnabled.value = String(providers.some(function (item) { return item.id === "vk"; }));
         authForm.telegramEnabled.value = String(providers.some(function (item) { return item.id === "telegram"; }));
-        authForm.vkAuthUrl.value = authConfig.externalProviderUrls && authConfig.externalProviderUrls.vk ? authConfig.externalProviderUrls.vk : "";
+        authForm.vkEnabled.value = String(providers.some(function (item) { return item.id === "vk"; }));
+        authForm.maxEnabled.value = String(providers.some(function (item) { return item.id === "max"; }));
+        authForm.yandexEnabled.value = String(providers.some(function (item) { return item.id === "yandex"; }));
         authForm.telegramAuthUrl.value = authConfig.externalProviderUrls && authConfig.externalProviderUrls.telegram ? authConfig.externalProviderUrls.telegram : "";
+        authForm.vkAuthUrl.value = authConfig.externalProviderUrls && authConfig.externalProviderUrls.vk ? authConfig.externalProviderUrls.vk : "";
+        authForm.maxAuthUrl.value = authConfig.externalProviderUrls && authConfig.externalProviderUrls.max ? authConfig.externalProviderUrls.max : "";
+        authForm.yandexAuthUrl.value = authConfig.externalProviderUrls && authConfig.externalProviderUrls.yandex ? authConfig.externalProviderUrls.yandex : "";
     }
     function renderDictionaries() {
       const dict = MarketplaceStore.getDictionaries();
@@ -751,14 +766,18 @@
           mode: payload.mode || "local",
           supabaseUrl: (payload.supabaseUrl || "").trim(),
           supabaseAnonKey: (payload.supabaseAnonKey || "").trim(),
+          configVersion: 4,
           socialProviders: [
-            payload.googleEnabled === "true" ? { id: "google", label: "Google" } : null,
+            payload.telegramEnabled === "true" ? { id: "telegram", label: "Telegram" } : null,
             payload.vkEnabled === "true" ? { id: "vk", label: "VK ID" } : null,
-            payload.telegramEnabled === "true" ? { id: "telegram", label: "Telegram" } : null
+            payload.maxEnabled === "true" ? { id: "max", label: "MAX" } : null,
+            payload.yandexEnabled === "true" ? { id: "yandex", label: "Яндекс" } : null
           ].filter(Boolean),
           externalProviderUrls: {
+            telegram: (payload.telegramAuthUrl || "").trim(),
             vk: (payload.vkAuthUrl || "").trim(),
-            telegram: (payload.telegramAuthUrl || "").trim()
+            max: (payload.maxAuthUrl || "").trim(),
+            yandex: (payload.yandexAuthUrl || "").trim()
           }
         };
       localStorage.setItem("palanart_auth_config", JSON.stringify(config));
