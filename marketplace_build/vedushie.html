@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
@@ -12,27 +12,36 @@
       <div class="brand"><strong>Palanart</strong><span>Категория: ведущие</span></div>
       <nav class="nav">
         <a href="index.html">Витрина</a>
-        <a href="user.html">Клиент</a>
-        <a href="artist.html">Исполнитель</a>
+        <a href="user.html">Заказчику</a>
+        <a href="artist.html">Исполнителю</a>
         <button id="theme-toggle" class="ghost-btn theme-toggle" type="button">Светлая тема</button>
       </nav>
     </div>
   </header>
   <main class="shell section">
     <div class="section-head"><div><h2 id="page-title"></h2><p id="page-description"></p></div></div>
-    <div class="card-actions" style="margin-bottom:18px">
-      <a class="ghost-btn" href="vedushie.html">Все города</a>
-      <a class="ghost-btn" href="vedushie.html?city=Чебоксары">Чебоксары</a>
-      <a class="ghost-btn" href="vedushie.html?city=Саранск">Саранск</a>
-    </div>
     <div id="cards" class="cards-grid"></div>
   </main>
   <script src="marketplace-core.js"></script>
   <script src="category-template.js"></script>
   <script>
-    (function () { const key="palan_theme_mode"; const saved=localStorage.getItem(key)||"dark"; document.body.setAttribute("data-theme",saved); const button=document.getElementById("theme-toggle"); function sync(){button.textContent=(document.body.getAttribute("data-theme")||"dark")==="dark"?"Светлая тема":"Тёмная тема";} button.addEventListener("click",function(){const next=(document.body.getAttribute("data-theme")||"dark")==="dark"?"light":"dark"; document.body.setAttribute("data-theme",next); localStorage.setItem(key,next); sync();}); sync(); })();
+    (function () {
+      const key = "palan_theme_mode";
+      const saved = localStorage.getItem(key) || "dark";
+      document.body.setAttribute("data-theme", saved);
+      const button = document.getElementById("theme-toggle");
+      function sync() {
+        button.textContent = (document.body.getAttribute("data-theme") || "dark") === "dark" ? "Светлая тема" : "Тёмная тема";
+      }
+      button.addEventListener("click", function () {
+        const next = (document.body.getAttribute("data-theme") || "dark") === "dark" ? "light" : "dark";
+        document.body.setAttribute("data-theme", next);
+        localStorage.setItem(key, next);
+        sync();
+      });
+      sync();
+    })();
     renderCategoryPage("host", "Ведущие", "Актуальные профили ведущих и MC для свадеб, корпоративов и частных событий.", "cards");
   </script>
 </body>
 </html>
-

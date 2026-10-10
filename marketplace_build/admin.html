@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Админка | Palanart</title>
-  <script>if (location.hostname.endsWith("github.io")) location.replace("index.html");</script>
   <link rel="stylesheet" href="marketplace.css">
 </head>
 <body class="page-admin">
@@ -62,42 +61,42 @@
         </div>
         <div class="page-masthead-rail">
           <article class="masthead-people-card masthead-people-card--admin">
-            <img class="people-image people-image--admin-hero" src="assets/admin-ops-room.png" alt="Операционная команда платформы в Admin Backoffice">
+            <img class="people-image people-image--admin-hero" src="assets/admin-ops-room.png" alt="Операционная команда платформы в админке">
             <div class="masthead-people-copy">
-              <div class="eyebrow">Operations Team Presence</div>
-              <h3>Живая ops-команда и control room в самом верхе админки</h3>
-              <p>Backoffice выглядит убедительнее, когда на первом экране есть не только control layers, но и реальные люди, которые управляют платформой.</p>
+              <div class="eyebrow">Команда платформы</div>
+              <h3>Профили, заявки, чаты и модерация под рукой</h3>
+              <p>Админка показывает не только цифры, но и реальные рабочие процессы маркетплейса.</p>
             </div>
           </article>
           <div class="page-rail-card">
-            <span>Governance Layer</span>
-            <strong>Platform rules, auth settings, moderation and visibility policies.</strong>
+            <span>Правила платформы</span>
+            <strong>Настройки доступа, модерация, видимость профилей и политика публикации.</strong>
           </div>
           <div class="page-rail-card">
-            <span>Operations Layer</span>
-            <strong>Profiles, releases, chats, studio queue and cross-role workflow management.</strong>
+            <span>Рабочие процессы</span>
+            <strong>Профили, заявки, чаты, релизы, студия и управление ролями.</strong>
           </div>
           <div class="page-rail-card">
-            <span>Finance Layer</span>
-            <strong>Royalty publishing, payouts, documents, tickets and system discipline.</strong>
+            <span>Финансы и документы</span>
+            <strong>Отчёты, выплаты, документы, обращения и операционная дисциплина.</strong>
           </div>
         </div>
       </div>
     </section>
     <section class="people-showcase" data-scene="board">
       <article class="people-card people-card--tall people-card--admin-main">
-        <img class="people-image people-image--admin-main" src="assets/admin-ops-room.png" alt="Операционная команда платформы в control room">
+        <img class="people-image people-image--admin-main" src="assets/admin-ops-room.png" alt="Операционная команда платформы">
         <div class="people-card-copy">
-          <div class="eyebrow">Operations Team</div>
-          <h3>Control room с реальной ops-командой и большими dashboards</h3>
-          <p>Backoffice получил отдельную живую сцену: команда, аналитические панели, release и finance-контроль в одном визуальном пространстве.</p>
+          <div class="eyebrow">Операционная команда</div>
+          <h3>Единая панель для управления маркетплейсом</h3>
+          <p>Команда видит заявки, профили, чаты, релизы, финансы и поддержку в одном пространстве.</p>
         </div>
       </article>
       <div class="people-showcase-stack">
         <article class="people-card people-card--admin-artist">
           <img class="people-image people-image--admin-artist" src="assets/artist-portal-banner.png" alt="Артист платформы">
           <div class="people-card-copy">
-            <div class="eyebrow">Artist Oversight</div>
+            <div class="eyebrow">Исполнители</div>
             <h3>В фокусе артисты и их контур</h3>
             <p>Админка визуально связана с теми, кого команда реально сопровождает.</p>
           </div>
@@ -105,9 +104,9 @@
         <article class="people-card people-card--admin-studio">
           <img class="people-image people-image--admin-studio" src="assets/studio-artist-scene.png" alt="Студийный процесс">
           <div class="people-card-copy">
-            <div class="eyebrow">Studio Control</div>
-            <h3>Студийная инфраструктура в одном visual layer</h3>
-            <p>Backoffice показывает не абстракцию, а живой production-процесс.</p>
+            <div class="eyebrow">Студия</div>
+            <h3>Студийная инфраструктура в общей панели</h3>
+            <p>Админка показывает реальный рабочий процесс без лишних внутренних терминов.</p>
           </div>
         </article>
       </div>
@@ -117,6 +116,16 @@
         <h1>Вход администратора</h1>
         <p class="muted">Служебный кабинет Palanart для управления профилями, заявками, отзывами и настройками.</p>
         <div id="login-message"></div>
+        <form id="admin-setup" class="panel" style="display:none;">
+          <h2>Первичная настройка владельца</h2>
+          <p class="muted">Создайте единственный служебный доступ для управления Palanart на этой локальной сборке.</p>
+          <div class="form-grid one">
+            <label>Имя владельца<input name="name" type="text" autocomplete="name" required></label>
+            <label>E-mail<input name="email" type="email" autocomplete="username" required></label>
+            <label>Пароль<input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
+          </div>
+          <button class="primary-btn" type="submit">Создать закрытый доступ</button>
+        </form>
         <form id="admin-login" class="panel">
           <div class="form-grid one">
             <label>E-mail<input name="email" type="email" autocomplete="username" required></label>
@@ -124,7 +133,6 @@
           </div>
           <div class="inline-actions">
             <button class="primary-btn" type="submit">Войти</button>
-            <button id="reset-db" class="ghost-btn" type="button">Очистить базу</button>
           </div>
         </form>
       </div>
@@ -138,27 +146,30 @@
           <h2>Панель управления</h2>
           <p id="admin-name" class="muted"></p>
         </div>
-        <button id="logout-admin" class="ghost-btn" type="button">Выйти</button>
+        <div class="inline-actions">
+          <button id="reset-db" class="ghost-btn" type="button">Очистить базу</button>
+          <button id="logout-admin" class="ghost-btn" type="button">Выйти</button>
+        </div>
       </div>
       <div id="admin-message"></div>
       <div id="stats-grid" class="stats-grid"></div>
       <div id="admin-executive-grid" class="portal-summary-grid" style="margin-top:14px;"></div>
       <div id="admin-system-rail" class="status-rail" style="margin-top:14px;"></div>
-      <nav class="portal-nav" aria-label="Admin product navigation">
-        <a href="#admin-platform-settings">Platform Rules</a>
-        <a href="#admin-profile-ops">Profile Ops</a>
-        <a href="#admin-commercial-ops">Commercial Ops</a>
-        <a href="#admin-release-ops">Release Control</a>
-        <a href="#admin-finance-ops">Finance</a>
-        <a href="#admin-studio-ops">Studio</a>
-        <a href="#admin-support-ops">Docs & Support</a>
+      <nav class="portal-nav" aria-label="Навигация админки">
+        <a href="#admin-platform-settings">Правила</a>
+        <a href="#admin-profile-ops">Профили</a>
+        <a href="#admin-commercial-ops">Заявки</a>
+        <a href="#admin-release-ops">Релизы</a>
+        <a href="#admin-finance-ops">Финансы</a>
+        <a href="#admin-studio-ops">Студия</a>
+        <a href="#admin-support-ops">Документы</a>
       </nav>
       <div class="ops-board">
         <section class="ops-card">
           <div class="section-head compact">
             <div>
-              <div class="eyebrow">Operations Control</div>
-              <h2>Priority queue</h2>
+              <div class="eyebrow">Главное сейчас</div>
+              <h2>Очередь действий</h2>
             </div>
           </div>
           <div id="admin-command-center" class="ops-card-list"></div>
@@ -166,7 +177,7 @@
         <section class="ops-card">
           <div class="section-head compact">
             <div>
-              <div class="eyebrow">Platform Feed</div>
+              <div class="eyebrow">Лента платформы</div>
               <h2>Последние движения</h2>
             </div>
           </div>
@@ -291,20 +302,20 @@
 
       <div class="split" style="margin-top:18px;" id="admin-release-ops" data-scene="release">
         <div class="panel">
-          <div class="section-head"><div><h2>Релизы платформы</h2><p class="muted">Контроль статусов релизов артистов и партнёров: draft → review → scheduled → distributed → published.</p></div></div>
+          <div class="section-head"><div><h2>Релизы платформы</h2><p class="muted">Контроль статусов релизов исполнителей и партнёров: черновик, проверка, запланировано, передано, опубликовано.</p></div></div>
           <div id="admin-release-timeline" class="timeline-list" style="margin-bottom:14px;"></div>
           <div id="releases-list" class="table-list"></div>
         </div>
         <div class="panel" id="admin-finance-ops">
-          <div class="section-head"><div><h2>Royalty и выплаты</h2><p class="muted">Публикация отчётов, начисление баланса артисту и управление запросами на вывод.</p></div></div>
+          <div class="section-head"><div><h2>Отчёты и выплаты</h2><p class="muted">Публикация финансовых отчётов, начисление баланса исполнителю и управление запросами на вывод.</p></div></div>
           <div id="admin-finance-widgets" class="finance-widget-grid" style="margin-bottom:14px;"></div>
           <form id="royalty-form" class="form-grid">
             <label>Артист
               <select name="artistId" id="royalty-artist-select"></select>
             </label>
             <label>Период<input name="periodLabel" type="text" placeholder="Q1 2026" required></label>
-            <label>Gross<input name="grossAmount" type="number" min="0" step="100" required></label>
-            <label>Net<input name="netAmount" type="number" min="0" step="100" required></label>
+            <label>Сумма всего<input name="grossAmount" type="number" min="0" step="100" required></label>
+            <label>К начислению<input name="netAmount" type="number" min="0" step="100" required></label>
             <label>Валюта
               <select name="currency">
                 <option value="RUB">RUB</option>
@@ -313,7 +324,7 @@
               </select>
             </label>
             <label>Файл отчёта<input name="statementUrl" type="url" placeholder="https://..."></label>
-            <button class="primary-btn" type="submit">Опубликовать отчёт и начислить net</button>
+            <button class="primary-btn" type="submit">Опубликовать отчёт и начислить сумму</button>
           </form>
           <div id="royalty-list" class="table-list" style="margin-top:14px;"></div>
           <div id="payouts-list" class="table-list" style="margin-top:14px;"></div>
@@ -327,29 +338,29 @@
 
       <div class="split" style="margin-top:18px;" id="admin-support-ops" data-scene="trust">
         <div class="panel">
-          <div class="section-head"><div><h2>Document Center</h2><p class="muted">Royalty statements, payout requests и сервисные документы платформы в одном окне.</p></div></div>
+          <div class="section-head"><div><h2>Документы</h2><p class="muted">Финансовые отчёты, заявки на вывод и сервисные документы платформы в одном окне.</p></div></div>
           <div id="admin-documents-list" class="table-list"></div>
         </div>
         <div class="panel">
-          <div class="section-head"><div><h2>Support Desk</h2><p class="muted">Тикеты артистов и партнёров с приоритетами, SLA и ручным переводом по статусам.</p></div></div>
+          <div class="section-head"><div><h2>Поддержка</h2><p class="muted">Обращения исполнителей и партнёров с приоритетами, SLA и ручным переводом по статусам.</p></div></div>
           <div id="admin-tickets-list" class="table-list"></div>
         </div>
       </div>
       </div>
       <aside class="page-shell-aside">
         <div class="floating-panel">
-          <div class="eyebrow">Control Signals</div>
+          <div class="eyebrow">Сигналы контроля</div>
           <h3>Что должен видеть оператор сразу</h3>
           <ul>
             <li>Какие релизы, выплаты и профили требуют внимания прямо сейчас.</li>
-            <li>Где копятся support и finance риски.</li>
-            <li>Как auth, studio и moderation связаны в одной платформенной картине.</li>
+            <li>Где копятся риски по поддержке и финансам.</li>
+            <li>Как вход, студия и модерация связаны в одной платформенной картине.</li>
           </ul>
         </div>
         <div class="floating-panel">
-          <div class="eyebrow">Backoffice Shape</div>
-          <h3>Новый visual-control слой</h3>
-          <p class="muted">Админка переходит в формат command center: masthead, main shell, sticky rail и более серьёзная enterprise-подача.</p>
+          <div class="eyebrow">Структура админки</div>
+          <h3>Понятная панель управления</h3>
+          <p class="muted">Профили, заявки, релизы, финансы, студия и поддержка собраны в одной рабочей структуре.</p>
         </div>
       </aside>
       </div>
@@ -386,6 +397,36 @@
     })();
     function byId(id) { return document.getElementById(id); }
     function escapeHtml(value) { return String(value || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+    function statusLabel(status) {
+      const map = {
+        draft: "Черновик",
+        pending: "Ожидает",
+        approved: "Одобрено",
+        rejected: "Отклонено",
+        new: "Новая",
+        replied: "Есть ответ",
+        quoted: "Предложение отправлено",
+        booked: "Забронировано",
+        done: "Завершено",
+        review: "На проверке",
+        scheduled: "Запланировано",
+        distributed: "Передано",
+        published: "Опубликовано",
+        confirmed: "Подтверждено",
+        open: "Открыто",
+        in_progress: "В работе",
+        resolved: "Решено",
+        closed: "Закрыто",
+        normal: "Обычный",
+        high: "Высокий",
+        critical: "Срочный"
+      };
+      return map[status] || status || "Без статуса";
+    }
+    function releaseTypeLabel(type) {
+      const map = { single: "Сингл", ep: "EP", album: "Альбом" };
+      return map[type] || type || "релиз";
+    }
     function showMessage(target, text, kind) { byId(target).innerHTML = text ? '<div class="message ' + kind + '">' + text + '</div>' : ""; }
     function renderStats() {
       const stats = MarketplaceStore.getStats();
@@ -403,47 +444,47 @@
       const openTickets = tickets.filter(function (item) { return item.status !== "resolved" && item.status !== "closed"; }).length;
       byId("admin-executive-grid").innerHTML = [
         {
-          eyebrow: "Platform Pulse",
+          eyebrow: "Пульс платформы",
           title: "Поток профилей и релизов контролируется из одного контура",
           value: stats.approvedProfiles + "/" + stats.releases,
-          text: "Профили, релизы и кейсы сведены в один backoffice без разрыва между content и ops."
+          text: "Профили, релизы и кейсы сведены в одну рабочую панель без разрыва между контентом и операциями."
         },
         {
-          eyebrow: "Commercial Ops",
+          eyebrow: "Заявки",
           title: "Запросы и предложения в работе",
           value: String(stats.leads + stats.quotes),
-          text: "Команда видит service intake, предложения и chat-based progression без отдельной CRM."
+          text: "Команда видит входящие заявки, предложения и движение диалогов без отдельной CRM."
         },
         {
-          eyebrow: "Release Desk",
-          title: "Scheduled release pressure",
+          eyebrow: "Релизы",
+          title: "Запланированные релизы",
           value: String(scheduledReleases),
-          text: "Scheduled layer показывает, сколько релизов уже требуют coordination, assets и external sync."
+          text: "Панель показывает, сколько релизов требуют координации, материалов и следующего статуса."
         },
         {
-          eyebrow: "Finance Queue",
-          title: "Payout requests pending approval",
+          eyebrow: "Финансы",
+          title: "Заявки на вывод ждут решения",
           value: String(pendingPayouts),
-          text: pendingPayouts ? "Есть выплаты, требующие решения finance owner." : "Сейчас finance queue чистая и не требует ручного вмешательства."
+          text: pendingPayouts ? "Есть выплаты, которые нужно проверить и одобрить." : "Сейчас финансовая очередь чистая и не требует ручного вмешательства."
         },
         {
-          eyebrow: "Support Desk",
-          title: "Open tickets across artist and partner portals",
+          eyebrow: "Поддержка",
+          title: "Открытые обращения",
           value: String(openTickets),
-          text: openTickets ? "Support queue уже живая. Важно держать SLA и не терять finance/doc issues." : "Сервисный desk пока чистый, можно усиливать knowledge base и document flow."
+          text: openTickets ? "Есть обращения, по которым важно выдерживать срок ответа и не терять документы." : "Очередь поддержки пока чистая, можно готовить шаблоны ответов и базу знаний."
         }
       ].map(function (item) {
-        return '<article class="portal-summary-card"><span class="eyebrow-note">' + escapeHtml(item.eyebrow) + '</span><strong>' + escapeHtml(item.title) + '</strong><div class="portal-stat-line"><span class="muted">Live</span><span class="value">' + escapeHtml(item.value) + '</span></div><p>' + escapeHtml(item.text) + '</p></article>';
+        return '<article class="portal-summary-card"><span class="eyebrow-note">' + escapeHtml(item.eyebrow) + '</span><strong>' + escapeHtml(item.title) + '</strong><div class="portal-stat-line"><span class="muted">Сейчас</span><span class="value">' + escapeHtml(item.value) + '</span></div><p>' + escapeHtml(item.text) + '</p></article>';
       }).join("");
     }
     function renderAdminSystemRail() {
       const stats = MarketplaceStore.getStats();
       const steps = [
-        { title: "Intake", text: "Платформа собирает профили, запросы и сервисные формы.", active: stats.users + stats.artists > 0 },
-        { title: "Moderation", text: "Контент и профили проходят ручную или auto-модерацию.", active: stats.pendingProfiles > 0 || stats.approvedProfiles > 0 },
-        { title: "Release Ops", text: "Релизы двигаются по lifecycle и готовятся к external sync.", active: stats.releases > 0 },
-        { title: "Finance", text: "Отчёты, ledger и payout requests сходятся в finance layer.", active: stats.royaltyReports > 0 || stats.payoutRequests > 0 },
-        { title: "Studio", text: "Studio bookings подключены к общему ops-contour.", active: stats.studioBookings > 0 }
+        { title: "Входящие", text: "Платформа собирает профили, запросы и сервисные формы.", active: stats.users + stats.artists > 0 },
+        { title: "Модерация", text: "Контент и профили проходят ручную или автоматическую проверку.", active: stats.pendingProfiles > 0 || stats.approvedProfiles > 0 },
+        { title: "Релизы", text: "Релизы двигаются по статусам и готовятся к публикации.", active: stats.releases > 0 },
+        { title: "Финансы", text: "Отчёты, журнал начислений и заявки на вывод сходятся в финансовом блоке.", active: stats.royaltyReports > 0 || stats.payoutRequests > 0 },
+        { title: "Студия", text: "Студийные бронирования подключены к общему рабочему процессу.", active: stats.studioBookings > 0 }
       ];
       var activeIndex = 0;
       steps.forEach(function (step, index) { if (step.active) activeIndex = index; });
@@ -465,44 +506,44 @@
       const featuredGap = reviews.filter(function (item) { return item.featured; }).length;
       byId("admin-command-center").innerHTML = [
         {
-          title: pendingProfiles ? "Очередь модерации требует разбора" : "Moderation queue чистая",
-          chip: pendingProfiles ? pendingProfiles + " pending" : "No blockers",
+          title: pendingProfiles ? "Очередь модерации требует разбора" : "Модерация чистая",
+          chip: pendingProfiles ? pendingProfiles + " ждут" : "Без блокеров",
           chipClass: pendingProfiles ? " is-hot" : " is-positive",
-          text: pendingProfiles ? "Проверьте profile ops и закройте карточки, которые ждут публикации." : "Можно переключиться на growth-layer и настройку featured visibility.",
+          text: pendingProfiles ? "Проверьте профили, которые ждут публикации." : "Можно переключиться на продвижение витрины и настройку видимости.",
           actionHref: "#admin-profile-ops",
-          actionLabel: "Открыть Profile Ops"
+          actionLabel: "Открыть профили"
         },
         {
-          title: scheduled ? "Release desk активен" : "Release desk стабилен",
-          chip: scheduled ? scheduled + " in flow" : "Release clear",
+          title: scheduled ? "Релизы активны" : "Релизы стабильны",
+          chip: scheduled ? scheduled + " в работе" : "Чисто",
           chipClass: scheduled ? " is-focus" : " is-positive",
-          text: scheduled ? "Есть релизы в review/scheduled стадиях, которым нужна editorial и distribution координация." : "Когда в систему зайдут новые релизы, этот блок покажет pressure на release ops.",
+          text: scheduled ? "Есть релизы на проверке или в расписании, которым нужна координация материалов." : "Когда в систему зайдут новые релизы, этот блок покажет нагрузку.",
           actionHref: "#admin-release-ops",
-          actionLabel: "Перейти в Release Control"
+          actionLabel: "Перейти к релизам"
         },
         {
-          title: pendingPayouts ? "Finance owner attention needed" : "Finance queue under control",
-          chip: pendingPayouts ? pendingPayouts + " payout" : "Stable",
+          title: pendingPayouts ? "Финансы требуют внимания" : "Финансы под контролем",
+          chip: pendingPayouts ? pendingPayouts + " заявок" : "Стабильно",
           chipClass: pendingPayouts ? " is-hot" : " is-positive",
-          text: pendingPayouts ? "Проверьте payout requests и синхронизируйте их с published royalty periods." : "Royalty и payout поток сейчас не требует ручной эскалации.",
+          text: pendingPayouts ? "Проверьте заявки на вывод и сверку с опубликованными отчётами." : "Финансовый поток сейчас не требует ручной эскалации.",
           actionHref: "#admin-finance-ops",
-          actionLabel: "Открыть Finance"
+          actionLabel: "Открыть финансы"
         },
         {
-          title: featuredGap ? "Есть social proof для витрины" : "Пора усиливать featured reviews",
-          chip: featuredGap ? featuredGap + " featured" : "Need curation",
+          title: featuredGap ? "Есть сильные отзывы для витрины" : "Пора усиливать отзывы",
+          chip: featuredGap ? featuredGap + " выделено" : "Нужна подборка",
           chipClass: featuredGap ? " is-positive" : " is-focus",
-          text: featuredGap ? "Отзывы уже можно использовать для усиления публичного brand trust." : "После первых completed flows стоит поднимать curation и reputation layer.",
+          text: featuredGap ? "Отзывы уже можно использовать для усиления доверия к витрине." : "После первых завершённых заказов стоит поднимать подборку и репутацию.",
           actionHref: "#admin-commercial-ops",
-          actionLabel: "Открыть Commercial Ops"
+          actionLabel: "Открыть заявки"
         },
         {
-          title: openTickets ? "Support desk ждёт ответа" : "Support desk стабилен",
-          chip: openTickets ? openTickets + " open" : "Desk clear",
+          title: openTickets ? "Поддержка ждёт ответа" : "Поддержка стабильна",
+          chip: openTickets ? openTickets + " открыто" : "Чисто",
           chipClass: openTickets ? " is-hot" : " is-positive",
-          text: openTickets ? "Есть открытые тикеты по документам, финансам или studio flow. Лучше закрывать их в общем SLA." : "Сервисный контур чистый. Можно фокусироваться на proactive support и automation.",
+          text: openTickets ? "Есть открытые обращения по документам, финансам или студии. Лучше закрывать их в общем SLA." : "Сервисный контур чистый. Можно фокусироваться на поддержке и автоматизации.",
           actionHref: "#admin-support-ops",
-          actionLabel: "Открыть Docs & Support"
+          actionLabel: "Открыть поддержку"
         }
       ].map(function (item) {
         return '<article class="ops-item"><div class="ops-item-head"><strong>' + escapeHtml(item.title) + '</strong><span class="ops-chip' + item.chipClass + '">' + escapeHtml(item.chip) + '</span></div><p>' + escapeHtml(item.text) + '</p><div class="ops-actions"><a class="ops-link" href="' + escapeHtml(item.actionHref || "#") + '">' + escapeHtml(item.actionLabel || "Открыть") + '</a></div></article>';
@@ -516,23 +557,23 @@
       const cards = [
         {
           state: stats.pendingProfiles ? "is-hot" : "is-positive",
-          title: stats.pendingProfiles ? "Moderation attention" : "Moderation stable",
+          title: stats.pendingProfiles ? "Модерация требует внимания" : "Модерация стабильна",
           text: stats.pendingProfiles ? "Есть карточки, которые ждут публикации или ручного решения." : "Профильный контур стабилен и не требует срочной ручной обработки."
         },
         {
           state: releases.filter(function (item) { return item.status === "review" || item.status === "scheduled"; }).length ? "is-focus" : "is-positive",
-          title: "Release leverage",
-          text: releases.length ? "Release desk уже живой. Дальше критична скорость перевода в distributed/published." : "Когда релизы пойдут в систему, этот блок станет главным operational pressure point."
+          title: "Релизы",
+          text: releases.length ? "Релизы уже в работе. Дальше важна скорость перевода к публикации." : "Когда релизы пойдут в систему, этот блок покажет основную нагрузку."
         },
         {
           state: payouts.filter(function (item) { return item.status === "pending"; }).length ? "is-hot" : "is-positive",
-          title: "Finance risk",
-          text: payouts.filter(function (item) { return item.status === "pending"; }).length ? "Есть pending payouts. Их лучше держать в одном SLA с royalty-publishing." : "Finance queue сейчас чистая, можно усиливать platform rules и growth mechanics."
+          title: "Финансовый риск",
+          text: payouts.filter(function (item) { return item.status === "pending"; }).length ? "Есть ожидающие выплаты. Их лучше держать в одном сроке с публикацией отчётов." : "Финансовая очередь сейчас чистая, можно усиливать правила платформы и рост витрины."
         },
         {
           state: tickets.filter(function (item) { return item.status !== "resolved" && item.status !== "closed"; }).length ? "is-focus" : "is-positive",
-          title: "Support SLA",
-          text: tickets.filter(function (item) { return item.status !== "resolved" && item.status !== "closed"; }).length ? "Открытые тикеты уже формируют отдельный operational contour. Ему нужен owner и понятный SLA." : "Support desk спокойный. Можно готовить canned replies и knowledge layer."
+          title: "Поддержка",
+          text: tickets.filter(function (item) { return item.status !== "resolved" && item.status !== "closed"; }).length ? "Открытые обращения уже требуют ответственного и понятного срока реакции." : "Поддержка спокойная. Можно готовить шаблоны ответов и базу знаний."
         }
       ];
       byId("admin-focus-strip").innerHTML = cards.map(function (card) {
@@ -547,15 +588,15 @@
       const lead = (MarketplaceStore.getDb().leads || [])[0];
       const booking = (MarketplaceStore.getDb().studioBookings || [])[0];
       const ticket = (MarketplaceStore.getDb().tickets || [])[0];
-      if (profile) items.push({ title: "Profile signal", meta: profile.status, text: profile.name + " · " + (profile.city || "city pending") });
-      if (lead) items.push({ title: "New intake", meta: lead.status, text: (lead.customerName || "Client") + " оставил новый service request." });
-      if (release) items.push({ title: "Release movement", meta: release.status, text: release.title + (release.releaseDate ? " · " + release.releaseDate : "") });
-      if (payout) items.push({ title: "Payout movement", meta: payout.status, text: "Запрос на " + Number(payout.amount || 0).toLocaleString("ru-RU") + " " + payout.currency + "." });
-      if (booking) items.push({ title: "Studio booking", meta: booking.status, text: (booking.customerName || "Customer") + " · " + (booking.date || "TBD") });
-      if (ticket) items.push({ title: "Support ticket", meta: ticket.status, text: ticket.subject + " · " + ticket.priority });
+      if (profile) items.push({ title: "Сигнал профиля", meta: statusLabel(profile.status), text: profile.name + " · " + (profile.city || "город не указан") });
+      if (lead) items.push({ title: "Новая заявка", meta: statusLabel(lead.status), text: (lead.customerName || "Клиент") + " оставил новый запрос." });
+      if (release) items.push({ title: "Движение релиза", meta: statusLabel(release.status), text: release.title + (release.releaseDate ? " · " + release.releaseDate : "") });
+      if (payout) items.push({ title: "Заявка на вывод", meta: statusLabel(payout.status), text: "Запрос на " + Number(payout.amount || 0).toLocaleString("ru-RU") + " " + payout.currency + "." });
+      if (booking) items.push({ title: "Студийная бронь", meta: statusLabel(booking.status), text: (booking.customerName || "Клиент") + " · " + (booking.date || "дата не указана") });
+      if (ticket) items.push({ title: "Обращение в поддержку", meta: statusLabel(ticket.status), text: ticket.subject + " · " + statusLabel(ticket.priority) });
       byId("admin-activity-feed").innerHTML = items.length ? items.slice(0, 5).map(function (item) {
-        return '<article class="activity-item"><div class="activity-meta"><strong>' + escapeHtml(item.title) + '</strong><span class="ops-chip">' + escapeHtml(item.meta || "Update") + '</span></div><p>' + escapeHtml(item.text) + '</p></article>';
-      }).join("") : '<div class="empty">Когда профили, релизы и finance начнут двигаться, здесь появится platform activity feed.</div>';
+        return '<article class="activity-item"><div class="activity-meta"><strong>' + escapeHtml(item.title) + '</strong><span class="ops-chip">' + escapeHtml(item.meta || "Обновление") + '</span></div><p>' + escapeHtml(item.text) + '</p></article>';
+      }).join("") : '<div class="empty">Когда профили, релизы и финансы начнут двигаться, здесь появится лента активности платформы.</div>';
     }
     function renderSettings() {
       const settings = MarketplaceStore.getSettings();
@@ -591,17 +632,17 @@
     function renderProfiles() {
       const profiles = MarketplaceStore.getDb().profiles;
       byId("profiles-list").innerHTML = profiles.length ? profiles.map(function (profile) {
-        return '<div class="table-row"><div><strong>' + escapeHtml(profile.name) + '</strong><div class="muted">' + escapeHtml(profile.city) + ' · ' + escapeHtml(profile.categories.map(MarketplaceStore.categoryLabel).join(", ")) + '</div></div><div>' + escapeHtml(profile.planId) + '</div><div><span class="badge accent">' + escapeHtml(profile.status) + '</span></div><div>' + (profile.hidden ? 'Скрыт' : (profile.featured ? 'Витрина' : 'Публичный')) + '</div><div class="inline-actions"><button class="primary-btn" type="button" onclick="approveProfile(\'' + profile.id + '\')">Одобрить</button><button class="ghost-btn" type="button" onclick="toggleFeatured(\'' + profile.id + '\')">В витрину</button><button class="ghost-btn" type="button" onclick="toggleHidden(\'' + profile.id + '\')">' + (profile.hidden ? 'Показать' : 'Скрыть') + '</button></div></div>';
+        return '<div class="table-row"><div><strong>' + escapeHtml(profile.name) + '</strong><div class="muted">' + escapeHtml(profile.city) + ' · ' + escapeHtml(profile.categories.map(MarketplaceStore.categoryLabel).join(", ")) + '</div></div><div>' + escapeHtml(profile.planId) + '</div><div><span class="badge accent">' + escapeHtml(statusLabel(profile.status)) + '</span></div><div>' + (profile.hidden ? 'Скрыт' : (profile.featured ? 'Витрина' : 'Публичный')) + '</div><div class="inline-actions"><button class="primary-btn" type="button" onclick="approveProfile(\'' + profile.id + '\')">Одобрить</button><button class="ghost-btn" type="button" onclick="toggleFeatured(\'' + profile.id + '\')">В витрину</button><button class="ghost-btn" type="button" onclick="toggleHidden(\'' + profile.id + '\')">' + (profile.hidden ? 'Показать' : 'Скрыть') + '</button></div></div>';
       }).join("") : '<div class="empty">Профилей пока нет.</div>';
     }
     function renderLeadsAndQuotes() {
       const leads = MarketplaceStore.getDb().leads;
       const quotes = MarketplaceStore.getDb().quotes;
       byId("leads-list").innerHTML = leads.length ? leads.map(function (lead) {
-        return '<div class="table-row"><div><strong>' + escapeHtml(lead.customerName) + '</strong><div class="muted">' + escapeHtml(lead.profileName || "Без профиля") + '</div></div><div>' + escapeHtml(lead.eventDate || "") + '</div><div>' + (lead.budget ? Number(lead.budget).toLocaleString("ru-RU") + ' ₽' : 'без бюджета') + '</div><div><span class="badge gold">' + escapeHtml(lead.status) + '</span></div><div></div></div>';
+        return '<div class="table-row"><div><strong>' + escapeHtml(lead.customerName) + '</strong><div class="muted">' + escapeHtml(lead.profileName || "Без профиля") + '</div></div><div>' + escapeHtml(lead.eventDate || "") + '</div><div>' + (lead.budget ? Number(lead.budget).toLocaleString("ru-RU") + ' ₽' : 'без бюджета') + '</div><div><span class="badge gold">' + escapeHtml(statusLabel(lead.status)) + '</span></div><div></div></div>';
       }).join("") : '<div class="empty">Пока нет входящих запросов.</div>';
       byId("quotes-list").innerHTML = quotes.length ? quotes.map(function (quote) {
-        return '<div class="table-row"><div><strong>' + escapeHtml(quote.packageName || "Предложение") + '</strong><div class="muted">' + escapeHtml((MarketplaceStore.getLeadById(quote.leadId) || {}).customerName || "") + '</div></div><div>' + Number(quote.amount || 0).toLocaleString("ru-RU") + ' ₽</div><div>' + quote.depositPercent + '%</div><div><span class="badge accent">' + escapeHtml(quote.status) + '</span></div><div></div></div>';
+        return '<div class="table-row"><div><strong>' + escapeHtml(quote.packageName || "Предложение") + '</strong><div class="muted">' + escapeHtml((MarketplaceStore.getLeadById(quote.leadId) || {}).customerName || "") + '</div></div><div>' + Number(quote.amount || 0).toLocaleString("ru-RU") + ' ₽</div><div>' + quote.depositPercent + '%</div><div><span class="badge accent">' + escapeHtml(statusLabel(quote.status)) + '</span></div><div></div></div>';
       }).join("") : '<div class="empty">Пока нет предложений.</div>';
     }
     function renderReviews() {
@@ -614,7 +655,7 @@
     function renderChats() {
       const deals = MarketplaceStore.getDb().deals;
       byId("chats-list").innerHTML = deals.length ? deals.map(function (deal) {
-        return '<div class="table-row"><div><strong>' + escapeHtml(deal.profileName) + '</strong><div class="muted">' + escapeHtml(deal.clientName) + '</div></div><div>' + (deal.agreedAmount ? Number(deal.agreedAmount).toLocaleString("ru-RU") + ' ₽' : 'без суммы') + '</div><div><span class="badge accent">' + escapeHtml(deal.status) + '</span></div><div>Чат доступен</div><div><button class="primary-btn" type="button" onclick="openAdminChat(\'' + deal.id + '\')">Открыть</button></div></div>';
+        return '<div class="table-row"><div><strong>' + escapeHtml(deal.profileName) + '</strong><div class="muted">' + escapeHtml(deal.clientName) + '</div></div><div>' + (deal.agreedAmount ? Number(deal.agreedAmount).toLocaleString("ru-RU") + ' ₽' : 'без суммы') + '</div><div><span class="badge accent">' + escapeHtml(statusLabel(deal.status)) + '</span></div><div>Чат доступен</div><div><button class="primary-btn" type="button" onclick="openAdminChat(\'' + deal.id + '\')">Открыть</button></div></div>';
       }).join("") : '<div class="empty">Кейсов и чатов пока нет.</div>';
     }
     function renderReleaseOps() {
@@ -622,14 +663,14 @@
       byId("releases-list").innerHTML = releases.length ? releases.map(function (release) {
         const artist = MarketplaceStore.getDb().artists.find(function (item) { return item.id === release.artistId; });
         const partner = MarketplaceStore.getDb().partners.find(function (item) { return item.id === release.partnerId; });
-        return '<div class="table-row"><div><strong>' + escapeHtml(release.title) + '</strong><div class="muted">' + escapeHtml(artist ? artist.name : (partner ? partner.name : "Без владельца")) + '</div></div><div>' + escapeHtml(release.type) + '</div><div>' + escapeHtml(release.releaseDate || "Без даты") + '</div><div><span class="badge accent">' + escapeHtml(release.status) + '</span></div><div><button class="ghost-btn" type="button" onclick="advanceAdminReleaseStatus(\'' + release.id + '\')">След. статус</button></div></div>';
+        return '<div class="table-row"><div><strong>' + escapeHtml(release.title) + '</strong><div class="muted">' + escapeHtml(artist ? artist.name : (partner ? partner.companyName : "Без владельца")) + '</div></div><div>' + escapeHtml(releaseTypeLabel(release.type)) + '</div><div>' + escapeHtml(release.releaseDate || "Без даты") + '</div><div><span class="badge accent">' + escapeHtml(statusLabel(release.status)) + '</span></div><div><button class="ghost-btn" type="button" onclick="advanceAdminReleaseStatus(\'' + release.id + '\')">След. статус</button></div></div>';
       }).join("") : '<div class="empty">Релизов пока нет.</div>';
     }
     function renderAdminReleaseTimeline() {
       const releases = (MarketplaceStore.getDb().releases || []).slice(0, 5);
       byId("admin-release-timeline").innerHTML = releases.length ? releases.map(function (release) {
-        return '<article class="timeline-item"><div class="timeline-item-head"><div><span class="timeline-meta">' + escapeHtml(release.type || "release") + '</span><strong>' + escapeHtml(release.title) + '</strong></div><span class="summary-pill">' + escapeHtml(release.status) + '</span></div><p>' + escapeHtml(release.description || "Release card без расширенного комментария. Здесь удобно отслеживать editorial readiness и distribution state.") + '</p><div class="timeline-pills"><span class="timeline-pill">Date: ' + escapeHtml(release.releaseDate || "TBD") + '</span><span class="timeline-pill">Genre: ' + escapeHtml(release.genre || "—") + '</span><span class="timeline-pill">Tracks: ' + escapeHtml(String(release.trackCount || 1)) + '</span></div></article>';
-      }).join("") : '<div class="empty">Release timeline появится после первых релизов в системе.</div>';
+        return '<article class="timeline-item"><div class="timeline-item-head"><div><span class="timeline-meta">' + escapeHtml(releaseTypeLabel(release.type)) + '</span><strong>' + escapeHtml(release.title) + '</strong></div><span class="summary-pill">' + escapeHtml(statusLabel(release.status)) + '</span></div><p>' + escapeHtml(release.description || "Релиз пока без расширенного комментария. Здесь удобно отслеживать готовность материалов и следующий статус.") + '</p><div class="timeline-pills"><span class="timeline-pill">Дата: ' + escapeHtml(release.releaseDate || "не указана") + '</span><span class="timeline-pill">Жанр: ' + escapeHtml(release.genre || "—") + '</span><span class="timeline-pill">Треков: ' + escapeHtml(String(release.trackCount || 1)) + '</span></div></article>';
+      }).join("") : '<div class="empty">Таймлайн релизов появится после первых релизов в системе.</div>';
     }
     function renderRoyaltyOps() {
       const artists = MarketplaceStore.getDb().artists;
@@ -639,13 +680,13 @@
       const reports = MarketplaceStore.getDb().royaltyReports;
       byId("royalty-list").innerHTML = reports.length ? reports.map(function (report) {
         const artist = MarketplaceStore.getDb().artists.find(function (item) { return item.id === report.artistId; });
-        return '<div class="table-row"><div><strong>' + escapeHtml(report.periodLabel) + '</strong><div class="muted">' + escapeHtml(artist ? artist.name : "Артист") + '</div></div><div>' + Number(report.grossAmount || 0).toLocaleString("ru-RU") + '</div><div>' + Number(report.netAmount || 0).toLocaleString("ru-RU") + ' ' + escapeHtml(report.currency) + '</div><div><span class="badge gold">' + escapeHtml(report.status) + '</span></div><div></div></div>';
+        return '<div class="table-row"><div><strong>' + escapeHtml(report.periodLabel) + '</strong><div class="muted">' + escapeHtml(artist ? artist.name : "Артист") + '</div></div><div>' + Number(report.grossAmount || 0).toLocaleString("ru-RU") + '</div><div>' + Number(report.netAmount || 0).toLocaleString("ru-RU") + ' ' + escapeHtml(report.currency) + '</div><div><span class="badge gold">' + escapeHtml(statusLabel(report.status)) + '</span></div><div></div></div>';
       }).join("") : '<div class="empty">Отчётов пока нет.</div>';
       const payouts = MarketplaceStore.getDb().payoutRequests;
       byId("payouts-list").innerHTML = payouts.length ? payouts.map(function (request) {
         const artist = MarketplaceStore.getDb().artists.find(function (item) { return item.id === request.artistId; });
         const partner = MarketplaceStore.getDb().partners.find(function (item) { return item.id === request.partnerId; });
-        return '<div class="table-row"><div><strong>' + Number(request.amount || 0).toLocaleString("ru-RU") + ' ' + escapeHtml(request.currency) + '</strong><div class="muted">' + escapeHtml(artist ? artist.name : (partner ? partner.name : "Владелец")) + '</div></div><div><span class="badge accent">' + escapeHtml(request.status) + '</span></div><div>' + escapeHtml(request.note || "Без комментария") + '</div><div><button class="ghost-btn" type="button" onclick="setPayoutStatus(\'' + request.id + '\', \'approved\')">Одобрить</button></div><div><button class="ghost-btn" type="button" onclick="setPayoutStatus(\'' + request.id + '\', \'rejected\')">Отклонить</button></div></div>';
+        return '<div class="table-row"><div><strong>' + Number(request.amount || 0).toLocaleString("ru-RU") + ' ' + escapeHtml(request.currency) + '</strong><div class="muted">' + escapeHtml(artist ? artist.name : (partner ? partner.companyName : "Владелец")) + '</div></div><div><span class="badge accent">' + escapeHtml(statusLabel(request.status)) + '</span></div><div>' + escapeHtml(request.note || "Без комментария") + '</div><div><button class="ghost-btn" type="button" onclick="setPayoutStatus(\'' + request.id + '\', \'approved\')">Одобрить</button></div><div><button class="ghost-btn" type="button" onclick="setPayoutStatus(\'' + request.id + '\', \'rejected\')">Отклонить</button></div></div>';
       }).join("") : '<div class="empty">Запросов на вывод пока нет.</div>';
     }
     function renderAdminFinanceWidgets() {
@@ -659,28 +700,28 @@
       const payoutShare = (approved + pending) > 0 ? Math.min(100, Math.round((approved / (approved + pending)) * 100)) : 0;
       byId("admin-finance-widgets").innerHTML = [
         {
-          eyebrow: "Royalty Yield",
-          title: "Net against gross reporting",
+          eyebrow: "Отчёты",
+          title: "Начисления к общей сумме",
           value: netShare + "%",
           meter: netShare,
-          rows: [["Gross", Number(gross || 0).toLocaleString("ru-RU") + " ₽"], ["Net", Number(net || 0).toLocaleString("ru-RU") + " ₽"]]
+          rows: [["Всего", Number(gross || 0).toLocaleString("ru-RU") + " ₽"], ["К начислению", Number(net || 0).toLocaleString("ru-RU") + " ₽"]]
         },
         {
-          eyebrow: "Payout Queue",
-          title: "Approved against pending",
+          eyebrow: "Вывод средств",
+          title: "Одобрено к ожидающим",
           value: Number(pending || 0).toLocaleString("ru-RU") + " ₽",
           meter: payoutShare,
-          rows: [["Approved", Number(approved || 0).toLocaleString("ru-RU") + " ₽"], ["Pending", Number(pending || 0).toLocaleString("ru-RU") + " ₽"]]
+          rows: [["Одобрено", Number(approved || 0).toLocaleString("ru-RU") + " ₽"], ["Ожидает", Number(pending || 0).toLocaleString("ru-RU") + " ₽"]]
         }
       ].map(function (item) {
-        return '<article class="finance-widget"><span class="eyebrow-note">' + escapeHtml(item.eyebrow) + '</span><strong>' + escapeHtml(item.title) + '</strong><div class="portal-stat-line"><span class="muted">Current</span><span class="value">' + escapeHtml(String(item.value)) + '</span></div><div class="finance-meter"><span style="width:' + item.meter + '%;"></span></div><div class="section-stack">' + item.rows.map(function (row) { return '<div class="metric-row"><span>' + escapeHtml(String(row[0])) + '</span><span>' + escapeHtml(String(row[1])) + '</span></div>'; }).join("") + '</div></article>';
+        return '<article class="finance-widget"><span class="eyebrow-note">' + escapeHtml(item.eyebrow) + '</span><strong>' + escapeHtml(item.title) + '</strong><div class="portal-stat-line"><span class="muted">Сейчас</span><span class="value">' + escapeHtml(String(item.value)) + '</span></div><div class="finance-meter"><span style="width:' + item.meter + '%;"></span></div><div class="section-stack">' + item.rows.map(function (row) { return '<div class="metric-row"><span>' + escapeHtml(String(row[0])) + '</span><span>' + escapeHtml(String(row[1])) + '</span></div>'; }).join("") + '</div></article>';
       }).join("");
     }
     function renderStudioOps() {
       const bookings = MarketplaceStore.getDb().studioBookings;
       byId("studio-bookings-list").innerHTML = bookings.length ? bookings.map(function (booking) {
         const service = MarketplaceStore.getStudioServices().find(function (item) { return item.id === booking.serviceId; });
-        return '<div class="table-row"><div><strong>' + escapeHtml(service ? service.name : "Услуга") + '</strong><div class="muted">' + escapeHtml(booking.customerName || "") + '</div></div><div>' + escapeHtml(booking.date || "Без даты") + ' ' + escapeHtml(booking.time || "") + '</div><div>' + escapeHtml(booking.duration || "—") + '</div><div><span class="badge gold">' + escapeHtml(booking.status) + '</span></div><div><button class="ghost-btn" type="button" onclick="setStudioStatus(\'' + booking.id + '\', \'confirmed\')">Подтвердить</button></div></div>';
+        return '<div class="table-row"><div><strong>' + escapeHtml(service ? service.name : "Услуга") + '</strong><div class="muted">' + escapeHtml(booking.customerName || "") + '</div></div><div>' + escapeHtml(booking.date || "Без даты") + ' ' + escapeHtml(booking.time || "") + '</div><div>' + escapeHtml(booking.duration || "—") + '</div><div><span class="badge gold">' + escapeHtml(statusLabel(booking.status)) + '</span></div><div><button class="ghost-btn" type="button" onclick="setStudioStatus(\'' + booking.id + '\', \'confirmed\')">Подтвердить</button></div></div>';
       }).join("") : '<div class="empty">Студийных бронирований пока нет.</div>';
     }
     function renderAdminSupportDesk() {
@@ -688,17 +729,17 @@
         return String(b.createdAt || "").localeCompare(String(a.createdAt || ""));
       });
       byId("admin-documents-list").innerHTML = documents.length ? documents.map(function (document) {
-        const ownerLabel = document.ownerType === "artist" ? "Artist" : (document.ownerType === "partner" ? "Partner" : "Shared");
+        const ownerLabel = document.ownerType === "artist" ? "Исполнитель" : (document.ownerType === "partner" ? "Партнёр" : "Общий");
         const action = document.url ? '<a class="ops-link" href="' + escapeHtml(document.url) + '" target="_blank" rel="noopener">Открыть</a>' : '<span class="muted">Без файла</span>';
-        return '<div class="table-row"><div><strong>' + escapeHtml(document.title) + '</strong><div class="muted">' + escapeHtml(ownerLabel) + ' · ' + escapeHtml(document.kind || "document") + '</div></div><div>' + escapeHtml(document.summary || "Без описания") + '</div><div><span class="badge accent">' + escapeHtml(document.status || "published") + '</span></div><div>' + action + '</div></div>';
-      }).join("") : '<div class="empty">Документы появятся после первых royalty periods и payout flows.</div>';
+        return '<div class="table-row"><div><strong>' + escapeHtml(document.title) + '</strong><div class="muted">' + escapeHtml(ownerLabel) + ' · ' + escapeHtml(document.kind || "документ") + '</div></div><div>' + escapeHtml(document.summary || "Без описания") + '</div><div><span class="badge accent">' + escapeHtml(statusLabel(document.status || "published")) + '</span></div><div>' + action + '</div></div>';
+      }).join("") : '<div class="empty">Документы появятся после первых отчётов и заявок на вывод.</div>';
 
       const tickets = (MarketplaceStore.getDb().tickets || []).slice().sort(function (a, b) {
         return String(b.updatedAt || b.createdAt || "").localeCompare(String(a.updatedAt || a.createdAt || ""));
       });
       byId("admin-tickets-list").innerHTML = tickets.length ? tickets.map(function (ticket) {
-        const ownerLabel = ticket.ownerType === "artist" ? "Artist" : "Partner";
-        return '<div class="table-row"><div><strong>' + escapeHtml(ticket.subject) + '</strong><div class="muted">' + escapeHtml(ownerLabel) + ' · ' + escapeHtml(ticket.category || "general") + ' · ' + escapeHtml(ticket.priority || "normal") + '</div></div><div>' + escapeHtml(ticket.message || "Без комментария") + '</div><div><span class="badge gold">' + escapeHtml(ticket.status || "open") + '</span></div><div class="inline-actions"><button class="ghost-btn" type="button" onclick="setTicketStatus(\'' + ticket.id + '\', \'in_progress\')">В работу</button><button class="ghost-btn" type="button" onclick="setTicketStatus(\'' + ticket.id + '\', \'resolved\')">Решён</button><button class="ghost-btn" type="button" onclick="setTicketStatus(\'' + ticket.id + '\', \'closed\')">Закрыть</button></div></div>';
+        const ownerLabel = ticket.ownerType === "artist" ? "Исполнитель" : "Партнёр";
+        return '<div class="table-row"><div><strong>' + escapeHtml(ticket.subject) + '</strong><div class="muted">' + escapeHtml(ownerLabel) + ' · ' + escapeHtml(ticket.category || "общий") + ' · ' + escapeHtml(statusLabel(ticket.priority || "normal")) + '</div></div><div>' + escapeHtml(ticket.message || "Без комментария") + '</div><div><span class="badge gold">' + escapeHtml(statusLabel(ticket.status || "open")) + '</span></div><div class="inline-actions"><button class="ghost-btn" type="button" onclick="setTicketStatus(\'' + ticket.id + '\', \'in_progress\')">В работу</button><button class="ghost-btn" type="button" onclick="setTicketStatus(\'' + ticket.id + '\', \'resolved\')">Решён</button><button class="ghost-btn" type="button" onclick="setTicketStatus(\'' + ticket.id + '\', \'closed\')">Закрыть</button></div></div>';
       }).join("") : '<div class="empty">Открытых тикетов пока нет.</div>';
     }
     window.openAdminChat = function (dealId) {
@@ -736,13 +777,41 @@
     };
     function renderDashboard() {
       const admin = MarketplaceStore.getCurrentAdmin();
+      const canUseAdmin = MarketplaceStore.canUseAdmin ? MarketplaceStore.canUseAdmin() : false;
+      const admins = ((MarketplaceStore.getDb().admins || []).filter(function (item) {
+        return String(item.email || "").trim().toLowerCase() !== "admin@palan.market";
+      }));
+      const setupForm = byId("admin-setup");
+      const loginForm = byId("admin-login");
       byId("login-view").style.display = admin ? "none" : "grid";
       byId("dashboard-view").style.display = admin ? "block" : "none";
+      if (!admin) {
+        if (!canUseAdmin) {
+          setupForm.style.display = "none";
+          loginForm.style.display = "none";
+          showMessage("login-message", "Админка закрыта. Управление доступно только владельцу в локальной сборке.", "error");
+          return;
+        }
+        setupForm.style.display = admins.length ? "none" : "grid";
+        loginForm.style.display = admins.length ? "grid" : "none";
+        if (!admins.length) {
+          showMessage("login-message", "Демо-администратор отключён. Создайте закрытый доступ владельца.", "success");
+        }
+        return;
+      }
       if (!admin) return;
       byId("admin-name").textContent = "Авторизован: " + admin.name;
       renderStats(); renderAdminExecutive(); renderAdminSystemRail(); renderAdminCommandCenter(); renderAdminActivityFeed(); renderAdminFocusStrip(); renderSettings(); renderDictionaries(); renderProfiles(); renderLeadsAndQuotes(); renderReviews(); renderChats(); renderReleaseOps(); renderAdminReleaseTimeline(); renderRoyaltyOps(); renderAdminFinanceWidgets(); renderStudioOps(); renderAdminSupportDesk();
       byId("chat-admin-box").innerHTML = '<div class="empty">Выберите кейс, чтобы посмотреть чат.</div>';
     }
+    byId("admin-setup").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const payload = Object.fromEntries(new FormData(event.target).entries());
+      const result = MarketplaceStore.createOwnerAdmin(payload);
+      if (!result.ok) return showMessage("login-message", result.message, "error");
+      showMessage("admin-message", "Закрытый доступ владельца создан.", "success");
+      renderDashboard();
+    });
     byId("admin-login").addEventListener("submit", function (event) {
       event.preventDefault();
       const payload = Object.fromEntries(new FormData(event.target).entries());
@@ -751,7 +820,7 @@
       renderDashboard();
     });
     byId("logout-admin").addEventListener("click", function () { MarketplaceStore.logout(); renderDashboard(); });
-    byId("reset-db").addEventListener("click", function () { MarketplaceStore.resetDb(); showMessage("login-message", "База очищена и перезапущена без демо-данных.", "success"); renderDashboard(); });
+    byId("reset-db").addEventListener("click", function () { MarketplaceStore.resetDb(); showMessage("login-message", "База очищена. Закрытый доступ владельца сохранён, войдите заново.", "success"); renderDashboard(); });
     byId("settings-form").addEventListener("submit", function (event) {
       event.preventDefault();
       const payload = Object.fromEntries(new FormData(event.target).entries());
@@ -781,7 +850,7 @@
           }
         };
       localStorage.setItem("palanart_auth_config", JSON.stringify(config));
-      showMessage("admin-message", "Настройки сервисного входа сохранены. Обновите client services или artist portal.", "success");
+      showMessage("admin-message", "Настройки сервисного входа сохранены. Обновите кабинеты заказчика и исполнителя.", "success");
       renderSettings();
     });
     byId("royalty-form").addEventListener("submit", function (event) {
@@ -806,7 +875,7 @@
         note: "Начисление по периоду " + payload.periodLabel
       });
       event.target.reset();
-      showMessage("admin-message", "Royalty-отчёт опубликован и баланс артиста пополнен на net-сумму.", "success");
+      showMessage("admin-message", "Финансовый отчёт опубликован, баланс исполнителя пополнен.", "success");
       renderDashboard();
     });
     (function initPortalScenes() {

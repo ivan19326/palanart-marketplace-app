@@ -96,19 +96,19 @@
             <div class="stage-grid"></div>
             <div class="orbit-chip orbit-chip--guitar">
               <svg viewBox="0 0 24 24" fill="none"><path d="M15.5 3.5a2 2 0 0 1 2.8 0l2.2 2.2a2 2 0 0 1 0 2.8l-2.1 2.1-1.8-1.8-2 2-1.4-1.4 2-2-1.8-1.8 2.1-2.1Z" stroke="currentColor" stroke-width="1.6"/><path d="m12.8 10.2-5.6 5.6a2.8 2.8 0 1 1-4-4l5.6-5.6" stroke="currentColor" stroke-width="1.6"/></svg>
-              <span><strong>Guitar</strong><small>live set</small></span>
+              <span><strong>Гитара</strong><small>живой сет</small></span>
             </div>
             <div class="orbit-chip orbit-chip--mic">
               <svg viewBox="0 0 24 24" fill="none"><rect x="9" y="3.5" width="6" height="10" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M6 11.5a6 6 0 1 0 12 0M12 17.5v3m-3 0h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-              <span><strong>Vocal</strong><small>mic line</small></span>
+              <span><strong>Вокал</strong><small>микрофон</small></span>
             </div>
             <div class="orbit-chip orbit-chip--drums">
               <svg viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="14.5" rx="5.5" ry="3.5" stroke="currentColor" stroke-width="1.6"/><path d="M6.5 14.5V9m11 5.5V9M9 7.5h6M5 6l3 2.5M19 6l-3 2.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-              <span><strong>Drums</strong><small>show energy</small></span>
+              <span><strong>Ритм</strong><small>энергия шоу</small></span>
             </div>
             <div class="orbit-chip orbit-chip--piano">
               <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 9v6M12 9v6M16 9v6M6 12h12" stroke="currentColor" stroke-width="1.4"/></svg>
-              <span><strong>Keys</strong><small>studio tone</small></span>
+              <span><strong>Клавиши</strong><small>студийный звук</small></span>
             </div>
             <div class="anime-singer">
               <div class="hair"></div>
@@ -221,7 +221,7 @@
         <article class="matrix-card">
           <div class="matrix-kicker">Модерация</div>
           <h3>Порядок и доверие в каталоге</h3>
-          <p>Администратор проверяет профили, управляет публикацией, заявками и отзывами.</p>
+          <p>Профили, публикации, заявки и отзывы проходят внутренний контроль качества платформы.</p>
         </article>
         <article class="matrix-card">
           <div class="matrix-kicker">Рост</div>
@@ -351,7 +351,7 @@
         </div>
       </div>
       <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
-        <div class="summary-card"><strong>Быстрый подбор</strong><p class="muted">Собирайте short-list специалистов под конкретную дату, город и бюджет.</p></div>
+        <div class="summary-card"><strong>Быстрый подбор</strong><p class="muted">Собирайте список подходящих специалистов под конкретную дату, город и бюджет.</p></div>
         <div class="summary-card"><strong>Сравнение</strong><p class="muted">Сводите цены, форматы работы и портфолио в одном месте.</p></div>
         <div class="summary-card"><strong>Повторные заказы</strong><p class="muted">Сохраняйте проверенных исполнителей и возвращайтесь к ним для новых событий.</p></div>
         <div class="summary-card"><strong>Командная работа</strong><p class="muted">Партнёрский кабинет можно развить для работы нескольких менеджеров.</p></div>
@@ -409,7 +409,7 @@
           <select id="filter-category"></select>
         </label>
         <label>Город
-          <input id="filter-city" type="text" placeholder="Чебоксары">
+          <input id="filter-city" type="text" list="city-options" placeholder="Чебоксары">
         </label>
         <label>Бюджет до
           <input id="filter-price" type="number" min="0" placeholder="80000">
@@ -452,7 +452,7 @@
       <div class="section-head">
         <div>
           <h2>Сравнение артистов и проектов</h2>
-          <p>Удобно для A&R, отбора артистов, внешних запросов и сервисного short-list внутри платформы.</p>
+          <p>Удобно для выбора исполнителей, сравнения условий и подготовки короткого списка под событие.</p>
         </div>
       </div>
       <div id="compare-box" class="comparison-table"></div>
@@ -547,20 +547,19 @@
       <div class="panel">
         <div class="section-head">
           <div>
-            <h2>Три стороны Palanart</h2>
-            <p class="muted">У каждого участника свой понятный сценарий — без лишней сложности.</p>
+          <h2>Palanart для участников</h2>
+          <p class="muted">У каждого участника свой понятный сценарий — без лишней сложности.</p>
           </div>
         </div>
         <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
           <div class="summary-card"><strong>Заказчик</strong><p class="muted">Ищет, сравнивает, сохраняет избранное и оставляет заявку.</p></div>
           <div class="summary-card"><strong>Исполнитель</strong><p class="muted">Оформляет профиль, показывает портфолио и отвечает на заявки.</p></div>
-          <div class="summary-card"><strong>Партнёр</strong><p class="muted">Подбирает специалистов для клиентов и собирает рабочий short-list.</p></div>
-          <div class="summary-card"><strong>Администратор</strong><p class="muted">Модерирует профили, отзывы, категории и публикации.</p></div>
+          <div class="summary-card"><strong>Партнёр</strong><p class="muted">Подбирает специалистов для клиентов и собирает рабочий список вариантов.</p></div>
         </div>
         <div class="hero-actions" style="margin-top:18px;">
           <a class="primary-btn" href="artist.html">Кабинет исполнителя</a>
           <a class="ghost-btn" href="user.html">Кабинет заказчика</a>
-          <a class="ghost-btn" href="admin.html">Админка</a>
+          <a class="ghost-btn" href="partner.html">Партнёрам</a>
         </div>
       </div>
     </section>
@@ -631,7 +630,7 @@
               <option value="1">Индивидуально</option>
               <option value="5" selected>Малый проект</option>
               <option value="20">Команда / серия задач</option>
-              <option value="100">Крупный production</option>
+              <option value="100">Крупный проект</option>
             </select>
           </label>
           <label>Дата<input name="eventDate" type="date"></label>
@@ -656,7 +655,7 @@
         <div class="quick-options">
           <button class="quick-option" type="button" data-fill-target="requirements" data-fill-value="Нужен сильный локальный опыт и понятное сопровождение по этапам.">Локальный опыт</button>
           <button class="quick-option" type="button" data-fill-target="requirements" data-fill-value="Нужен спокойный сервисный процесс, понятный тайминг и минимум хаоса.">Сервисный формат</button>
-          <button class="quick-option" type="button" data-fill-target="requirements" data-fill-value="Важно наличие собственного production-процесса, студийных возможностей и быстрой коммуникации.">Production-ready</button>
+          <button class="quick-option" type="button" data-fill-target="requirements" data-fill-value="Важно, чтобы исполнитель работал организованно, быстро отвечал и заранее согласовал все детали.">Готовый процесс</button>
         </div>
         <div class="inline-actions">
           <button class="primary-btn" type="submit">Отправить запрос</button>
@@ -694,9 +693,37 @@
   <datalist id="city-options">
     <option value="Чебоксары"></option>
     <option value="Новочебоксарск"></option>
+    <option value="Йошкар-Ола"></option>
+    <option value="Саранск"></option>
     <option value="Казань"></option>
+    <option value="Нижний Новгород"></option>
+    <option value="Ульяновск"></option>
+    <option value="Киров"></option>
+    <option value="Ижевск"></option>
+    <option value="Набережные Челны"></option>
+    <option value="Уфа"></option>
+    <option value="Самара"></option>
+    <option value="Тольятти"></option>
+    <option value="Пенза"></option>
+    <option value="Саратов"></option>
+    <option value="Волгоград"></option>
+    <option value="Пермь"></option>
+    <option value="Екатеринбург"></option>
+    <option value="Оренбург"></option>
     <option value="Москва"></option>
     <option value="Санкт-Петербург"></option>
+    <option value="Ярославль"></option>
+    <option value="Владимир"></option>
+    <option value="Рязань"></option>
+    <option value="Тула"></option>
+    <option value="Воронеж"></option>
+    <option value="Ростов-на-Дону"></option>
+    <option value="Краснодар"></option>
+    <option value="Сочи"></option>
+    <option value="Новосибирск"></option>
+    <option value="Красноярск"></option>
+    <option value="Омск"></option>
+    <option value="Тюмень"></option>
   </datalist>
   <datalist id="venue-options">
     <option value="Ресторан"></option>
@@ -938,7 +965,7 @@
       const user = currentUser();
       const host = byId("compare-box");
       if (!user) {
-        host.innerHTML = '<div class="empty">Сравнение сохраняется в client services. Войдите как заказчик услуг, чтобы собирать short-list и быстро сверять условия.</div>';
+        host.innerHTML = '<div class="empty">Сравнение сохраняется в кабинете заказчика. Войдите, чтобы собирать список вариантов и быстро сверять условия.</div>';
         return;
       }
       const profiles = MarketplaceStore.getCompareProfiles(user.id);
@@ -965,14 +992,14 @@
     window.selectProfile = function (profileId) { catalogState.selectedProfileId = profileId; renderCatalog(); byId("profile-detail").scrollIntoView({ behavior: "smooth", block: "start" }); };
     window.toggleFavorite = function (profileId) {
       const user = currentUser();
-      if (!user) return showSiteMessage('Сначала войдите как заказчик в <a href="user.html">client services</a>, и тогда short-list будет работать нормально.', "error");
+      if (!user) return showSiteMessage('Сначала войдите в <a href="user.html">кабинет заказчика</a>, и тогда избранное будет сохраняться.', "error");
       MarketplaceStore.toggleFavoriteProfile(user.id, profileId);
       showSiteMessage("Избранное обновлено.", "success");
       renderCatalog();
     };
     window.toggleCompare = function (profileId) {
       const user = currentUser();
-      if (!user) return showSiteMessage('Сравнение доступно после входа в <a href="user.html">client services</a>.', "error");
+      if (!user) return showSiteMessage('Сравнение доступно после входа в <a href="user.html">кабинет заказчика</a>.', "error");
       MarketplaceStore.toggleCompareProfile(user.id, profileId);
       showSiteMessage("Сравнение обновлено.", "success");
       renderCatalog();
@@ -1035,7 +1062,7 @@
           requirements: payload.requirements
         });
         closeModal(requestModal);
-        showSiteMessage('Чат открыт. Продолжить можно в <a href="user.html">client services</a>. Сделка: ' + deal.id, "success");
+        showSiteMessage('Чат открыт. Продолжить можно в <a href="user.html">кабинете заказчика</a>. Номер диалога: ' + deal.id, "success");
       } else {
         MarketplaceStore.createLead(payload);
         closeModal(requestModal);
@@ -1052,7 +1079,7 @@
         authorType: artist ? "artist" : "client",
         authorId: artist ? artist.id : (user ? user.id : null),
         authorName: payload.authorName,
-        contactInfo: artist ? "Через artist portal" : "Через client services",
+        contactInfo: artist ? "Через кабинет исполнителя" : "Через кабинет заказчика",
         message: payload.message
       });
       closeModal(replyModal);

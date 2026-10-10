@@ -2421,6 +2421,64 @@ body[data-theme="light"] .message {
   margin-bottom: 16px;
 }
 
+.category-city-tools {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 18px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+body[data-theme="light"] .category-city-tools {
+  background: rgba(255, 255, 255, 0.66);
+}
+
+.category-city-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.category-city-head div {
+  display: grid;
+  gap: 4px;
+}
+
+.category-city-head span {
+  color: var(--muted);
+}
+
+.category-city-search {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.category-city-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.category-city-list .mini-chip {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text);
+  text-decoration: none;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.category-city-list .mini-chip.is-active,
+.category-city-list .mini-chip:hover {
+  border-color: rgba(255, 138, 91, 0.5);
+  background: rgba(255, 138, 91, 0.16);
+}
+
 .cards-grid {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
@@ -3583,6 +3641,7 @@ body[data-theme="light"] .summary-pill {
   .service-hero,
   .detail-grid,
   .filters,
+  .category-city-search,
   .stats-grid,
   .table-row,
   .form-grid,

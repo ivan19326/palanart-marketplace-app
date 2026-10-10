@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Client Services | Palanart</title>
+  <title>Кабинет заказчика | Palanart</title>
   <link rel="stylesheet" href="marketplace.css">
 </head>
 <body class="page-client">
@@ -50,16 +50,16 @@
       <article class="people-card people-card--tall people-card--client-main">
         <img class="people-image people-image--client-main" src="assets/client-services-team.png" alt="Клиент, артист и команда в студийной встрече">
         <div class="people-card-copy">
-          <div class="eyebrow">Client Services</div>
-          <h3>Живая встреча клиента, артиста и команды прямо в музыкальной среде</h3>
-          <p>Теперь у client services свой отдельный human-scene: реальная коммуникация, студийная атмосфера и обсуждение проекта в кадре.</p>
+          <div class="eyebrow">Кабинет заказчика</div>
+          <h3>Подбор исполнителя без лишних звонков и хаоса</h3>
+          <p>Сохраняйте варианты, отправляйте заявки и обсуждайте детали мероприятия в одном понятном месте.</p>
         </div>
       </article>
       <div class="people-showcase-stack">
         <article class="people-card people-card--live-energy">
           <img class="people-image people-image--live-energy" src="assets/hero-people-anime-stage.png" alt="Живые артисты на сцене">
           <div class="people-card-copy">
-            <div class="eyebrow">Live Energy</div>
+            <div class="eyebrow">Живые выступления</div>
             <h3>Выступления и человеческая энергия</h3>
             <p>Показываем, ради чего клиент вообще приходит в платформу.</p>
           </div>
@@ -67,7 +67,7 @@
         <article class="people-card people-card--platform-team">
           <img class="people-image people-image--platform-team" src="assets/partner-release-desk-scene.png" alt="Команда платформы">
           <div class="people-card-copy">
-            <div class="eyebrow">Platform Team</div>
+            <div class="eyebrow">Команда Palanart</div>
             <h3>За платформой стоят реальные люди</h3>
             <p>Команда, координация и поддержка считываются с первого экрана.</p>
           </div>
@@ -88,8 +88,8 @@
           <aside class="service-panel">
             <h3>Рабочий режим</h3>
             <div class="info-list">
-              <div class="info-item">Регистрируйте service client и сразу тестируйте запросы, предложения и чат.</div>
-              <div class="info-item">Избранное, сравнение и история сделок сохраняются в браузере как рабочая база теста.</div>
+              <div class="info-item">Создайте кабинет и сразу отправляйте заявки выбранным исполнителям.</div>
+              <div class="info-item">Избранное, сравнение и история диалогов сохраняются в вашем браузере.</div>
             </div>
           </aside>
         </div>
@@ -101,7 +101,7 @@
                 <label>Имя<input name="name" type="text" required></label>
                 <label>E-mail<input name="email" type="email" required></label>
                 <label>Телефон<input name="phone" type="tel" required></label>
-                <label>Город<input name="city" type="text" placeholder="Чебоксары"></label>
+                <label>Город<input name="city" type="text" list="user-city-options" placeholder="Чебоксары"></label>
                 <div class="geo-inline-action">
                   <button id="detect-user-city" class="ghost-btn mini-chip" type="button">Определить город по геолокации</button>
                 </div>
@@ -131,7 +131,7 @@
           <article class="service-panel">
             <div class="section-head">
               <div>
-                <h1>Client Services Cabinet</h1>
+                <h1>Кабинет заказчика</h1>
                 <p id="user-summary" class="muted"></p>
               </div>
               <button id="logout-user" class="ghost-btn" type="button">Выйти</button>
@@ -141,7 +141,7 @@
           <aside class="service-panel">
             <h3>Что доступно</h3>
             <div class="info-list">
-              <div class="info-item">Сохраняйте карточки в избранное и собирайте shortlist.</div>
+              <div class="info-item">Сохраняйте карточки в избранное и собирайте список подходящих вариантов.</div>
               <div class="info-item">Отправляйте запросы на артистов, релизные сервисы и студийные услуги.</div>
               <div class="info-item">Получайте предложения и согласовывайте детали в чате.</div>
             </div>
@@ -208,6 +208,42 @@
     </div>
   </main>
 
+  <datalist id="user-city-options">
+    <option value="Чебоксары"></option>
+    <option value="Новочебоксарск"></option>
+    <option value="Йошкар-Ола"></option>
+    <option value="Саранск"></option>
+    <option value="Казань"></option>
+    <option value="Нижний Новгород"></option>
+    <option value="Ульяновск"></option>
+    <option value="Киров"></option>
+    <option value="Ижевск"></option>
+    <option value="Набережные Челны"></option>
+    <option value="Уфа"></option>
+    <option value="Самара"></option>
+    <option value="Тольятти"></option>
+    <option value="Пенза"></option>
+    <option value="Саратов"></option>
+    <option value="Волгоград"></option>
+    <option value="Пермь"></option>
+    <option value="Екатеринбург"></option>
+    <option value="Оренбург"></option>
+    <option value="Москва"></option>
+    <option value="Санкт-Петербург"></option>
+    <option value="Ярославль"></option>
+    <option value="Владимир"></option>
+    <option value="Рязань"></option>
+    <option value="Тула"></option>
+    <option value="Воронеж"></option>
+    <option value="Ростов-на-Дону"></option>
+    <option value="Краснодар"></option>
+    <option value="Сочи"></option>
+    <option value="Новосибирск"></option>
+    <option value="Красноярск"></option>
+    <option value="Омск"></option>
+    <option value="Тюмень"></option>
+  </datalist>
+
   <script src="auth-config.js"></script>
   <script src="marketplace-core.js"></script>
   <script src="auth-bridge.js"></script>
@@ -246,6 +282,17 @@
     function escapeHtml(value) {
       return String(value || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
     }
+    function statusLabel(status) {
+      const map = {
+        new: "Новая",
+        quoted: "Есть предложение",
+        replied: "Есть ответ",
+        booked: "Забронировано",
+        done: "Завершено",
+        cancelled: "Отменено"
+      };
+      return map[status] || status || "Без статуса";
+    }
     function showMessage(text, kind) {
       byId("cab-message").innerHTML = text ? '<div class="message ' + kind + '">' + text + '</div>' : "";
     }
@@ -255,7 +302,7 @@
       const favorites = MarketplaceStore.getFavoriteProfiles(user.id);
       byId("user-kpis").innerHTML = [
         ["Заявки", leads.length, "активные и завершенные"],
-        ["Квоты", quotes.length, "полученные предложения"],
+        ["Предложения", quotes.length, "полученные ответы"],
         ["Избранное", favorites.length, "сохраненные профили"]
       ].map(function (item) {
         return '<div class="service-kpi"><span>' + item[0] + '</span><strong>' + item[1] + '</strong><span class="muted">' + item[2] + '</span></div>';
@@ -264,7 +311,7 @@
     function renderLeads(user) {
       const leads = MarketplaceStore.getLeadsForUser(user.id);
       byId("user-leads").innerHTML = leads.length ? leads.map(function (lead) {
-        return '<div class="table-row"><div><strong>' + escapeHtml(lead.profileName || "Общий запрос") + '</strong><div class="muted">' + escapeHtml(lead.eventType || "Событие") + ' · ' + escapeHtml(lead.city || "Город не указан") + '</div></div><div>' + escapeHtml(lead.eventDate || "Дата не указана") + '</div><div>' + (lead.budget ? Number(lead.budget).toLocaleString("ru-RU") + ' ₽' : 'Бюджет не указан') + '</div><div><span class="badge accent">' + escapeHtml(lead.status) + '</span></div><div><a class="ghost-btn" href="index.html">Каталог</a></div></div>';
+        return '<div class="table-row"><div><strong>' + escapeHtml(lead.profileName || "Общий запрос") + '</strong><div class="muted">' + escapeHtml(lead.eventType || "Событие") + ' · ' + escapeHtml(lead.city || "Город не указан") + '</div></div><div>' + escapeHtml(lead.eventDate || "Дата не указана") + '</div><div>' + (lead.budget ? Number(lead.budget).toLocaleString("ru-RU") + ' ₽' : 'Бюджет не указан') + '</div><div><span class="badge accent">' + escapeHtml(statusLabel(lead.status)) + '</span></div><div><a class="ghost-btn" href="index.html">Каталог</a></div></div>';
       }).join("") : '<div class="empty">Здесь появятся все ваши сервисные запросы. Начните с главной витрины и отправьте первый запрос артисту или команде платформы.</div>';
     }
     function renderQuotes(user) {
@@ -272,21 +319,21 @@
       byId("user-quotes").innerHTML = quotes.length ? quotes.map(function (quote) {
         const lead = MarketplaceStore.getLeadById(quote.leadId);
         const profile = MarketplaceStore.getProfileById(quote.profileId);
-        return '<div class="detail-box"><div class="section-head"><div><strong>' + escapeHtml(profile ? profile.name : "Исполнитель") + '</strong><div class="muted">' + escapeHtml(quote.packageName || "Персональный пакет") + '</div></div><span class="badge gold">' + Number(quote.amount || 0).toLocaleString("ru-RU") + ' ₽</span></div><div>' + escapeHtml(quote.includes || "") + '</div><div class="muted" style="margin-top:8px;">' + escapeHtml(quote.comment || "") + '</div><div class="inline-actions" style="margin-top:12px;"><button class="primary-btn" type="button" onclick="acceptQuote(\'' + quote.id + '\')">Подтвердить</button><button class="ghost-btn" type="button" onclick="openLeadChatByLead(\'' + quote.leadId + '\')">Открыть чат</button><span class="summary-pill">Статус заявки: ' + escapeHtml(lead ? lead.status : "") + '</span></div></div>';
-      }).join("") : '<div class="empty">Когда артист или команда платформы ответят на ваш запрос, здесь появится персональное предложение с ценой, scope и условиями.</div>';
+        return '<div class="detail-box"><div class="section-head"><div><strong>' + escapeHtml(profile ? profile.name : "Исполнитель") + '</strong><div class="muted">' + escapeHtml(quote.packageName || "Персональный пакет") + '</div></div><span class="badge gold">' + Number(quote.amount || 0).toLocaleString("ru-RU") + ' ₽</span></div><div>' + escapeHtml(quote.includes || "") + '</div><div class="muted" style="margin-top:8px;">' + escapeHtml(quote.comment || "") + '</div><div class="inline-actions" style="margin-top:12px;"><button class="primary-btn" type="button" onclick="acceptQuote(\'' + quote.id + '\')">Подтвердить</button><button class="ghost-btn" type="button" onclick="openLeadChatByLead(\'' + quote.leadId + '\')">Открыть чат</button><span class="summary-pill">Статус заявки: ' + escapeHtml(statusLabel(lead ? lead.status : "")) + '</span></div></div>';
+      }).join("") : '<div class="empty">Когда исполнитель или команда платформы ответят на ваш запрос, здесь появится персональное предложение с ценой и условиями.</div>';
     }
     function renderFavorites(user) {
       const favorites = MarketplaceStore.getFavoriteProfiles(user.id);
       byId("user-favorites").innerHTML = favorites.length ? favorites.map(function (profile) {
         return '<div class="table-row"><div><strong>' + escapeHtml(profile.name) + '</strong><div class="muted">' + escapeHtml(profile.city) + ' · ' + escapeHtml(profile.title) + '</div></div><div>' + Number(profile.priceFrom || 0).toLocaleString("ru-RU") + ' ₽</div><div>' + MarketplaceStore.getProfileRating(profile.id).average.toFixed(1) + ' / 5</div><div>' + escapeHtml(profile.categories.map(MarketplaceStore.categoryLabel).join(", ")) + '</div><div><a class="ghost-btn" href="index.html#catalog">Открыть</a></div></div>';
-      }).join("") : '<div class="empty">Избранное пока пусто. Сохраняйте сильные карточки с витрины, чтобы собрать shortlist по сервисному кейсу.</div>';
+      }).join("") : '<div class="empty">Избранное пока пусто. Сохраняйте сильные карточки с витрины, чтобы собрать список вариантов под ваше событие.</div>';
       const compare = MarketplaceStore.getCompareProfiles(user.id);
       byId("user-compare").innerHTML = compare.length ? '<table><thead><tr><th>Параметр</th>' + compare.map(function (profile) { return '<th>' + escapeHtml(profile.name) + '</th>'; }).join("") + '</tr></thead><tbody>' + [["Цена от", function (profile) { return Number(profile.priceFrom || 0).toLocaleString("ru-RU") + " ₽"; }], ["Город", function (profile) { return profile.city; }], ["Языки", function (profile) { return profile.languages.join(", "); }], ["Сценарии работы", function (profile) { return profile.eventFormats.join(", "); }]].map(function (row) { return '<tr><th>' + row[0] + '</th>' + compare.map(function (profile) { return '<td>' + escapeHtml(row[1](profile) || "Не указано") + '</td>'; }).join("") + '</tr>'; }).join("") + '</tbody></table>' : '<div class="empty">Сравнение пока пустое. Добавьте 2-3 профиля и быстро сверьте цену, языки и сценарии работы.</div>';
     }
     function renderDeals(user) {
       const deals = MarketplaceStore.getDealsForUser(user);
       byId("user-deals").innerHTML = deals.length ? deals.map(function (deal) {
-        return '<div class="table-row"><div><strong>' + escapeHtml(deal.profileName) + '</strong><div class="muted">' + escapeHtml(deal.clientName) + '</div></div><div>' + (deal.agreedAmount ? Number(deal.agreedAmount).toLocaleString("ru-RU") + ' ₽' : 'Сумма не согласована') + '</div><div><span class="badge accent">' + escapeHtml(deal.status) + '</span></div><div>Диалог активен</div><div><button class="primary-btn" type="button" onclick="openClientChat(\'' + deal.id + '\')">Открыть</button></div></div>';
+        return '<div class="table-row"><div><strong>' + escapeHtml(deal.profileName) + '</strong><div class="muted">' + escapeHtml(deal.clientName) + '</div></div><div>' + (deal.agreedAmount ? Number(deal.agreedAmount).toLocaleString("ru-RU") + ' ₽' : 'Сумма не согласована') + '</div><div><span class="badge accent">' + escapeHtml(statusLabel(deal.status)) + '</span></div><div>Диалог активен</div><div><button class="primary-btn" type="button" onclick="openClientChat(\'' + deal.id + '\')">Открыть</button></div></div>';
       }).join("") : '<div class="empty">После первого ответа артиста здесь появятся кейс и чат по конкретному запросу.</div>';
     }
     function renderBoard(user) {
@@ -299,7 +346,7 @@
       const chat = MarketplaceStore.getChatByDealId(dealId);
       const deal = MarketplaceStore.getDb().deals.find(function (item) { return item.id === dealId; });
       if (!chat || !deal) return byId("chat-box").innerHTML = '<div class="empty">Чат не найден.</div>';
-      byId("chat-box").innerHTML = '<div class="section-head"><div><h2>Чат по кейсу</h2><p class="muted">' + escapeHtml(deal.profileName) + ' · ' + escapeHtml(deal.status) + '</p></div></div><div class="table-list">' + chat.messages.map(function (message) { return '<div class="hero-point"><strong>' + escapeHtml(message.sender) + '</strong><div class="muted">' + escapeHtml(message.createdAt.slice(0, 16).replace("T", " ")) + '</div><div>' + escapeHtml(message.text) + '</div></div>'; }).join("") + '</div><form id="chat-form" class="form-grid one" style="margin-top:12px;"><label>Новое сообщение<textarea name="text" required></textarea></label><button class="primary-btn" type="submit">Отправить</button></form>' + ((deal.status === "done" || deal.status === "booked") ? '<form id="review-form" class="form-grid" style="margin-top:12px;"><label>Коммуникация<input name="communication" type="number" min="1" max="5" value="5"></label><label>Пунктуальность<input name="punctuality" type="number" min="1" max="5" value="5"></label><label>Качество<input name="quality" type="number" min="1" max="5" value="5"></label><label>Цена/ценность<input name="value" type="number" min="1" max="5" value="5"></label><label style="grid-column:1/-1;">Отзыв<textarea name="text" required></textarea></label><button class="ghost-btn" type="submit">Оставить отзыв</button></form>' : '');
+      byId("chat-box").innerHTML = '<div class="section-head"><div><h2>Чат по кейсу</h2><p class="muted">' + escapeHtml(deal.profileName) + ' · ' + escapeHtml(statusLabel(deal.status)) + '</p></div></div><div class="table-list">' + chat.messages.map(function (message) { return '<div class="hero-point"><strong>' + escapeHtml(message.sender) + '</strong><div class="muted">' + escapeHtml(message.createdAt.slice(0, 16).replace("T", " ")) + '</div><div>' + escapeHtml(message.text) + '</div></div>'; }).join("") + '</div><form id="chat-form" class="form-grid one" style="margin-top:12px;"><label>Новое сообщение<textarea name="text" required></textarea></label><button class="primary-btn" type="submit">Отправить</button></form>' + ((deal.status === "done" || deal.status === "booked") ? '<form id="review-form" class="form-grid" style="margin-top:12px;"><label>Коммуникация<input name="communication" type="number" min="1" max="5" value="5"></label><label>Пунктуальность<input name="punctuality" type="number" min="1" max="5" value="5"></label><label>Качество<input name="quality" type="number" min="1" max="5" value="5"></label><label>Цена/ценность<input name="value" type="number" min="1" max="5" value="5"></label><label style="grid-column:1/-1;">Отзыв<textarea name="text" required></textarea></label><button class="ghost-btn" type="submit">Оставить отзыв</button></form>' : '');
       byId("chat-form").addEventListener("submit", function (event) {
         event.preventDefault();
         MarketplaceStore.addChatMessage(dealId, "client", new FormData(event.target).get("text"));
@@ -322,7 +369,7 @@
     };
     window.acceptQuote = function (quoteId) {
       MarketplaceStore.updateQuoteStatus(quoteId, "accepted");
-      showMessage("Предложение подтверждено. Кейс переведён в booked.", "success");
+      showMessage("Предложение подтверждено. Диалог переведён в статус бронирования.", "success");
       renderCabinet();
     };
     function maybeOpenDealFromUrl() {
@@ -338,10 +385,10 @@
       const raw = String(email || "").trim();
       if (!raw) return fallbackLabel || "";
       if (/@auth\.(palanart|dvizhart)\.local$/i.test(raw)) {
-        if (/^telegram_/i.test(raw)) return "Telegram user";
-        if (/^vk_/i.test(raw)) return "VK user";
-        if (/^max_/i.test(raw)) return "MAX user";
-        if (/^yandex_/i.test(raw)) return "Яндекс user";
+        if (/^telegram_/i.test(raw)) return "Telegram";
+        if (/^vk_/i.test(raw)) return "VK ID";
+        if (/^max_/i.test(raw)) return "MAX";
+        if (/^yandex_/i.test(raw)) return "Яндекс";
         return fallbackLabel || "Соцвход";
       }
       return raw;
@@ -351,7 +398,7 @@
       byId("auth-view").style.display = user ? "none" : "grid";
       byId("cabinet-view").style.display = user ? "grid" : "none";
       if (!user) return;
-      byId("user-summary").textContent = user.name + " · " + formatCabinetIdentity(user.email, "Service Client") + " · " + (user.city || "город не указан");
+      byId("user-summary").textContent = user.name + " · " + formatCabinetIdentity(user.email, "Клиент") + " · " + (user.city || "город не указан");
       renderKpis(user); renderLeads(user); renderQuotes(user); renderFavorites(user); renderDeals(user); renderBoard(user);
       byId("chat-box").innerHTML = '<div class="empty">Выберите кейс слева, чтобы открыть чат и продолжить согласование.</div>';
       maybeOpenDealFromUrl();
@@ -359,8 +406,8 @@
       function renderAuthMode() {
         const mode = window.PalanartAuthBridge ? window.PalanartAuthBridge.getMode() : "local";
         byId("user-auth-mode").innerHTML = mode === "supabase"
-          ? "Сервисный вход включён. Доступны e-mail и пароль, а также Telegram, VK ID, MAX и Яндекс через внешний auth-слой."
-          : "Работает локальный режим. E-mail доступен сразу; Telegram, VK ID, MAX и Яндекс создают локальный соцаккаунт для тестирования.";
+          ? "Вход через e-mail и пароль включён. Также доступны Telegram, VK ID, MAX и Яндекс, если они подключены в настройках."
+          : "Локальный вход включён. Можно войти по e-mail или через доступные соцсервисы без внешнего редиректа.";
         document.querySelectorAll("[data-user-social]").forEach(function (button) {
           const available = window.PalanartAuthBridge && window.PalanartAuthBridge.canUseProvider(button.dataset.userSocial);
           button.disabled = !available;

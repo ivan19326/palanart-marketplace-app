@@ -43,13 +43,48 @@
             <option value="Обсуждение услуги" hidden>Обсуждение услуги</option>
           </select>
         </label>
-        <label>Город<input name="city" type="text" placeholder="Например, Чебоксары" required></label>
+        <label>Город<input name="city" type="text" list="city-options" placeholder="Например, Чебоксары" required></label>
         <label>Дата <span class="muted">(если известна)</span><input name="eventDate" type="date"></label>
         <label>Комментарий <span class="muted">(необязательно)</span><textarea name="requirements" placeholder="Например: свадьба на 40 гостей, нужен ведущий на вечер"></textarea></label>
       </div>
       <button id="lead-submit" class="primary-btn" type="submit">Отправить заявку</button>
     </form>
   </main>
+  <datalist id="city-options">
+    <option value="Чебоксары"></option>
+    <option value="Новочебоксарск"></option>
+    <option value="Йошкар-Ола"></option>
+    <option value="Саранск"></option>
+    <option value="Казань"></option>
+    <option value="Нижний Новгород"></option>
+    <option value="Ульяновск"></option>
+    <option value="Киров"></option>
+    <option value="Ижевск"></option>
+    <option value="Набережные Челны"></option>
+    <option value="Уфа"></option>
+    <option value="Самара"></option>
+    <option value="Тольятти"></option>
+    <option value="Пенза"></option>
+    <option value="Саратов"></option>
+    <option value="Волгоград"></option>
+    <option value="Пермь"></option>
+    <option value="Екатеринбург"></option>
+    <option value="Оренбург"></option>
+    <option value="Москва"></option>
+    <option value="Санкт-Петербург"></option>
+    <option value="Ярославль"></option>
+    <option value="Владимир"></option>
+    <option value="Рязань"></option>
+    <option value="Тула"></option>
+    <option value="Воронеж"></option>
+    <option value="Ростов-на-Дону"></option>
+    <option value="Краснодар"></option>
+    <option value="Сочи"></option>
+    <option value="Новосибирск"></option>
+    <option value="Красноярск"></option>
+    <option value="Омск"></option>
+    <option value="Тюмень"></option>
+  </datalist>
   <script src="marketplace-core.js"></script>
   <script>
     (function () {
