@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
   const DB_KEY = "palan_marketplace_db_v7";
   const LEGACY_DB_KEYS = ["palan_marketplace_db_v2"];
   const SESSION_KEY = "palan_marketplace_session_v3";
@@ -589,12 +589,15 @@
   function getCurrentUser() {
     const session = getSession();
     if (!session || session.type !== "user") return null;
+    if (!session.authUserId) return null;
+    if (window.PalanartAuthBridge && !window.PalanartAuthBridge.isAuthenticated(session.authUserId)) return null;
     return getDb().users.find(function (user) { return user.id === session.id; }) || null;
   }
 
   function getCurrentArtist() {
     const session = getSession();
     if (!session || session.type !== "artist") return null;
+    if (window.PalanartAuthBridge && (!session.authUserId || !window.PalanartAuthBridge.isAuthenticated(session.authUserId))) return null;
     return getDb().artists.find(function (artist) { return artist.id === session.id; }) || null;
   }
 
@@ -617,38 +620,11 @@
   }
 
   function registerUser(payload) {
-    const db = getDb();
-    const email = (payload.email || "").trim().toLowerCase();
-    if (!email || !payload.password || !(payload.name || "").trim()) {
-      return { ok: false, message: "Заполните имя, e-mail и пароль." };
-    }
-    if (db.users.some(function (user) { return user.email === email; })) {
-      return { ok: false, message: "Клиент с таким e-mail уже зарегистрирован." };
-    }
-    const user = normalizeUser({
-      id: newId("user"),
-      name: payload.name,
-      email: email,
-      phone: payload.phone || "",
-      password: payload.password,
-      city: payload.city || "",
-      createdAt: new Date().toISOString(),
-      savedProfiles: [],
-      compareProfiles: []
-    });
-    db.users.unshift(user);
-    saveDb(db);
-    setSession({ type: "user", id: user.id });
-    return { ok: true, user: user };
+    return { ok: false, message: "Регистрация доступна через защищённый сервис на странице user.html." };
   }
 
   function loginUser(email, password) {
-    const user = getDb().users.find(function (item) {
-      return item.email === (email || "").trim().toLowerCase() && item.password === password;
-    });
-    if (!user) return { ok: false, message: "Неверный e-mail или пароль." };
-    setSession({ type: "user", id: user.id });
-    return { ok: true, user: user };
+    return { ok: false, message: "Войдите через защищённый сервис на странице user.html. Для старого локального аккаунта нужна регистрация с тем же e-mail." };
   }
 
   function registerArtistAccount(payload) {
@@ -814,11 +790,20 @@
     clearSession();
   }
 
+  function clearExternalSession() {
+    const session = getSession();
+    if (session && (session.type === "user" || session.type === "artist")) clearSession();
+  }
+
   function ensureExternalUserAccount(payload) {
+    if (!payload.authUserId || !window.PalanartAuthBridge || !window.PalanartAuthBridge.isAuthenticated(payload.authUserId)) {
+      return { ok: false, message: "Необходим подтверждённый вход." };
+    }
     const db = getDb();
     const email = String(payload.email || "").trim().toLowerCase();
     if (!email) return { ok: false, message: "Не удалось определить e-mail аккаунта." };
-    let user = db.users.find(function (item) { return item.email === email; });
+    let user = db.users.find(function (item) { return item.authUserId === payload.authUserId; }) ||
+      db.users.find(function (item) { return item.email === email && !item.authUserId; });
     if (!user) {
       user = normalizeUser({
         id: newId("user"),
@@ -837,16 +822,27 @@
       user.phone = payload.phone || user.phone;
       user.city = payload.city || user.city;
     }
+    user.authUserId = payload.authUserId;
+    user.email = email;
+    user.provider = payload.provider || "email";
+    user.authProviders = payload.providers || [user.provider];
+    user.role = "client";
+    user.registeredAt = payload.createdAt || user.createdAt;
+    delete user.password;
     saveDb(db);
-    setSession({ type: "user", id: user.id });
+    setSession({ type: "user", id: user.id, authUserId: payload.authUserId });
     return { ok: true, user: user };
   }
 
   function ensureExternalArtistAccount(payload) {
+    if (!payload.authUserId || !window.PalanartAuthBridge || !window.PalanartAuthBridge.isAuthenticated(payload.authUserId)) {
+      return { ok: false, message: "Необходим подтверждённый вход." };
+    }
     const db = getDb();
     const email = String(payload.email || "").trim().toLowerCase();
     if (!email) return { ok: false, message: "Не удалось определить e-mail аккаунта." };
-    let artist = db.artists.find(function (item) { return item.email === email; });
+    let artist = db.artists.find(function (item) { return item.authUserId === payload.authUserId; }) ||
+      db.artists.find(function (item) { return item.email === email && !item.authUserId; });
     if (!artist) {
       artist = {
         id: newId("artist"),
@@ -867,8 +863,11 @@
       artist.telegram = payload.telegram || artist.telegram;
       artist.photo = payload.photo || artist.photo;
     }
+    artist.authUserId = payload.authUserId;
+    artist.email = email;
+    delete artist.password;
     saveDb(db);
-    setSession({ type: "artist", id: artist.id });
+    setSession({ type: "artist", id: artist.id, authUserId: payload.authUserId });
     return { ok: true, artist: artist };
   }
 
@@ -1786,6 +1785,7 @@
     ensureExternalUserAccount: ensureExternalUserAccount,
     ensureExternalArtistAccount: ensureExternalArtistAccount,
     logout: logout,
+    clearExternalSession: clearExternalSession,
     getProfiles: getProfiles,
     getProfileById: getProfileById,
     getProfileRating: getProfileRating,

@@ -1,4 +1,4 @@
-const CACHE_NAME = "palanart-cache-v22";
+const CACHE_NAME = "palanart-cache-v23";
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
@@ -6,6 +6,8 @@ const FILES_TO_CACHE = [
   "./artist.html",
   "./partner.html",
   "./telegram-login.html",
+  "./max-login.html",
+  "./provider-login.js",
   "./vedushie.html",
   "./dj.html",
   "./music.html",
@@ -20,6 +22,8 @@ const FILES_TO_CACHE = [
   "./marketplace-core.js",
   "./auth-config.js",
   "./auth-bridge.js",
+  "./user-auth.js",
+  "./vendor/supabase-2.117.1.js",
   "./category-template.js",
   "./assets/hero-people-anime-stage.png",
   "./assets/studio-artist-scene.png",

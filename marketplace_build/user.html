@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
@@ -76,7 +76,21 @@
     </section>
 
     <div class="auth-box">
-      <div id="cab-message"></div>
+      <div id="cab-message" role="status" aria-live="polite" tabindex="-1"></div>
+      <div id="max-auth-panel" class="service-panel" hidden>
+        <h2>Подтверждение MAX</h2>
+        <p>Откройте MAX, подтвердите вход и вернитесь в эту вкладку.</p>
+        <a id="max-auth-open" class="primary-btn" target="_blank" rel="noopener noreferrer">Открыть MAX</a>
+        <p id="max-auth-identity" role="status" aria-live="polite"></p>
+        <button id="max-auth-check" class="ghost-btn" type="button">Проверить подтверждение MAX</button>
+        <button id="max-auth-cancel" class="ghost-btn" type="button">Отмена</button>
+      </div>
+      <form id="password-update-form" class="service-panel" hidden>
+        <h2>Новый пароль</h2>
+        <label>Новый пароль<input name="password" type="password" autocomplete="new-password" minlength="10" maxlength="128" required></label>
+        <p class="muted">Не менее 10 символов, буквы и цифры.</p>
+        <button class="primary-btn" type="submit">Сохранить пароль</button>
+      </form>
 
       <section id="auth-view" class="auth-grid">
         <div class="service-hero">
@@ -96,16 +110,18 @@
         <div class="split">
           <form id="register-form" class="service-panel">
             <h2>Регистрация</h2>
+            <a href="#login-form" data-auth-focus="login-form">Уже есть аккаунт? Войти</a>
             <div id="user-auth-mode" class="muted auth-mode-note"></div>
               <div class="form-grid one">
-                <label>Имя<input name="name" type="text" required></label>
-                <label>E-mail<input name="email" type="email" required></label>
-                <label>Телефон<input name="phone" type="tel" required></label>
-                <label>Город<input name="city" type="text" list="user-city-options" placeholder="Чебоксары"></label>
+                <label>Имя<input name="name" type="text" autocomplete="name" minlength="2" maxlength="100" required></label>
+                <label>E-mail<input name="email" type="email" autocomplete="email" maxlength="254" required></label>
+                <label>Телефон<input name="phone" type="tel" autocomplete="tel" maxlength="30" required></label>
+                <label>Город<input name="city" type="text" autocomplete="address-level2" minlength="2" maxlength="150" list="user-city-options" placeholder="Выберите или введите город" required></label>
                 <div class="geo-inline-action">
                   <button id="detect-user-city" class="ghost-btn mini-chip" type="button">Определить город по геолокации</button>
                 </div>
-                <label>Пароль<input name="password" type="password" required></label>
+                <label>Пароль<input name="password" type="password" autocomplete="new-password" minlength="10" maxlength="128" aria-describedby="password-hint" required></label>
+                <p id="password-hint" class="muted">Не менее 10 символов, буквы и цифры.</p>
               </div>
             <button class="primary-btn" type="submit">Создать аккаунт</button>
             <div class="auth-socials">
@@ -117,12 +133,24 @@
           </form>
           <form id="login-form" class="service-panel">
             <h2>Вход</h2>
+            <a href="#register-form" data-auth-focus="register-form">Нет аккаунта? Зарегистрироваться</a>
             <div class="form-grid one">
-              <label>E-mail<input name="email" type="email" required></label>
-              <label>Пароль<input name="password" type="password" required></label>
+              <label>E-mail<input name="email" type="email" autocomplete="username" required></label>
+              <label>Пароль<input name="password" type="password" autocomplete="current-password" required></label>
             </div>
             <button class="ghost-btn" type="submit">Войти</button>
+            <button id="forgot-password" class="ghost-btn" type="button">Забыли пароль?</button>
           </form>
+          <form id="password-reset-form" class="service-panel" hidden>
+            <h2>Восстановить доступ</h2>
+            <label>E-mail<input name="email" type="email" autocomplete="email" required></label>
+            <button class="primary-btn" type="submit">Отправить письмо</button>
+            <button id="back-to-login" class="ghost-btn" type="button">Вернуться ко входу</button>
+          </form>
+        </div>
+        <div class="service-panel">
+          <p class="muted">Если раньше кабинет работал только в этом браузере, создайте защищённый аккаунт с тем же e-mail. Сохранённая история останется в браузере и будет связана с подтверждённым аккаунтом.</p>
+          <button id="export-browser-data" class="ghost-btn" type="button">Скачать копию истории из браузера</button>
         </div>
       </section>
 
@@ -140,6 +168,13 @@
           </article>
           <aside class="service-panel">
             <h3>Что доступно</h3>
+            <p class="muted">Привязать другой способ входа к этому аккаунту:</p>
+            <div class="auth-socials">
+              <button class="ghost-btn" type="button" data-user-link="telegram">Telegram</button>
+              <button class="ghost-btn" type="button" data-user-link="vk">VK ID</button>
+              <button class="ghost-btn" type="button" data-user-link="max">MAX</button>
+              <button class="ghost-btn" type="button" data-user-link="yandex">Яндекс ID</button>
+            </div>
             <div class="info-list">
               <div class="info-item">Сохраняйте карточки в избранное и собирайте список подходящих вариантов.</div>
               <div class="info-item">Отправляйте запросы на артистов, релизные сервисы и студийные услуги.</div>
@@ -157,6 +192,17 @@
           </div>
           <div id="user-leads" class="table-list"></div>
         </div>
+
+        <form id="account-profile-form" class="service-panel">
+          <h2>Мои контакты</h2>
+          <p class="muted">После первого входа через соцсервис укажите имя, телефон и город для связи с исполнителями.</p>
+          <div class="form-grid">
+            <label>Имя<input name="name" autocomplete="name" minlength="2" maxlength="100" required></label>
+            <label>Телефон<input name="phone" type="tel" autocomplete="tel" maxlength="30" required></label>
+            <label>Город<input name="city" autocomplete="address-level2" list="user-city-options" minlength="2" maxlength="150" required></label>
+          </div>
+          <button class="primary-btn" type="submit">Сохранить контакты</button>
+        </form>
 
         <div class="split">
           <div class="panel">
@@ -294,7 +340,8 @@
       return map[status] || status || "Без статуса";
     }
     function showMessage(text, kind) {
-      byId("cab-message").innerHTML = text ? '<div class="message ' + kind + '">' + text + '</div>' : "";
+      byId("cab-message").innerHTML = text ? '<div class="message ' + (kind === "success" ? "success" : "error") + '">' + escapeHtml(text) + '</div>' : "";
+      if (text) byId("cab-message").scrollIntoView({ block: "center", behavior: "smooth" });
     }
     function renderKpis(user) {
       const leads = MarketplaceStore.getLeadsForUser(user.id);
@@ -403,103 +450,8 @@
       byId("chat-box").innerHTML = '<div class="empty">Выберите кейс слева, чтобы открыть чат и продолжить согласование.</div>';
       maybeOpenDealFromUrl();
     }
-      function renderAuthMode() {
-        const mode = window.PalanartAuthBridge ? window.PalanartAuthBridge.getMode() : "local";
-        byId("user-auth-mode").innerHTML = mode === "supabase"
-          ? "Вход через e-mail и пароль включён. Также доступны Telegram, VK ID, MAX и Яндекс, если они подключены в настройках."
-          : "Локальный вход включён. Можно войти по e-mail или через доступные соцсервисы без внешнего редиректа.";
-        document.querySelectorAll("[data-user-social]").forEach(function (button) {
-          const available = window.PalanartAuthBridge && window.PalanartAuthBridge.canUseProvider(button.dataset.userSocial);
-          button.disabled = !available;
-          button.hidden = !available;
-          button.classList.toggle("is-unavailable", !available);
-          button.title = available ? "" : "Этот соцвход сейчас недоступен.";
-        });
-      }
-      async function reverseLookupCity(latitude, longitude) {
-        const endpoint = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" + encodeURIComponent(latitude) + "&lon=" + encodeURIComponent(longitude) + "&accept-language=ru";
-        const response = await fetch(endpoint, { headers: { "Accept": "application/json" } });
-        if (!response.ok) throw new Error("Сервис геолокации не ответил.");
-        const data = await response.json();
-        const address = data.address || {};
-        return {
-          city: address.city || address.town || address.village || address.municipality || address.state || "",
-          region: address.state || address.region || address.county || ""
-        };
-      }
-      async function detectUserCity() {
-        if (!navigator.geolocation) return showMessage("Ваш браузер не поддерживает геолокацию.", "error");
-        const button = byId("detect-user-city");
-        button.disabled = true;
-        button.textContent = "Определяем...";
-        navigator.geolocation.getCurrentPosition(async function (position) {
-          try {
-            const result = await reverseLookupCity(position.coords.latitude, position.coords.longitude);
-            if (byId("register-form").city && result.city) {
-              byId("register-form").city.value = result.city;
-            }
-            showMessage(result.city ? "Город определён: " + result.city : "Координаты получены, но город не распознан. Можно вписать вручную.", result.city ? "success" : "error");
-          } catch (error) {
-            showMessage(error.message || "Не удалось определить город.", "error");
-          } finally {
-            button.disabled = false;
-            button.textContent = "Определить город по геолокации";
-          }
-        }, function () {
-          button.disabled = false;
-          button.textContent = "Определить город по геолокации";
-          showMessage("Не удалось получить геолокацию. Проверьте разрешение браузера.", "error");
-        }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 });
-      }
-      byId("register-form").addEventListener("submit", async function (event) {
-        event.preventDefault();
-        const payload = Object.fromEntries(new FormData(event.target).entries());
-        const result = window.PalanartAuthBridge && window.PalanartAuthBridge.getMode() === "supabase"
-        ? await window.PalanartAuthBridge.signUpWithEmail("client", payload)
-        : MarketplaceStore.registerUser(payload);
-      if (!result.ok) return showMessage(result.message, "error");
-      renderCabinet();
-    });
-    byId("login-form").addEventListener("submit", async function (event) {
-      event.preventDefault();
-      const payload = Object.fromEntries(new FormData(event.target).entries());
-      const result = window.PalanartAuthBridge && window.PalanartAuthBridge.getMode() === "supabase"
-        ? await window.PalanartAuthBridge.signInWithEmail("client", payload)
-        : MarketplaceStore.loginUser(payload.email, payload.password);
-      if (!result.ok) return showMessage(result.message, "error");
-      renderCabinet();
-    });
-    byId("logout-user").addEventListener("click", async function () {
-      if (window.PalanartAuthBridge) {
-        await window.PalanartAuthBridge.logout();
-      } else {
-        MarketplaceStore.logout();
-      }
-      renderCabinet();
-    });
-      document.querySelectorAll("[data-user-social]").forEach(function (button) {
-        button.addEventListener("click", async function () {
-          if (!window.PalanartAuthBridge) return;
-          const result = await window.PalanartAuthBridge.signInWithSocial("client", button.dataset.userSocial);
-          if (!result.ok) showMessage(result.message, "error");
-        });
-      });
-      byId("detect-user-city").addEventListener("click", detectUserCity);
-      renderAuthMode();
-    if (window.PalanartAuthBridge) {
-      window.PalanartAuthBridge.init({
-        role: "client",
-        onSession: function () {
-          renderCabinet();
-        }
-      }).then(function () {
-        renderAuthMode();
-        renderCabinet();
-      });
-    } else {
-      renderCabinet();
-    }
   </script>
+  <script src="user-auth.js"></script>
 </body>
 </html>
 

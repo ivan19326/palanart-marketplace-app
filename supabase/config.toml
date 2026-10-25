@@ -11,3 +11,18 @@ verify_jwt = false
 
 [functions.auth-telegram-callback]
 verify_jwt = false
+
+[functions.auth-max-start]
+verify_jwt = false
+
+[functions.auth-max-callback]
+verify_jwt = false
+
+[functions.auth-max-claim]
+verify_jwt = false
+
+[functions.auth-yandex-start]
+verify_jwt = false
+
+[functions.auth-yandex-callback]
+verify_jwt = false

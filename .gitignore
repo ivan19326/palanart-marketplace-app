@@ -11,3 +11,6 @@ build/
 supabase/.temp/
 supabase/functions/.env
 supabase/functions/.env.local
+
+.palanart-auth-backups/
+.auth-test-output/

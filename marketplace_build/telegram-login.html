@@ -1,111 +1,24 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ru">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Telegram | Palanart</title>
-    <style>
-      :root { color-scheme: dark; }
-      body {
-        margin: 0;
-        min-height: 100vh;
-        display: grid;
-        place-items: center;
-        background: radial-gradient(circle at top, #1d2a44 0%, #0b1220 52%, #070b14 100%);
-        color: #fff;
-        font-family: Arial, sans-serif;
-      }
-      .panel {
-        width: min(460px, calc(100vw - 32px));
-        padding: 32px;
-        border-radius: 28px;
-        background: rgba(14, 21, 35, 0.92);
-        box-shadow: 0 28px 80px rgba(0, 0, 0, 0.35);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-      }
-      h1 { margin: 0 0 12px; font-size: 32px; }
-      p { margin: 0 0 18px; color: rgba(255,255,255,0.78); line-height: 1.5; }
-      #telegram-login-host {
-        min-height: 54px;
-        display: flex;
-        justify-content: center;
-      }
-      .hint {
-        margin-top: 16px;
-        font-size: 14px;
-        color: rgba(255,255,255,0.62);
-      }
-      .error {
-        margin-top: 16px;
-        color: #ff8e8e;
-      }
-    </style>
-    <script>
-      (function () {
-        var params = new URLSearchParams(window.location.search);
-        var state = params.get("state") || "";
-
-        window.telegramLoginComplete = function (user) {
-          var error = document.getElementById("telegram-error");
-          var form = document.getElementById("telegram-complete");
-          if (!user || !user.id || !user.auth_date || !user.hash) {
-            if (error) {
-              error.hidden = false;
-              error.textContent = "Telegram не вернул данные входа. Повторите вход ещё раз.";
-            }
-            return;
-          }
-
-          ["id", "first_name", "last_name", "username", "photo_url", "auth_date", "hash"].forEach(function (key) {
-            var input = form.querySelector('input[name="' + key + '"]');
-            if (!input) {
-              input = document.createElement("input");
-              input.type = "hidden";
-              input.name = key;
-              form.appendChild(input);
-            }
-            input.value = user[key] || "";
-          });
-
-          form.querySelector('#telegram-state').value = state;
-          form.submit();
-        };
-      })();
-    </script>
-  </head>
-  <body>
-    <main class="panel">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Telegram | PALANART</title>
+  <link rel="stylesheet" href="marketplace.css">
+</head>
+<body data-provider="telegram">
+  <main class="shell auth-wrap">
+    <section class="service-panel">
       <h1>Вход через Telegram</h1>
-      <p>Подтвердите вход через Telegram. После подтверждения мы автоматически вернём вас обратно в Palanart.</p>
-      <div id="telegram-login-host">
-        <script async src="https://telegram.org/js/telegram-widget.js?22"
-          data-telegram-login="PalanAuthBot"
-          data-size="large"
-          data-radius="14"
-          data-lang="ru"
-          data-request-access="write"
-          data-userpic="false"
-          data-onauth="telegramLoginComplete(user)"></script>
-      </div>
-      <div id="telegram-error" class="error" hidden></div>
-      <div class="hint">Если окно входа не открылось само, нажмите кнопку Telegram ниже.</div>
-    </main>
-    <form id="telegram-complete" action="https://jioakguorsfvjuzyclrg.supabase.co/functions/v1/auth-telegram-callback" method="post" hidden>
-      <input type="hidden" name="state" id="telegram-state">
-    </form>
-    <script>
-      (function () {
-        var params = new URLSearchParams(window.location.search);
-        var state = params.get("state") || "";
-        var error = document.getElementById("telegram-error");
+      <p id="provider-description">Подтвердите вход в Telegram. После проверки откроется ваш кабинет.</p>
+      <div id="provider-widget"></div>
+      <p id="provider-error" role="status" aria-live="polite"></p>
+      <a class="ghost-btn" href="user.html">Вернуться ко входу</a>
+    </section>
+  </main>
+  <script src="auth-config.js"></script>
 
-        if (!state) {
-          error.hidden = false;
-          error.textContent = "Не хватает параметров входа Telegram. Вернитесь назад и попробуйте снова.";
-          return;
-        }
-      })();
-    </script>
-  </body>
+  <script src="provider-login.js"></script>
+</body>
 </html>
-

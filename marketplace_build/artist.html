@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
@@ -1409,12 +1409,12 @@
       }
       if (modeNode) {
         modeNode.textContent = mode === "supabase"
-          ? "Сервисный вход включён. Рабочий способ входа сейчас: e-mail и пароль через Supabase. Google добавляется внешней OAuth-настройкой, VK ID и Telegram подключаются через отдельный слой входа."
-          : "Локальный вход включён. E-mail доступен сразу, а Google, VK ID и Telegram создают локальный аккаунт исполнителя без внешнего редиректа.";
+          ? "Вход по e-mail и паролю. Социальный вход доступен после подключения соответствующего сервиса владельцем PALANART."
+          : "Защищённый сервис входа ещё не настроен.";
       } else {
         byId("artist-auth-mode").innerHTML = mode === "supabase"
-          ? "Сервисный вход включён. Рабочий способ входа сейчас: e-mail и пароль через Supabase. Google добавляется внешней OAuth-настройкой, VK ID и Telegram подключаются через отдельный слой входа."
-          : "Локальный вход включён. E-mail доступен сразу, а Google, VK ID и Telegram создают локальный аккаунт исполнителя без внешнего редиректа.";
+          ? "Вход по e-mail и паролю. Социальный вход доступен после подключения соответствующего сервиса владельцем PALANART."
+          : "Защищённый сервис входа ещё не настроен.";
       }
       document.querySelectorAll("[data-artist-social]").forEach(function (button) {
         const available = window.PalanartAuthBridge && window.PalanartAuthBridge.canUseProvider(button.dataset.artistSocial);
@@ -1586,6 +1586,11 @@
         ? await window.PalanartAuthBridge.signUpWithEmail("artist", payload)
         : MarketplaceStore.registerArtistAccount(payload);
       if (!result.ok) return showArtistMessage(result.message, "error");
+      if (result.needsConfirmation) {
+        event.target.elements.namedItem("password").value = "";
+        showArtistMessage("Подтвердите e-mail по ссылке из письма. Затем войдите в кабинет.", "success");
+        return;
+      }
       if (result.artist) {
         const preset = artistPresets[payload.role || "host"] || {};
         MarketplaceStore.createOrUpdateArtistProfile(result.artist.id, {
@@ -1914,6 +1919,9 @@
         }
       }).then(function () {
         renderArtistAuthMode();
+        renderArtistCabinet();
+      }).catch(function () {
+        showArtistMessage("Сервис входа недоступен. Попробуйте позже.", "error");
         renderArtistCabinet();
       });
     } else {

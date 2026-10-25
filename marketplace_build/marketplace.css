@@ -4036,3 +4036,7 @@ body[data-theme="light"] .summary-pill {
   0%, 100% { transform: scaleY(0.82); opacity: 0.78; }
   50% { transform: scaleY(1.08); opacity: 1; }
 }
+[hidden] { display: none !important; }
+.page-client .auth-box input { max-width: 100%; box-sizing: border-box; }
+.page-client .auth-box form { scroll-margin-top: 90px; }
+.page-client .auth-box button[aria-busy="true"] { cursor: progress; opacity: .7; }

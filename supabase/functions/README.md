@@ -1,32 +1,11 @@
-# Social auth functions
+# Social Auth Edge Functions
 
-These Edge Functions are the real backend layer for:
+Серверная реализация Telegram, VK ID, MAX и Яндекс ID находится в `_shared/social-auth.js`.
 
-- `VK ID`
-- `Telegram`
+Развёртывание девяти функций: `npm run supabase:functions:deploy`.
 
-Deploy them with the Supabase CLI after setting the required environment
-variables listed in `/supabase/README.md`.
+**Production backend недоступен; новые функции не развёрнуты и реальные провайдеры не проверены.**
 
-## Suggested commands
+Перед любыми изменениями БД: изучить действующую схему, получить резервный снимок, проверить SQL и advisors.
 
-```bash
-supabase functions deploy auth-vk-start
-supabase functions deploy auth-vk-callback
-supabase functions deploy auth-telegram-start
-supabase functions deploy auth-telegram-callback
-```
-
-From this repository you can also use:
-
-```bash
-npm run supabase:functions:serve
-npm run supabase:functions:deploy
-```
-
-## Default frontend URLs
-
-When the site knows only `SUPABASE_URL`, it now automatically routes:
-
-- `VK ID` -> `${SUPABASE_URL}/functions/v1/auth-vk-start`
-- `Telegram` -> `${SUPABASE_URL}/functions/v1/auth-telegram-start`
+Актуальная настройка, callbacks, RLS и условия завершения: [отчёт](../../docs/palanart-auth-recovery-2026-10-26.md).
