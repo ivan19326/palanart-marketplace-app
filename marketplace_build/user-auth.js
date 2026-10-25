@@ -1,11 +1,16 @@
 (function () {
   "use strict";
-  const bridge = window.PalanartAuthBridge;
+  const bridge = window.PalanartAuthBridge && window.PalanartAuthBridge.protocolVersion === 2 ? window.PalanartAuthBridge : null;
   let busy = false;
   let resetCooldown = 0;
   let maxReady = false;
   function field(form, name) { return form.elements.namedItem(name); }
   function updateView() {
+    if (!bridge) {
+      byId("auth-view").style.display = "grid";
+      byId("cabinet-view").style.display = "none";
+      return;
+    }
     const pending = bridge && bridge.pendingMax();
     byId("max-auth-panel").hidden = !pending;
     if (pending) byId("max-auth-open").href = pending.url;

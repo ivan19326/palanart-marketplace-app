@@ -1755,6 +1755,7 @@
   }
 
   window.MarketplaceStore = {
+    authProtocolVersion: 2,
     DB_KEY: DB_KEY,
     SESSION_KEY: SESSION_KEY,
     roleLabel: roleLabel,

@@ -66,6 +66,7 @@
     return clientPromise;
   }
   function syncUser(role, user) {
+    if (!window.MarketplaceStore || window.MarketplaceStore.authProtocolVersion !== 2) throw { safeMessage: "Обновите страницу, чтобы загрузить актуальную версию кабинета." };
     verifiedUser = user;
     if (!window.MarketplaceStore) return;
     const meta = user.user_metadata || {};
@@ -285,6 +286,7 @@
     } catch (_error) { return { ok: false, message: "Сервис входа MAX недоступен. Повторите попытку позже." }; }
   }
   window.PalanartAuthBridge = {
+    protocolVersion: 2,
     getMode: getMode, isConfigured: isConfigured, canUseProvider: canUseProvider, getSetupMessage: getSetupMessage,
     init: init, signUpWithEmail: signUpWithEmail, signInWithEmail: signInWithEmail, signInWithSocial: signInWithSocial,
     resetPassword: resetPassword, updatePassword: updatePassword, updateProfile: updateProfile, isRecovery: function () { return recovery; },

@@ -120,6 +120,23 @@ test('all local JavaScript and inline HTML scripts parse', () => {
     if (file.endsWith('.html')) for (const match of read('marketplace_build/' + file).matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)) new vm.Script(match[1], { filename: file });
   }
 });
+test('a mixed cached release cannot invoke the old simulated bridge or open a cached cabinet', () => {
+  const elements = new Map(); const messages = []; let renders = 0;
+  const byId = (id) => {
+    if (!elements.has(id)) elements.set(id, { style: {}, addEventListener() {}, textContent: '' });
+    return elements.get(id);
+  };
+  const context = vm.createContext({ URLSearchParams, byId, document: { querySelectorAll: () => [] },
+    MarketplaceStore: { getCurrentUser: () => ({ id: 'FORGED_LEGACY' }) },
+    PalanartAuthBridge: { signInWithSocial() { throw new Error('Old bridge invoked'); } },
+    location: { search: '', hash: '', pathname: '/user.html' }, history: { replaceState() {} },
+    renderCabinet: () => { renders++; }, showMessage: (message) => messages.push(message)
+  });
+  context.window = context;
+  vm.runInContext(read('marketplace_build/user-auth.js'), context);
+  assert.equal(renders, 0); assert.equal(byId('cabinet-view').style.display, 'none');
+  assert.equal(byId('auth-view').style.display, 'grid'); assert.match(messages[0], /Обновите страницу/);
+});
 
 // In-memory Auth/database adapters below exercise the real edge-function code;
 // these tests are not a claim that an external provider or production DB works.
