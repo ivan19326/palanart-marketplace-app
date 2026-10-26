@@ -4040,3 +4040,15 @@ body[data-theme="light"] .summary-pill {
 .page-client .auth-box input { max-width: 100%; box-sizing: border-box; }
 .page-client .auth-box form { scroll-margin-top: 90px; }
 .page-client .auth-box button[aria-busy="true"] { cursor: progress; opacity: .7; }
+.page-client .auth-wrap { display: block; }
+.page-client .auth-box { width: min(1040px, calc(100% - 20px)); box-sizing: border-box; }
+.client-auth-heading h1 { margin: 0 0 8px; font-size: clamp(1.6rem, 4vw, 2.2rem); }
+.client-auth-heading p { margin: 0; }
+.client-social-login h2 { margin: 0; font-size: 1.1rem; }
+.client-social-login .auth-socials { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.client-social-login .auth-social-btn { min-width: 0; width: 100%; }
+.client-auth-note { margin: 12px 0 0; font-size: .9rem; }
+.page-client #auth-view > .split { align-items: start; }
+@media (max-width: 600px) {
+  .client-social-login .auth-socials { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

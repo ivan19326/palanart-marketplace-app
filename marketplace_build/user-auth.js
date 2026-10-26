@@ -30,6 +30,7 @@
   async function run(button, action) {
     if (busy) return;
     busy = true;
+    showMessage("");
     const label = button.textContent;
     const buttons = Array.from(document.querySelectorAll(".auth-box button"));
     const disabled = buttons.map(function (item) { return item.disabled; });
@@ -77,12 +78,16 @@
     });
   });
   byId("forgot-password").addEventListener("click", function () {
+    showMessage("");
+    byId("login-form").hidden = true;
     byId("password-reset-form").hidden = false;
     field(byId("password-reset-form"), "email").value = field(byId("login-form"), "email").value;
     field(byId("password-reset-form"), "email").focus();
   });
   byId("back-to-login").addEventListener("click", function () {
+    showMessage("");
     byId("password-reset-form").hidden = true;
+    byId("login-form").hidden = false;
     field(byId("login-form"), "email").focus();
   });
   byId("password-reset-form").addEventListener("submit", function (event) {
@@ -141,6 +146,10 @@
     link.addEventListener("click", function (event) {
       event.preventDefault();
       const target = byId(link.dataset.authFocus);
+      if (target.id === "login-form") {
+        byId("password-reset-form").hidden = true;
+        target.hidden = false;
+      }
       target.scrollIntoView({ behavior: "smooth", block: "center" });
       target.querySelector("input").focus({ preventScroll: true });
     });
@@ -185,7 +194,7 @@
       showMessage("Копия истории скачана. Пароли и ключи доступа в неё не включены.", "success");
     } catch (_error) { showMessage("Не удалось скачать историю. Проверьте разрешения браузера.", "error"); }
   });
-  byId("user-auth-mode").textContent = "Вход по e-mail и паролю. Социальный вход доступен после подключения соответствующего сервиса владельцем PALANART.";
+  byId("user-auth-mode").textContent = "Используйте e-mail, к которому у вас есть доступ.";
   const query = new URLSearchParams(window.location.search);
   const hash = new URLSearchParams(window.location.hash.slice(1));
   if (query.has("error") || hash.has("error")) {

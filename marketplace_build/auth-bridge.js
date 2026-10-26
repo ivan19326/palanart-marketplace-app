@@ -8,7 +8,7 @@
   let recovery = new URLSearchParams(window.location.hash.slice(1)).get("type") === "recovery";
   let activeOptions = {};
   const providerNames = { telegram: "Telegram", vk: "VK ID", max: "MAX", yandex: "Яндекс ID" };
-  const networkMessage = "Не удалось связаться с сервисом входа. Проверьте соединение и повторите попытку. Если ошибка повторяется, сообщите поддержке PALANART.";
+  const networkMessage = "Сервис входа PALANART недоступен. Повторите попытку позже. Если ошибка сохраняется, обратитесь в поддержку.";
   function getMode() { return "supabase"; }
   function isConfigured() { return Boolean(config.supabaseUrl && config.supabaseAnonKey); }
   function canUseProvider(provider) { return Object.hasOwn(providerNames, provider) && isConfigured(); }
@@ -242,7 +242,7 @@
       }
       window.location.assign(target.toString());
       return { ok: true, redirecting: true };
-    } catch (_error) { return { ok: false, message: providerNames[provider] + ": сервис входа недоступен или ещё не настроен. Попробуйте e-mail или обратитесь в поддержку." }; }
+    } catch (_error) { return { ok: false, message: providerNames[provider] + ": " + networkMessage }; }
   }
   async function logout() {
     authGeneration++;
