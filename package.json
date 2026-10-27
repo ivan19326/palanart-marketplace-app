@@ -5,6 +5,9 @@
   "description": "Palanart — маркетплейс исполнителей и услуг для мероприятий.",
   "scripts": {
     "test:auth": "node --test tests/palanart-auth.test.cjs",
+    "test:assistant": "node --test tests/palanart-assistant.test.mjs",
+    "assistant:catalog": "node assistant/export-catalog.cjs",
+    "assistant:start": "node --env-file-if-exists=assistant/.env.local assistant/server.mjs",
     "cap:sync": "npx cap sync",
     "cap:open:android": "npx cap open android",
     "cap:open:ios": "npx cap open ios",

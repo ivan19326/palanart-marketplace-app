@@ -32,6 +32,9 @@ jobs:
       - name: Verify authentication code
         run: npm run test:auth
 
+      - name: Verify consultant boundaries and request limits
+        run: npm run test:assistant
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 

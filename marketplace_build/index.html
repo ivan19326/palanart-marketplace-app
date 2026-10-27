@@ -1145,12 +1145,17 @@
     renderCategoryFilter();
     renderHeroStats();
     renderCatalog();
+    const linkedProfileId = new URLSearchParams(location.search).get("profile");
+    if (linkedProfileId && MarketplaceStore.getProfiles().some(function (profile) { return profile.id === linkedProfileId; })) window.selectProfile(linkedProfileId);
     renderBoard();
     renderReviews();
     if ("serviceWorker" in navigator) navigator.serviceWorker.register("service-worker.js?v=7").then(function (registration) {
       if (registration && registration.update) registration.update();
     }).catch(function () {});
   </script>
+  <script src="assistant-config.js?v=20261027a"></script>
+  <script src="assistant-widget.js?v=20261027a"></script>
+  <link rel="stylesheet" href="assistant-widget.css?v=20261027a">
 </body>
 </html>
 

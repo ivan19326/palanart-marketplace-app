@@ -14,3 +14,6 @@ supabase/functions/.env.local
 
 .palanart-auth-backups/
 .auth-test-output/
+assistant/.env
+assistant/.env.local
+assistant/.runtime/

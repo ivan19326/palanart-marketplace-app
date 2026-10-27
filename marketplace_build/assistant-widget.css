@@ -1,0 +1,22 @@
+.palanart-assistant { position: fixed; right: 20px; bottom: 20px; z-index: 110; font: 15px/1.5 system-ui, sans-serif; color: #f1f5f9; }
+.palanart-assistant * { box-sizing: border-box; }
+.palanart-assistant [hidden] { display: none !important; }
+.palanart-assistant button { font: inherit; cursor: pointer; border: 1px solid #62717f; border-radius: 12px; padding: 9px 14px; color: #f8fafc; background: #243744; }
+.palanart-assistant button:disabled { opacity: .6; cursor: wait; }
+.palanart-assistant button:focus-visible, .palanart-assistant textarea:focus-visible, .palanart-assistant a:focus-visible { outline: 3px solid #ffb27e; outline-offset: 3px; }
+.palanart-assistant .pa-launcher, .palanart-assistant button[type="submit"] { background: #ab4b23; border-color: #ffb27e; font-weight: 650; }
+.palanart-assistant .pa-chat { display: flex; flex-direction: column; position: absolute; right: 0; bottom: 60px; width: min(400px, calc(100vw - 40px)); max-height: min(650px, calc(100dvh - 100px)); background: #13232e; border: 1px solid #637582; border-radius: 18px; box-shadow: 0 16px 60px #0008; overflow: hidden; }
+.pa-chat header { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 16px; border-bottom: 1px solid #52616c; }
+.pa-chat .pa-close { font-size: 24px; padding: 0 10px; }
+.pa-chat .pa-notice { margin: 0; padding: 12px 16px; font-size: 12px; color: #c4d3dd; }
+.pa-chat .pa-messages { overflow-y: auto; min-height: 60px; padding: 0 16px; }
+.pa-chat .pa-message { margin: 8px 0; padding: 10px; background: #243744; border-radius: 12px; overflow-wrap: anywhere; }
+.pa-chat .pa-message--user { background: #3f332e; }
+.pa-chat .pa-message p { margin: 6px 0 0; white-space: pre-wrap; }
+.pa-chat .pa-message a { display: block; color: #ffd1b3; margin-top: 8px; text-decoration: underline; }
+.pa-chat .pa-status { margin: 0; padding: 8px 16px; color: #ffd1b3; font-size: 13px; overflow-wrap: anywhere; }
+.pa-chat form { margin: 0; padding: 12px 16px; border-top: 1px solid #52616c; }
+.pa-chat label { display: block; margin-bottom: 6px; }
+.pa-chat textarea { display: block; width: 100%; min-height: 70px; resize: vertical; max-height: 140px; font: inherit; color: #f8fafc; background: #20323e; border: 1px solid #7e929f; border-radius: 10px; padding: 10px; }
+.pa-chat .pa-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+@media (max-width: 480px) { .palanart-assistant { right: 12px; bottom: 12px; } .pa-chat .pa-notice { font-size: 11px; } }
