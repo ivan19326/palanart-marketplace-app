@@ -1,4 +1,4 @@
-const CACHE_NAME = "palanart-cache-v26";
+const CACHE_NAME = "palanart-cache-v27";
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
@@ -23,6 +23,7 @@ const FILES_TO_CACHE = [
   "./auth-config.js",
   "./auth-bridge.js",
   "./user-auth.js",
+  "./artist-auth.js",
   "./assistant-config.js",
   "./assistant-widget.js",
   "./assistant-widget.css",

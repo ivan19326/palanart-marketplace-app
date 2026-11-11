@@ -24,6 +24,8 @@ function browser(hash = '') {
     signInWithPassword: async (payload) => { state.calls.push(['signin', payload]); if (state.signInError) return { error: state.signInError }; state.session = { user: state.user, access_token: 'TEST_ACCESS' }; return { data: { user: state.user, session: state.session }, error: null }; },
     resetPasswordForEmail: async (...args) => { state.calls.push(['reset', args]); return { error: null }; },
     updateUser: async (...args) => { state.calls.push(['update', args]); return { data: { user: state.user }, error: null }; },
+    signInWithOAuth: async (payload) => { state.calls.push(['oauth', payload]); return state.oauthResponse || { data: { url: 'https://jioakguorsfvjuzyclrg.supabase.co/auth/v1/authorize?provider=google' }, error: null }; },
+    linkIdentity: async (payload) => { state.calls.push(['linkIdentity', payload]); return state.linkResponse || { data: { url: 'https://accounts.google.com/o/oauth2/v2/auth?state=TEST_STATE&redirect_uri=https%3A%2F%2Fjioakguorsfvjuzyclrg.supabase.co%2Fauth%2Fv1%2Fcallback' }, error: null }; },
     signOut: async () => { state.session = null; return { error: null }; }
   };
   const localStorage = storage(); localStorage.setItem('palanart_auth_config', JSON.stringify({ mode: 'local', configVersion: 999 }));
@@ -41,10 +43,135 @@ function browser(hash = '') {
 test('old saved local configuration cannot re-enable simulated authentication', async () => {
   const b = browser(); assert.equal(b.bridge.getMode(), 'supabase');
   assert.equal(b.context.PalanartAuthConfig.mode, 'supabase');
-  for (const provider of ['telegram', 'vk', 'max', 'yandex']) {
+  for (const provider of ['google', 'telegram', 'vk', 'max', 'yandex']) {
     assert.equal((await b.bridge.signInWithSocial('client', provider)).ok, false);
   }
   assert.equal(b.store.getDb().users.length, 0); assert.equal(b.store.getCurrentUser(), null);
+});
+
+test('Google uses native Auth with an exact role callback and creates no session before returning', async () => {
+  for (const role of ['client', 'artist']) {
+    const b = browser();
+    b.state.fetch = async () => ({ ok: true, json: async () => ({ external: { google: true } }) });
+    const result = await b.bridge.signInWithSocial(role, 'google');
+    assert.equal(result.ok, true); assert.equal(result.redirecting, true);
+    const call = b.state.calls.find(item => item[0] === 'oauth')[1];
+    assert.equal(call.provider, 'google'); assert.equal(call.options.skipBrowserRedirect, true);
+    assert.equal(call.options.redirectTo, 'https://palanart.github.io/' + (role === 'artist' ? 'artist.html' : 'user.html'));
+    assert.equal(b.state.redirects.length, 1);
+    assert.equal(b.store.getCurrentUser(), null); assert.equal(b.store.getCurrentArtist(), null);
+    assert.equal(b.store.getDb().users.length, 0); assert.equal(b.store.getDb().artists.length, 0);
+    const request = b.state.calls.find(item => item[0] === 'fetch')[1];
+    assert.ok(request[0].endsWith('/auth/v1/settings')); assert.equal(request[1].headers.Authorization, undefined);
+  }
+});
+
+test('Google outage, disabled provider and unexpected OAuth URLs fail without granting access', async () => {
+  for (const external of [{ google: false }, {}, null]) {
+    const b = browser(); b.state.fetch = async () => ({ ok: true, json: async () => ({ external }) });
+    assert.equal((await b.bridge.signInWithSocial('client', 'google')).ok, false);
+    assert.equal(b.state.calls.filter(item => item[0] === 'oauth').length, 0);
+    assert.equal(b.state.redirects.length, 0);
+  }
+  for (const url of ['https://evil.example/auth/v1/authorize?provider=google', 'javascript:alert(1)',
+    'https://jioakguorsfvjuzyclrg.supabase.co/auth/v1/authorize?provider=github',
+    'https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=https://evil.example&state=bad']) {
+    const b = browser(); b.state.fetch = async () => ({ ok: true, json: async () => ({ external: { google: true } }) });
+    b.state.oauthResponse = { data: { url }, error: null };
+    assert.equal((await b.bridge.signInWithSocial('client', 'google')).ok, false);
+    assert.equal(b.state.redirects.length, 0); assert.equal(b.store.getCurrentUser(), null);
+  }
+});
+
+test('Google linking requires a current verified identity and never silently creates another account', async () => {
+  const b = browser(); b.state.fetch = async () => ({ ok: true, json: async () => ({ external: { google: true } }) });
+  assert.equal((await b.bridge.signInWithSocial('client', 'google', true)).ok, false);
+  assert.equal(b.state.calls.length, 0);
+  await b.bridge.signInWithEmail('client', valid);
+  assert.equal((await b.bridge.signInWithSocial('client', 'google', true)).ok, true);
+  assert.equal(b.state.calls.filter(item => item[0] === 'linkIdentity').length, 1);
+  assert.equal(b.store.getDb().users.length, 1);
+  b.state.linkResponse = { data: { url: null }, error: { code: 'manual_linking_disabled' } };
+  assert.match((await b.bridge.signInWithSocial('client', 'google', true)).message, /Привязка Google/);
+  b.state.failVerify = true;
+  const count = b.state.calls.filter(item => item[0] === 'linkIdentity').length;
+  assert.equal((await b.bridge.signInWithSocial('client', 'google', true)).ok, false);
+  assert.equal(b.state.calls.filter(item => item[0] === 'linkIdentity').length, count);
+});
+
+test('verified Google artist login preserves the existing profile id and history on repeated login', async () => {
+  const b = browser(); const db = b.store.getDb();
+  db.artists.push({ id: 'old-artist', email: valid.email.toLowerCase(), name: 'Прежний артист', password: 'OLD_PASSWORD', profileId: 'old-profile' });
+  db.profiles.push({ id: 'old-profile', artistId: 'old-artist', name: 'Сохранённый проект' });
+  b.context.localStorage.setItem(b.store.DB_KEY, JSON.stringify(db));
+  b.state.user.app_metadata = { provider: 'google', providers: ['email', 'google'] };
+  b.state.session = { user: b.state.user, access_token: 'TEST_ACCESS' };
+  await b.bridge.init({ role: 'artist' });
+  assert.equal(b.store.getCurrentArtist().id, 'old-artist');
+  assert.equal(b.store.getCurrentArtist().provider, 'google');
+  assert.equal(b.store.getArtistProfile('old-artist').id, 'old-profile');
+  assert.equal(b.store.getCurrentArtist().password, undefined);
+  await b.bridge.logout(); b.state.session = { user: b.state.user, access_token: 'TEST_ACCESS' };
+  await b.bridge.init({ role: 'artist' });
+  assert.equal(b.store.getDb().artists.length, 1); assert.equal(b.store.getArtistProfile('old-artist').name, 'Сохранённый проект');
+});
+
+test('legacy artist password entry cannot create an insecure account or bypass Auth', () => {
+  const b = browser(); const db = b.store.getDb();
+  db.artists.push({ id: 'legacy-artist', email: valid.email.toLowerCase(), password: 'LEGACY_ONLY' });
+  b.context.localStorage.setItem(b.store.DB_KEY, JSON.stringify(db));
+  assert.equal(b.store.registerArtistAccount(valid).ok, false);
+  assert.equal(b.store.loginArtist(valid.email, 'LEGACY_ONLY').ok, false);
+  assert.equal(b.store.getSession(), null); assert.equal(b.store.getDb().artists.length, 1);
+  assert.equal(b.store.getDb().artists[0].password, 'LEGACY_ONLY');
+});
+
+test('MAX attempts are scoped to the initiating cabinet and cannot survive sign-out or a different login', async () => {
+  const b = browser();
+  b.state.fetch = async () => ({ ok: true, json: async () => ({ url: 'https://jioakguorsfvjuzyclrg.supabase.co/functions/v1/auth-max-start?ticket=' + 'a'.repeat(64), ticket: 'a'.repeat(64), claimSecret: 'b'.repeat(64) }) });
+  await b.bridge.signInWithSocial('artist', 'max');
+  assert.ok(b.bridge.pendingMax('artist')); assert.equal(b.bridge.pendingMax('client'), null);
+  await b.bridge.logout(); assert.equal(b.bridge.pendingMax(), null);
+  await b.bridge.signInWithSocial('client', 'max'); assert.ok(b.bridge.pendingMax('client'));
+  await b.bridge.signInWithSocial('client', 'vk'); assert.equal(b.bridge.pendingMax(), null);
+});
+
+test('artist auth rejects a mixed cached legacy bridge and keeps the cabinet closed', () => {
+  const elements = new Map(); const messages = []; let renders = 0;
+  function byId(id) {
+    if (!elements.has(id)) elements.set(id, { style: {}, addEventListener() {} });
+    return elements.get(id);
+  }
+  const context = vm.createContext({ URLSearchParams, document: { getElementById: byId, querySelectorAll: () => [] },
+    PalanartArtistAuthUI: { render: () => { renders++; }, message: message => messages.push(message) },
+    PalanartAuthBridge: { signInWithSocial() { throw new Error('Legacy bridge used'); } },
+    location: { search: '', hash: '', pathname: '/artist.html' }, history: { replaceState() {} } });
+  context.window = context; vm.runInContext(read('marketplace_build/artist-auth.js'), context);
+  assert.equal(renders, 0); assert.equal(byId('artist-cabinet-view').style.display, 'none');
+  assert.match(messages[0], /Обновите страницу/);
+});
+
+test('a fresh MAX attempt requires fresh identity confirmation in the artist interface', async () => {
+  const elements = new Map(); let pending = { ticket: 'first', url: 'https://test.supabase.co/start' }; let callbacks;
+  const confirms = [];
+  function byId(id) {
+    if (!elements.has(id)) elements.set(id, { id, style: {}, textContent: id, disabled: false,
+      listeners: {}, addEventListener(type, fn) { this.listeners[type] = fn; }, setAttribute() {}, removeAttribute() {} });
+    return elements.get(id);
+  }
+  const context = vm.createContext({ URLSearchParams, document: { getElementById: byId, querySelectorAll: () => [] },
+    MarketplaceStore: { getCurrentArtist: () => null },
+    PalanartArtistAuthUI: { render() {}, renderMode() {}, message() {} },
+    PalanartAuthBridge: { protocolVersion: 2, pendingMax: () => pending, isRecovery: () => false,
+      init(options) { callbacks = options; return Promise.resolve(); },
+      claimMax: async (confirm) => { confirms.push(confirm); return { ok: true, ready: true, name: 'MAX Тест' }; } },
+    location: { search: '', hash: '', pathname: '/artist.html' }, history: { replaceState() {} } });
+  context.window = context; vm.runInContext(read('marketplace_build/artist-auth.js'), context);
+  const button = byId('artist-max-auth-check');
+  button.listeners.click({ currentTarget: button }); await new Promise(resolve => setImmediate(resolve));
+  pending = { ...pending, ticket: 'second' }; callbacks.onSession();
+  button.listeners.click({ currentTarget: button }); await new Promise(resolve => setImmediate(resolve));
+  assert.deepEqual(confirms, [false, false]);
 });
 test('all registration fields are validated before the backend is called', async () => {
   for (const change of [{ name: ' ' }, { email: 'bad' }, { phone: '123' }, { city: '' }, { password: '1234567890' }, { password: 'short1' }]) {

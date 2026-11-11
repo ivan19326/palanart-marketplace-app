@@ -628,44 +628,11 @@
   }
 
   function registerArtistAccount(payload) {
-    const db = getDb();
-    const email = (payload.email || "").trim().toLowerCase();
-    if (!email || !payload.password || !(payload.name || "").trim()) {
-      return { ok: false, message: "Заполните имя, e-mail и пароль." };
-    }
-    if (db.artists.some(function (artist) { return artist.email === email; })) {
-      return { ok: false, message: "Исполнитель с таким e-mail уже зарегистрирован." };
-    }
-    const artist = {
-      id: newId("artist"),
-      name: (payload.name || "").trim(),
-      email: email,
-      phone: (payload.phone || "").trim(),
-      telegram: (payload.telegram || "").trim(),
-      socials: {
-        instagram: (payload.instagram || "").trim(),
-        youtube: (payload.youtube || "").trim(),
-        vk: (payload.vk || "").trim(),
-        website: (payload.website || "").trim()
-      },
-      photo: (payload.photo || "").trim(),
-      password: payload.password,
-      profileId: null,
-      createdAt: new Date().toISOString()
-    };
-    db.artists.unshift(artist);
-    saveDb(db);
-    setSession({ type: "artist", id: artist.id });
-    return { ok: true, artist: artist };
+    return { ok: false, message: "Регистрация исполнителя доступна через защищённый сервис на странице artist.html." };
   }
 
   function loginArtist(email, password) {
-    const artist = getDb().artists.find(function (item) {
-      return item.email === (email || "").trim().toLowerCase() && item.password === password;
-    });
-    if (!artist) return { ok: false, message: "Неверный e-mail или пароль исполнителя." };
-    setSession({ type: "artist", id: artist.id });
-    return { ok: true, artist: artist };
+    return { ok: false, message: "Войдите через защищённый сервис на странице artist.html. Старые данные сохранены." };
   }
 
   function loginAdmin(email, password) {
@@ -865,6 +832,10 @@
     }
     artist.authUserId = payload.authUserId;
     artist.email = email;
+    artist.provider = payload.provider || "email";
+    artist.authProviders = payload.providers || [artist.provider];
+    artist.role = "artist";
+    artist.registeredAt = payload.createdAt || artist.createdAt;
     delete artist.password;
     saveDb(db);
     setSession({ type: "artist", id: artist.id, authUserId: payload.authUserId });

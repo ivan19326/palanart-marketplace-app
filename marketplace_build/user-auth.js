@@ -4,6 +4,7 @@
   let busy = false;
   let resetCooldown = 0;
   let maxReady = false;
+  let maxTicket = "";
   function field(form, name) { return form.elements.namedItem(name); }
   function updateView() {
     if (!bridge) {
@@ -11,7 +12,12 @@
       byId("cabinet-view").style.display = "none";
       return;
     }
-    const pending = bridge && bridge.pendingMax();
+    const pending = bridge && bridge.pendingMax("client");
+    if ((pending ? pending.ticket : "") !== maxTicket) {
+      maxTicket = pending ? pending.ticket : "";
+      maxReady = false;
+      byId("max-auth-identity").textContent = "";
+    }
     byId("max-auth-panel").hidden = !pending;
     if (pending) byId("max-auth-open").href = pending.url;
     const resetting = bridge && bridge.isRecovery() && MarketplaceStore.getCurrentUser();

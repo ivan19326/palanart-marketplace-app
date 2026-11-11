@@ -7,7 +7,7 @@
   let eventSequence = 0;
   let recovery = new URLSearchParams(window.location.hash.slice(1)).get("type") === "recovery";
   let activeOptions = {};
-  const providerNames = { telegram: "Telegram", vk: "VK ID", max: "MAX", yandex: "Яндекс ID" };
+  const providerNames = { google: "Google", telegram: "Telegram", vk: "VK ID", max: "MAX", yandex: "Яндекс ID" };
   const networkMessage = "Сервис входа PALANART недоступен. Повторите попытку позже. Если ошибка сохраняется, обратитесь в поддержку.";
   function getMode() { return "supabase"; }
   function isConfigured() { return Boolean(config.supabaseUrl && config.supabaseAnonKey); }
@@ -32,6 +32,9 @@
       signup_disabled: "Регистрация временно отключена владельцем PALANART.",
       otp_expired: "Ссылка устарела или уже использована. Запросите новое письмо.",
       session_not_found: "Сессия закончилась. Войдите ещё раз.",
+      provider_disabled: "Этот способ входа ещё не включён владельцем PALANART.",
+      manual_linking_disabled: "Привязка Google ещё не включена владельцем PALANART.",
+      identity_already_exists: "Этот способ входа уже связан с другим аккаунтом. Войдите в него или обратитесь в поддержку.",
       user_banned: "Доступ к аккаунту ограничен. Обратитесь в поддержку."
     };
     return messages[error && error.code] || (error && error.safeMessage) || networkMessage;
@@ -218,13 +221,37 @@
   async function signInWithSocial(role, provider, link) {
     if (!canUseProvider(provider)) return { ok: false, message: "Этот способ входа ещё не настроен." };
     try {
+      if (provider !== "max") sessionStorage.removeItem("palanart_max_pending");
       const endpoint = config.supabaseUrl + "/functions/v1/auth-" + provider + "-start";
       let accessToken = "";
       if (link) {
-        if (!verifiedUser) return { ok: false, message: "Для привязки сначала войдите в свой аккаунт." };
+        const expectedUserId = verifiedUser && verifiedUser.id;
+        if (!expectedUserId) return { ok: false, message: "Для привязки сначала войдите в свой аккаунт." };
+        const session = await validateSession(role);
+        if (!session || !verifiedUser || verifiedUser.id !== expectedUserId) return { ok: false, message: "Сессия изменилась. Войдите заново перед привязкой." };
+        accessToken = session.access_token;
+      }
+      if (provider === "google") {
+        // Auth settings are public. Detect outages/disabled Google before navigating away.
+        const settingsResponse = await request(config.supabaseUrl + "/auth/v1/settings", { headers: { apikey: config.supabaseAnonKey } });
+        if (!settingsResponse.ok) throw new Error("Auth unavailable");
+        const settings = await settingsResponse.json();
+        if (settings.external && settings.external.google === false) return { ok: false, message: "Вход через Google ещё не включён владельцем PALANART." };
+        if (!settings.external || settings.external.google !== true) throw new Error("Invalid Auth settings");
         const client = await ensureClient();
-        const session = await client.auth.getSession();
-        accessToken = session.data.session ? session.data.session.access_token : "";
+        const options = { redirectTo: returnUrl(role), skipBrowserRedirect: true };
+        const result = link
+          ? await client.auth.linkIdentity({ provider: "google", options: options })
+          : await client.auth.signInWithOAuth({ provider: "google", options: options });
+        if (result.error) return { ok: false, message: errorMessage(result.error) };
+        const target = new URL(result.data.url);
+        const authBase = new URL(config.supabaseUrl);
+        const authUrl = target.origin === authBase.origin && target.pathname === "/auth/v1/authorize" && target.searchParams.get("provider") === "google";
+        const linkUrl = link && target.origin === "https://accounts.google.com" && /^\/o\/oauth2\/(v2\/)?auth$/.test(target.pathname) &&
+          target.searchParams.get("redirect_uri") === authBase.origin + "/auth/v1/callback" && target.searchParams.has("state");
+        if (target.protocol !== "https:" || target.username || target.password || (!authUrl && !linkUrl)) throw new Error("Unexpected Google auth origin");
+        window.location.assign(target.toString());
+        return { ok: true, redirecting: true };
       }
       const response = await request(endpoint, {
         method: "POST", headers: Object.assign({ "Content-Type": "application/json", apikey: config.supabaseAnonKey },
@@ -237,7 +264,7 @@
       if (target.origin !== new URL(config.supabaseUrl).origin) throw new Error("Unexpected auth origin");
       if (provider === "max" && data.claimSecret && data.ticket) {
         sessionStorage.setItem("palanart_max_pending", JSON.stringify({ url: target.toString(), ticket: data.ticket,
-          secret: data.claimSecret, link: Boolean(link), createdAt: Date.now() }));
+          secret: data.claimSecret, role: role, link: Boolean(link), createdAt: Date.now() }));
         return { ok: true, pendingMax: true };
       }
       window.location.assign(target.toString());
@@ -247,6 +274,8 @@
   async function logout() {
     authGeneration++;
     verifiedUser = null;
+    recovery = false;
+    sessionStorage.removeItem("palanart_max_pending");
     if (window.MarketplaceStore) window.MarketplaceStore.clearExternalSession();
     try {
       const client = await ensureClient();
@@ -258,16 +287,17 @@
       return { ok: true };
     } catch (error) { return { ok: false, message: errorMessage(error) }; }
   }
-  function pendingMax() {
+  function pendingMax(role) {
     try {
       const value = JSON.parse(sessionStorage.getItem("palanart_max_pending") || "null");
       if (!value || value.createdAt < Date.now() - 600000 || new URL(value.url).origin !== new URL(config.supabaseUrl).origin) return null;
+      if (role && (value.role || "client") !== role) return null;
       return value;
     } catch (_error) { return null; }
   }
   async function claimMax(confirm) {
     try {
-      const pending = pendingMax();
+      const pending = pendingMax(activeOptions.role || "client");
       if (!pending) return { ok: false, message: "Попытка входа MAX устарела. Начните вход заново." };
       const response = await request(config.supabaseUrl + "/functions/v1/auth-max-claim", {
         method: "POST", headers: { "Content-Type": "application/json", apikey: config.supabaseAnonKey },
