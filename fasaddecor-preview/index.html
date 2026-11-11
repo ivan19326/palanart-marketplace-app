@@ -1,0 +1,12 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ФасадДекор — просмотр сайта</title>
+<style>body{font-family:Arial,sans-serif;background:#eff3ee;color:#23342e;display:grid;place-items:center;min-height:100vh;margin:0;text-align:center}main{max-width:480px;padding:22px}h1{font-size:32px}p{line-height:1.6}</style></head>
+<body><main><h1>ФасадДекор</h1><p id="load">Загружаем интерактивный сайт...</p></main>
+<script>
+(async function(){
+try{const files=["part-001.txt","part-002.txt","part-003.txt","part-004.txt","part-005.txt","part-006.txt","part-007.txt","part-008.txt","part-009.txt","part-010.txt","part-011.txt"];
+const parts=await Promise.all(files.map(async name=>{const res=await fetch(name,{cache:"no-store"});if(!res.ok)throw new Error("HTTP "+res.status+" "+name);return await res.text()}));
+const html=parts.join("");if(!html.includes("</html>"))throw new Error("Некорректный пакет");
+document.open();document.write(html);document.close();
+}catch(e){document.getElementById("load").textContent="Не удалось загрузить сайт. Обновите страницу через несколько секунд.";console.error(e)}
+})();
+</script></body></html>
