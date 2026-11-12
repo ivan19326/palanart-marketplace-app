@@ -123,3 +123,28 @@ SMTP-пароль не отправлять в чат и не сохранять
 Документация: [Google](https://supabase.com/docs/guides/auth/social-sign-in/auth-google),
 [SMTP](https://supabase.com/docs/guides/auth/auth-smtp),
 [Auth redirects](https://supabase.com/docs/guides/auth/redirect-urls).
+
+## Подтверждение публикации
+
+- Проверенный код: `615466b`; сборка и 38 проверок прошли в
+  [GitHub Actions](https://github.com/ivan19326/palanart-marketplace-app/actions/runs/43227246479).
+- Публичная версия: `bf4e1ac`, ресурсы `20261112b`, service worker `palanart-cache-v28`;
+  [развёртывание Pages успешно](https://github.com/palanart/palanart.github.io/actions/runs/43227300892).
+  Все 8 изменённых публичных файлов получены по HTTPS и совпали с исходниками.
+- В браузере открыта каноническая `https://palanart.github.io/user.html`.
+  Подтверждена загрузка ресурсов `20261112b`: Google сообщает о выключенном
+  provider; Telegram, VK ID, MAX и Яндекс показывают серверный ответ о недостающей
+  настройке. После ответа кнопки доступны, кабинет не открывается.
+- Неверные e-mail/пароль дают «Неверный e-mail или пароль». Заполненная регистрация
+  блокируется до настройки подтверждений; recovery также не отправляет письмо,
+  возврат ко входу восстанавливает фокус. Это ожидаемые проверки отказов.
+- Страница исполнителя загружена: видны все пять социальных способов, Google
+  запускает проверку и показывает тот же статус. Закрытые действия без сессии не
+  проверялись. Существующие аккаунты и серверные пароли тестами не менялись.
+- После браузерных проверок в новой базе по-прежнему 0 Auth-пользователей и
+  0 профилей. Реальные письма и успешный OAuth остаются обязательными до завершения.
+
+HTTP-результаты и хэши сохранены локально в
+`.auth-test-output/new-backend-release-20261112.json`,
+`.auth-test-output/new-project-initial-http-20261112.json` и
+`.auth-test-output/new-project-functions-http-20261112.json`.
