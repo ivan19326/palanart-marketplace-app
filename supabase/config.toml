@@ -1,4 +1,4 @@
-project_id = "jioakguorsfvjuzyclrg"
+project_id = "oimwiyncaxffcijqtmzf"
 
 [functions.auth-vk-start]
 verify_jwt = false

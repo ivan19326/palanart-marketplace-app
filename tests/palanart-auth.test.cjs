@@ -6,6 +6,9 @@ const vm = require('node:vm');
 const crypto = require('node:crypto');
 const root = path.resolve(__dirname, '..');
 const read = (p) => fs.readFileSync(path.join(root, p), 'utf8').replace(/^\uFEFF/, '');
+const deployment = { window: {} };
+vm.runInNewContext(read('marketplace_build/auth-config.js'), deployment);
+const authOrigin = new URL(deployment.window.PalanartAuthConfig.supabaseUrl).origin;
 function storage() {
   const values = new Map();
   return { getItem: (k) => values.get(k) || null, setItem: (k, v) => values.set(k, String(v)), removeItem: (k) => values.delete(k), values };
@@ -14,7 +17,7 @@ const testUser = () => ({ id: '11111111-1111-4111-8111-111111111111', email: 'au
   created_at: '2026-01-01T00:00:00Z', identities: [{ provider: 'email' }], app_metadata: { provider: 'email' },
   user_metadata: { full_name: 'Тестовый заказчик', phone: '+79990000000', city: 'Казань' } });
 const valid = { name: 'Тестовый заказчик', email: 'AUTH-TEST@example.invalid', phone: '+7 (999) 000-00-00', city: 'Казань', password: 'TestPassword123' };
-function browser(hash = '') {
+function browser(hash = '', configOverride = { emailConfirmationReady: true }) {
   const state = { user: testUser(), session: null, calls: [], redirects: [] };
   const auth = {
     getSession: async () => ({ data: { session: state.session }, error: null }),
@@ -24,8 +27,8 @@ function browser(hash = '') {
     signInWithPassword: async (payload) => { state.calls.push(['signin', payload]); if (state.signInError) return { error: state.signInError }; state.session = { user: state.user, access_token: 'TEST_ACCESS' }; return { data: { user: state.user, session: state.session }, error: null }; },
     resetPasswordForEmail: async (...args) => { state.calls.push(['reset', args]); return { error: null }; },
     updateUser: async (...args) => { state.calls.push(['update', args]); return { data: { user: state.user }, error: null }; },
-    signInWithOAuth: async (payload) => { state.calls.push(['oauth', payload]); return state.oauthResponse || { data: { url: 'https://jioakguorsfvjuzyclrg.supabase.co/auth/v1/authorize?provider=google' }, error: null }; },
-    linkIdentity: async (payload) => { state.calls.push(['linkIdentity', payload]); return state.linkResponse || { data: { url: 'https://accounts.google.com/o/oauth2/v2/auth?state=TEST_STATE&redirect_uri=https%3A%2F%2Fjioakguorsfvjuzyclrg.supabase.co%2Fauth%2Fv1%2Fcallback' }, error: null }; },
+    signInWithOAuth: async (payload) => { state.calls.push(['oauth', payload]); return state.oauthResponse || { data: { url: authOrigin + '/auth/v1/authorize?provider=google' }, error: null }; },
+    linkIdentity: async (payload) => { state.calls.push(['linkIdentity', payload]); return state.linkResponse || { data: { url: 'https://accounts.google.com/o/oauth2/v2/auth?state=TEST_STATE&redirect_uri=' + encodeURIComponent(authOrigin + '/auth/v1/callback') }, error: null }; },
     signOut: async () => { state.session = null; return { error: null }; }
   };
   const localStorage = storage(); localStorage.setItem('palanart_auth_config', JSON.stringify({ mode: 'local', configVersion: 999 }));
@@ -37,7 +40,10 @@ function browser(hash = '') {
     fetch: async (...args) => { state.calls.push(['fetch', args]); if (state.fetch) return state.fetch(...args); throw new Error('network unavailable'); }
   });
   context.window = context;
-  for (const p of ['auth-config.js', 'marketplace-core.js', 'auth-bridge.js']) vm.runInContext(read('marketplace_build/' + p), context, { filename: p });
+  for (const p of ['auth-config.js', 'marketplace-core.js', 'auth-bridge.js']) {
+    vm.runInContext(read('marketplace_build/' + p), context, { filename: p });
+    if (p === 'auth-config.js') context.PalanartAuthConfig = Object.freeze({ ...context.PalanartAuthConfig, ...configOverride });
+  }
   return { state, context, bridge: context.PalanartAuthBridge, store: context.MarketplaceStore };
 }
 test('old saved local configuration cannot re-enable simulated authentication', async () => {
@@ -74,7 +80,7 @@ test('Google outage, disabled provider and unexpected OAuth URLs fail without gr
     assert.equal(b.state.redirects.length, 0);
   }
   for (const url of ['https://evil.example/auth/v1/authorize?provider=google', 'javascript:alert(1)',
-    'https://jioakguorsfvjuzyclrg.supabase.co/auth/v1/authorize?provider=github',
+    authOrigin + '/auth/v1/authorize?provider=github',
     'https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=https://evil.example&state=bad']) {
     const b = browser(); b.state.fetch = async () => ({ ok: true, json: async () => ({ external: { google: true } }) });
     b.state.oauthResponse = { data: { url }, error: null };
@@ -128,7 +134,7 @@ test('legacy artist password entry cannot create an insecure account or bypass A
 
 test('MAX attempts are scoped to the initiating cabinet and cannot survive sign-out or a different login', async () => {
   const b = browser();
-  b.state.fetch = async () => ({ ok: true, json: async () => ({ url: 'https://jioakguorsfvjuzyclrg.supabase.co/functions/v1/auth-max-start?ticket=' + 'a'.repeat(64), ticket: 'a'.repeat(64), claimSecret: 'b'.repeat(64) }) });
+  b.state.fetch = async () => ({ ok: true, json: async () => ({ url: authOrigin + '/functions/v1/auth-max-start?ticket=' + 'a'.repeat(64), ticket: 'a'.repeat(64), claimSecret: 'b'.repeat(64) }) });
   await b.bridge.signInWithSocial('artist', 'max');
   assert.ok(b.bridge.pendingMax('artist')); assert.equal(b.bridge.pendingMax('client'), null);
   await b.bridge.logout(); assert.equal(b.bridge.pendingMax(), null);
@@ -179,6 +185,14 @@ test('all registration fields are validated before the backend is called', async
     assert.equal(b.state.calls.length, 0);
   }
 });
+test('confirmation and recovery cannot send to unconfigured callback URLs or an unready mail service', async () => {
+  const b = browser('', { emailConfirmationReady: false });
+  assert.equal((await b.bridge.signUpWithEmail('client', valid)).ok, false);
+  assert.equal((await b.bridge.resetPassword(valid.email, 'client')).ok, false);
+  assert.equal(b.state.calls.length, 0); assert.equal(b.store.getCurrentUser(), null);
+  assert.equal((await b.bridge.signInWithEmail('client', valid)).ok, true);
+});
+
 test('unconfirmed signup cannot create a local session or enter a cabinet', async () => {
   const b = browser(); const result = await b.bridge.signUpWithEmail('client', valid);
   assert.equal(result.ok, true); assert.equal(result.needsConfirmation, true);
@@ -236,7 +250,7 @@ test('initializing customer auth preserves an existing admin session', async () 
 });
 test('MAX initiation and claim never generate an account or put a secret in the redirect URL', async () => {
   const b = browser();
-  b.state.fetch = async () => ({ ok: true, json: async () => ({ url: 'https://jioakguorsfvjuzyclrg.supabase.co/functions/v1/auth-max-start?ticket=' + 'a'.repeat(64), ticket: 'a'.repeat(64), claimSecret: 'b'.repeat(64) }) });
+  b.state.fetch = async () => ({ ok: true, json: async () => ({ url: authOrigin + '/functions/v1/auth-max-start?ticket=' + 'a'.repeat(64), ticket: 'a'.repeat(64), claimSecret: 'b'.repeat(64) }) });
   assert.equal((await b.bridge.signInWithSocial('client', 'max')).pendingMax, true);
   assert.equal(b.state.redirects.length, 0); assert.equal(b.store.getDb().users.length, 0);
   assert.ok(!b.bridge.pendingMax().url.includes(b.bridge.pendingMax().secret));
@@ -323,6 +337,23 @@ function fakeAdmin() {
   } };
   return admin;
 }
+test('unconfigured social providers report setup required without creating flows or accounts', async () => {
+  const server = await serverPromise;
+  for (const [provider, required] of [['telegram', 'TELEGRAM_BOT_TOKEN'], ['vk', 'VK_CLIENT_ID'], ['max', 'MAX_BOT_TOKEN'], ['yandex', 'YANDEX_CLIENT_SECRET']]) {
+    activeAdmin = fakeAdmin();
+    const saved = environment[required]; delete environment[required];
+    try {
+      const response = await server.handleStart(new Request('https://test.supabase.co/start', {
+        method: 'POST', headers: { origin: 'https://palanart.github.io', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role: 'client', returnTo: 'https://palanart.github.io/user.html' })
+      }), provider);
+      assert.equal(response.status, 503);
+      assert.match((await response.json()).message, /ещё не настроен/);
+      assert.equal(activeAdmin.users.length, 0); assert.deepEqual(activeAdmin.tables, {});
+    } finally { environment[required] = saved; }
+  }
+});
+
 test('Telegram and MAX reject tampering, duplicate fields, expired and future assertions', async () => {
   const server = await serverPromise;
   assert.equal((await server.verifyTelegram(signedTelegram(), environment.TELEGRAM_BOT_TOKEN)).id, '1234567');

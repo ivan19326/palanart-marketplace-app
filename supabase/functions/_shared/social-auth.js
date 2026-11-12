@@ -27,13 +27,16 @@ function json(request, data, status = 200) {
 }
 function escape(value) { return String(value).replace(/[&<>"']/g, (s) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[s]); }
 function failure(request, provider, reason = "") {
-  const message = reason === "identity-linked"
+  const message = reason === "configuration"
+    ? `Вход через ${labels[provider]} ещё не настроен владельцем PALANART.`
+    : reason === "identity-linked"
     ? "Этот способ входа уже привязан к другому аккаунту. Войдите в него или обратитесь в поддержку."
     : reason === "expired" ? "Попытка входа устарела или уже использована. Начните вход заново."
     : "Вход не завершён. Сервис недоступен, не настроен или подтверждение было отменено. Попробуйте e-mail или обратитесь в поддержку PALANART.";
-  if (request.method === "POST" && (request.headers.get("content-type") || "").includes("application/json")) return json(request, { message }, 400);
+  const status = reason === "configuration" ? 503 : 400;
+  if (request.method === "POST" && (request.headers.get("content-type") || "").includes("application/json")) return json(request, { message }, status);
   return new Response(`<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${escape(labels[provider])} — PALANART</title><body><h1>${escape(labels[provider])}</h1><p>${escape(message)}</p><a href="${escape(new URL("user.html", site()).toString())}">Вернуться ко входу</a></body></html>`,
-    { status: 400, headers: { ...headers(request), "Content-Type": "text/html; charset=utf-8" } });
+    { status, headers: { ...headers(request), "Content-Type": "text/html; charset=utf-8" } });
 }
 export function normalizeReturnTo(input, role = "client") {
   const expected = new URL(role === "artist" ? "artist.html" : "user.html", site());

@@ -171,6 +171,7 @@
   async function signUpWithEmail(role, payload) {
     const validation = validateRegistration(payload);
     if (validation) return { ok: false, message: validation };
+    if (config.emailConfirmationReady === false) return { ok: false, message: "Регистрация по e-mail временно недоступна. Отправка подтверждений ещё настраивается. Повторите попытку позже." };
     try {
       const client = await ensureClient();
       const response = await client.auth.signUp({
@@ -199,6 +200,7 @@
   async function resetPassword(email, role) {
     try {
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || "").trim())) return { ok: false, message: "Укажите корректный e-mail." };
+      if (config.emailConfirmationReady === false) return { ok: false, message: "Восстановление пароля временно недоступно. Отправка писем ещё настраивается. Повторите попытку позже." };
       const client = await ensureClient();
       const response = await client.auth.resetPasswordForEmail(email.trim().toLowerCase(), { redirectTo: returnUrl(role, true) });
       if (response.error) throw response.error;
