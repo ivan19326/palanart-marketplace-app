@@ -180,7 +180,7 @@ test('a fresh MAX attempt requires fresh identity confirmation in the artist int
   assert.deepEqual(confirms, [false, false]);
 });
 test('all registration fields are validated before the backend is called', async () => {
-  for (const change of [{ name: ' ' }, { email: 'bad' }, { phone: '123' }, { city: '' }, { password: '1234567890' }, { password: 'short1' }]) {
+  for (const change of [{ name: ' ' }, { email: 'bad' }, { phone: '123' }, { city: '' }, { password: '1234567890' }, { password: 'short1' }, { password: 'Пароль123456' }]) {
     const b = browser(); assert.equal((await b.bridge.signUpWithEmail('client', { ...valid, ...change })).ok, false);
     assert.equal(b.state.calls.length, 0);
   }

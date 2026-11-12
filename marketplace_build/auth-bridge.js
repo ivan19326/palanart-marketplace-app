@@ -24,7 +24,7 @@
       email_not_confirmed: "Подтвердите e-mail по ссылке из письма. Затем войдите в кабинет.",
       user_already_exists: "Этот e-mail уже зарегистрирован. Войдите или восстановите пароль.",
       email_exists: "Этот e-mail уже зарегистрирован. Войдите или восстановите пароль.",
-      weak_password: "Пароль слишком простой. Используйте не менее 10 символов, буквы и цифры.",
+      weak_password: "Пароль слишком простой. Используйте не менее 10 символов, латинские буквы и цифры.",
       same_password: "Новый пароль должен отличаться от предыдущего.",
       over_email_send_rate_limit: "Письма отправляются слишком часто. Подождите несколько минут.",
       over_request_rate_limit: "Слишком много попыток. Подождите несколько минут.",
@@ -138,8 +138,8 @@
     return { mode: "supabase" };
   }
   function validatePassword(password) {
-    return typeof password !== "string" || password.length < 10 || password.length > 128 || !/\p{L}/u.test(password) || !/\d/.test(password)
-      ? "Используйте пароль от 10 до 128 символов, содержащий буквы и цифры." : "";
+    return typeof password !== "string" || password.length < 10 || password.length > 128 || !/[A-Za-z]/.test(password) || !/\d/.test(password)
+      ? "Используйте пароль от 10 до 128 символов, содержащий латинские буквы и цифры." : "";
   }
   function validateContacts(payload) {
     if (String(payload.name || "").trim().length < 2) return "Укажите имя (не менее двух символов).";

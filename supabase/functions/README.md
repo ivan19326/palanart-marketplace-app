@@ -4,7 +4,7 @@
 
 Google подключён через встроенные `signInWithOAuth` / `linkIdentity` Supabase Auth;
 Client ID/Secret задаются в настройках Google provider, отдельная Edge Function не нужна.
-Актуальный статус всех способов: [новый backend от 12.11.2026](../../docs/palanart-new-backend-2026-11-12.md).
+Актуальный статус всех способов: [реальные проверки от 13.11.2026](../../docs/palanart-auth-live-2026-11-13.md).
 
 Развёртывание девяти функций: `npm run supabase:functions:deploy`.
 
